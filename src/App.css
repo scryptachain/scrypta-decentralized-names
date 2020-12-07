@@ -2,6 +2,30 @@
   text-align: center;
 }
 
+.Splash {
+  background-image: url('./assets/bg-home.png') ;
+  background-color: #3D9A98;
+  color: white;
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100vh;
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+}
+
+.Explore {
+  background-image: url('./assets/bg-home.png') ;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: right;
+  width: 100%;
+  min-height: 60vh;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

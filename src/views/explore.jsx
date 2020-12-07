@@ -8,9 +8,12 @@ const { Input, Field, Control } = Form;
 
 export function Explore() {
   return (
-    <div className="App">
+    <div>
       <NavBar />
-      Explore Decentralized Names
+      <div className="Explore">
+        <h1>Explore Decentralized Names</h1>
+        <p>Try try try try try </p>
+      </div>
     </div>
   );
 }

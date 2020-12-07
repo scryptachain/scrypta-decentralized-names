@@ -1,6 +1,6 @@
 export function Login() {
     return (
-        <div className="App">
+        <div className="Login">
             Login page
         </div>
     );
