@@ -12,6 +12,7 @@ export function Dashboard(props) {
   let [searcher, setSearcher] = useState("")
   let [password, setPassword] = useState("")
   let [isSearching, setSearching] = useState(false)
+  let [isRegistering, setRegistering] = useState(false)
   let [isAvailable, setAvailability] = useState(false)
 
   let ban = ["register:turinglabs"]
@@ -52,21 +53,22 @@ export function Dashboard(props) {
   }
 
   async function registerName() {
-    if(password.length > 0){
+    if (password.length > 0 && !isRegistering) {
+      setRegistering(true)
       let key = await scrypta.readKey(password, props.user.walletstore)
-      if(key !== false){
+      if (key !== false) {
         let balance = await scrypta.get('/balance/' + props.user.address)
-        if(balance.balance >= 10.002){
-          let success = false
+        if (balance.balance >= 10.002) {
           let fee = await scrypta.send(props.user.walletstore, password, 'LSJq6a6AMigCiRHGrby4TuHeGirJw2PL5c', 10)
-          if(fee.length === 64){
-            setTimeout(async function(){
+          if (fee.length === 64) {
+            setTimeout(async function () {
               let written = await scrypta.write(props.user.walletstore, password, 'register:' + searcher, '', '', 'names://')
-              if(written.txs[0].length === 64){
+              if (written.txs[0].length === 64) {
                 alert('Name registered!')
                 setAvailability(false)
                 setSearcher(false)
-                setTimeout(async function(){
+                setRegistering(false)
+                setTimeout(async function () {
                   let address = await scrypta.createAddress('-', false)
                   let request = await scrypta.createContractRequest(address.walletstore, '-', { contract: "LcD7AGaY74xvVxDg3NkKjfP6QpG8Pmxpnu", function: "names", params: {} })
                   let response = await scrypta.sendContractRequest(request)
@@ -78,17 +80,21 @@ export function Dashboard(props) {
                   }
                   setOwned(registered)
                 }, 1500)
-              }else{
+              } else {
+                setRegistering(false)
                 alert('Something goes wrong, please retry!')
               }
-            },1500)
-          }else{
+            }, 1500)
+          } else {
+            setRegistering(false)
             alert('Something goes wrong, please retry!')
           }
-        }else{
+        } else {
+          setRegistering(false)
           alert('Not enough funds!')
         }
-      }else{
+      } else {
+        setRegistering(false)
         alert('Wrong password!')
       }
     }
@@ -121,51 +127,51 @@ export function Dashboard(props) {
             <h1>Congratulations, this name is available,<br></br>enter your password to register it!</h1><br></br>
             This transaction will cost <b>10 LYRA</b>!<br></br><br></br>
             <Input style={{ width: "100%!important", textAlign: "center" }} type="password" onChange={(evt) => { setPassword(evt.target.value) }} value={password} /><br></br><br></br>
-            <Button onClick={registerName} color="info">REGISTER</Button>
+            {!isRegistering ? <Button onClick={registerName} color="info">REGISTER</Button> : <div>Registering, please wait...</div>}
           </Section>
         </Modal.Content>
       </Modal >
     }
   }
 
-return (
-  <div>
-    <NavBar />
-    <div className="Explore">
-      <Container>
-        <Columns>
-          <Columns.Column style={{ marginTop: "40px" }}>
-            <Box>
-              <h1><b style={{ fontSize: "20px" }}>Hi {props.user.address}!</b><br />What do you want to register today?</h1><br></br>
-              <Input style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} />
-              {!isSearching ? <Control style={{ position: "absolute", bottom: "32px", right: "20px" }}>
-                <Button onClick={searchName} color="info">Search</Button>
-              </Control> : <div style={{ marginTop: "20px" }}>Searching...</div>}
-            </Box>
-          </Columns.Column>
-        </Columns>
-      </Container>
-      {returnRegisterBox()}
-      <Container>
-        <Columns>
-          <Columns.Column style={{ marginTop: "40px" }}>
-            <Card>
-              <Card.Content align="center">
-                <Media>
-                  <Media.Item>
-                    <Heading size={5} align="center">YOUR REGISTERED DOMAINS</Heading>
-                  </Media.Item>
-                </Media>
-                <hr></hr>
-                <Content>
-                  {returnOwned()}
-                </Content>
-              </Card.Content>
-            </Card>
-          </Columns.Column>
-        </Columns>
-      </Container>
+  return (
+    <div>
+      <NavBar />
+      <div className="Explore">
+        <Container>
+          <Columns>
+            <Columns.Column style={{ marginTop: "40px" }}>
+              <Box>
+                <h1><b style={{ fontSize: "20px" }}>Hi {props.user.address}!</b><br />What do you want to register today?</h1><br></br>
+                <Input style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} />
+                {!isSearching ? <Control style={{ position: "absolute", bottom: "32px", right: "20px" }}>
+                  <Button onClick={searchName} color="info">Search</Button>
+                </Control> : <div style={{ marginTop: "20px" }}>Searching...</div>}
+              </Box>
+            </Columns.Column>
+          </Columns>
+        </Container>
+        {returnRegisterBox()}
+        <Container>
+          <Columns>
+            <Columns.Column style={{ marginTop: "40px" }}>
+              <Card>
+                <Card.Content align="center">
+                  <Media>
+                    <Media.Item>
+                      <Heading size={5} align="center">YOUR REGISTERED DOMAINS</Heading>
+                    </Media.Item>
+                  </Media>
+                  <hr></hr>
+                  <Content>
+                    {returnOwned()}
+                  </Content>
+                </Card.Content>
+              </Card>
+            </Columns.Column>
+          </Columns>
+        </Container>
+      </div>
     </div>
-  </div>
-);
+  );
 }
