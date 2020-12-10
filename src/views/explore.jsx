@@ -1,23 +1,44 @@
 import { Button } from 'react-bulma-components';
-import React, { useState } from 'react';
-import { Form, Heading, Card, Content, Media, Container, Columns, Column, Label, Box, } from 'react-bulma-components';
+import React, { useState, useEffect } from 'react';
+import { Form, Heading, Card, Content, Media, Container, Columns, Box, } from 'react-bulma-components';
 import { NavBar, } from '../components/navbar.jsx';
 const ScryptaCore = require('@scrypta/core')
 const scrypta = new ScryptaCore(true)
-const { Input, Field, Control } = Form;
+scrypta.staticnodes = true
+const { Input, Control } = Form;
 
 export function Explore() {
-  let [search, setSearch] = useState([])
-  let [explore, setExplore] = useState([])
+  let [history, setHistory] = useState([])
   let [searcher, setSearcher] = useState("")
+  let ban = ["register:turinglabs"]
 
   async function init() {
-    let address = await scrypta.createAddress('MyPassword')
-    let request = await scrypta.createContractRequest(address.walletstore, 'MyPassword', { contract: "LgSAtP3gPURByanZSM32kfEu9C1uyQ6Kfg", function: "search", params: { contract: "LcD7AGaY74xvVxDg3NkKjfP6QpG8Pmxpnu", version: "latest" } })
-    setSearch(JSON.stringify(request))
+    let address = await scrypta.createAddress('-')
+    let request = await scrypta.createContractRequest(address.walletstore, '-', { contract: "LcD7AGaY74xvVxDg3NkKjfP6QpG8Pmxpnu", function: "names", params: {} })
+    let response = await scrypta.sendContractRequest(request)
+    setHistory(response)
   }
 
-  init()
+  useEffect(() => {
+    if (history.length === 0) {
+      init()
+    }
+  })
+
+  async function searchName() {
+    if (searcher.length > 0) {
+      let address = await scrypta.createAddress('-')
+      let request = await scrypta.createContractRequest(address.walletstore, '-', { contract: "LcD7AGaY74xvVxDg3NkKjfP6QpG8Pmxpnu", function: "search", params: { "name": searcher } })
+      let response = await scrypta.sendContractRequest(request)
+      if(response.message !== undefined && response.message === 'Name not found.'){
+        alert('This domain is available, proceed!')
+      } else if(response.address !== undefined){
+        alert('This domain is taken by ' + response.address)
+      }
+    } else {
+      alert('Write a name first!')
+    }
+  }
 
   return (
     <div>
@@ -28,12 +49,10 @@ export function Explore() {
             <Columns.Column style={{ marginTop: "40px" }}>
               <Box>
                 <h1><b>Search a name</b></h1>
-                <Field>
-                  <Input onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} />
-                  <Control style={{ position: "absolute", top: "95px", right: "100px" }}>
-                    <Button color="info">Search</Button>
-                  </Control>
-                </Field>
+                <Input style={{width: "100%!important; padding-right:300px"}} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} />
+                <Control style={{ position: "absolute", top: "95px", right: "20px" }}>
+                  <Button onClick={searchName} color="info">Search</Button>
+                </Control>
               </Box>
             </Columns.Column>
           </Columns>
@@ -50,7 +69,16 @@ export function Explore() {
                   </Media>
                   <hr></hr>
                   <Content>
-                    {search}
+                      {history.map((value, index) => {
+                        if (ban.indexOf(value.name) === -1) {
+                          return <div key={index}>
+                            <h4 stlye={{marginBottom:"-30px"}}>{value.name}</h4>
+                            registered by: <b>{value.owner} </b><hr/>
+                          </div>
+                        }else{
+                          return false;
+                        }
+                      })}
                   </Content>
                 </Card.Content>
               </Card>

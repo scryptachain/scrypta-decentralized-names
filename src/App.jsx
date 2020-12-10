@@ -8,8 +8,7 @@ import { Login } from './views/login.jsx'
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link
+  Route
 } from "react-router-dom";
 
 const User = require("./libs/user");
@@ -17,7 +16,7 @@ const User = require("./libs/user");
 function App() {
   let [logged, setLogged] = useState(false)
   let [guest, setGuest] = useState(true)
-
+  
   async function init() {
     let auth = await User.auth();
     if (auth !== false) {
