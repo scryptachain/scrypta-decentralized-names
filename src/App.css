@@ -26,6 +26,18 @@
   min-height: 60vh;
 }
 
+#scrypta-login-wrapper {
+  z-index: 9999;
+}
+
+#scrypta-login-contents {
+  padding: 16vh 60px !important;
+}
+
+#scrypta-login-contents p{
+  text-align: center;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
