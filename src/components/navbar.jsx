@@ -17,7 +17,7 @@ export function NavBar() {
             <Navbar.Menu >
                 <Navbar.Container position="end">
                     <Navbar.Item renderAs="a" href="/login">
-                        <Button color="secondary">LOGIN</Button>
+                        <Button color="info">LOGIN</Button>
                     </Navbar.Item>
                 </Navbar.Container>
             </Navbar.Menu>
