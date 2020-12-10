@@ -11,15 +11,14 @@ export function Explore() {
   let [history, setHistory] = useState([])
   let [searcher, setSearcher] = useState("")
   let ban = ["register:turinglabs"]
-
-  async function init() {
-    let address = await scrypta.createAddress('-')
-    let request = await scrypta.createContractRequest(address.walletstore, '-', { contract: "LcD7AGaY74xvVxDg3NkKjfP6QpG8Pmxpnu", function: "names", params: {} })
-    let response = await scrypta.sendContractRequest(request)
-    setHistory(response)
-  }
-
+  console.log('isExplore')
   useEffect(() => {
+    async function init() {
+      let address = await scrypta.createAddress('-', false)
+      let request = await scrypta.createContractRequest(address.walletstore, '-', { contract: "LcD7AGaY74xvVxDg3NkKjfP6QpG8Pmxpnu", function: "names", params: {} })
+      let response = await scrypta.sendContractRequest(request)
+      setHistory(response)
+    }
     if (history.length === 0) {
       init()
     }
@@ -27,7 +26,7 @@ export function Explore() {
 
   async function searchName() {
     if (searcher.length > 0) {
-      let address = await scrypta.createAddress('-')
+      let address = await scrypta.createAddress('-', false)
       let request = await scrypta.createContractRequest(address.walletstore, '-', { contract: "LcD7AGaY74xvVxDg3NkKjfP6QpG8Pmxpnu", function: "search", params: { "name": searcher } })
       let response = await scrypta.sendContractRequest(request)
       if(response.message !== undefined && response.message === 'Name not found.'){

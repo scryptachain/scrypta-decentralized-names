@@ -23,8 +23,6 @@ export function Splash() {
             </h1><br />
             <Button onClick={
                 async () => {
-                    let wallet = await scrypta.createAddress('guest');
-                    localStorage.setItem('SID', wallet.walletstore)
                     localStorage.setItem('isGuest', true)
                     window.location.reload()
                 }} color="primary">Enter!</Button>

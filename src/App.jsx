@@ -1,6 +1,6 @@
 import './App.css';
 import 'react-bulma-components/dist/react-bulma-components.min.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Splash } from './views/splash.jsx'
 import { Dashboard } from './views/dashboard.jsx'
 import { Explore } from './views/explore.jsx'
@@ -17,21 +17,23 @@ function App() {
   let [logged, setLogged] = useState(false)
   let [guest, setGuest] = useState(true)
   
-  async function init() {
-    let auth = await User.auth();
-    if (auth !== false) {
-      setLogged(true)
+  useEffect(() => {  
+    async function init() {
+      let auth = await User.auth();
+      if (auth !== false) {
+        setLogged(true)
+      }
+      let isGuest = localStorage.getItem('isGuest')
+      if (isGuest === 'true') {
+        setGuest(true)
+      }else{
+        setGuest(false)
+      }
     }
-    let isGuest = localStorage.getItem('isGuest')
-    if (isGuest === true) {
-      setGuest(true)
-    }
-  }
-
-  init()
-
-  if (logged) {
-    if (guest) {
+    init()
+  })
+  if (logged || guest) {
+    if (guest && !logged) {
       return (
         <Router>
           <Switch>
