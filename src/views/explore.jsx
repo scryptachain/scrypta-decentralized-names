@@ -1,6 +1,6 @@
 import { Button } from 'react-bulma-components';
 import React, { useState, useEffect } from 'react';
-import { Form, Heading, Card, Content, Media, Container, Columns, Box, } from 'react-bulma-components';
+import { Form, Heading, Card, Content, Container, Columns, Box, } from 'react-bulma-components';
 import { NavBar, } from '../components/navbar.jsx';
 const ScryptaCore = require('@scrypta/core')
 const scrypta = new ScryptaCore(true)
@@ -28,9 +28,9 @@ export function Explore() {
       let address = await scrypta.createAddress('-', false)
       let request = await scrypta.createContractRequest(address.walletstore, '-', { contract: "LcD7AGaY74xvVxDg3NkKjfP6QpG8Pmxpnu", function: "search", params: { "name": searcher } })
       let response = await scrypta.sendContractRequest(request)
-      if(response.message !== undefined && response.message === 'Name not found.'){
+      if (response.message !== undefined && response.message === 'Name not found.') {
         alert('This domain is available, proceed!')
-      } else if(response.address !== undefined){
+      } else if (response.address !== undefined) {
         alert('This domain is taken by ' + response.address)
       }
     } else {
@@ -39,44 +39,43 @@ export function Explore() {
   }
 
   return (
-    <div>
-      <NavBar />
       <div className="Explore">
+      <NavBar />
         <Container>
           <Columns>
-            <Columns.Column style={{ marginTop: "40px" }}>
+            <Columns.Column style={{ marginTop: "150px" }} align="center">
+              <Card>
+                <Content>
+                </Content>
+              </Card>
+              <h1 style={{fontSize: "40px", fontWeight: "600"}}>Blockchain Domain Names</h1>
               <Box>
-                <h1><b>Search a name</b></h1>
-                <Input style={{width: "100%!important"}} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} />
-                <Control style={{ position: "absolute", top: "95px", right: "20px" }}>
-                  <Button onClick={searchName} color="info">Search</Button>
+                <Input className="myInput" style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain domain"} />
+                <Control style={{ position: "absolute", top: "242px", right: "20px" }}>
+                  <Button className="myButton" onClick={searchName} color="info">Search</Button>
                 </Control>
               </Box>
             </Columns.Column>
           </Columns>
-        </Container>
-        <Container>
           <Columns>
             <Columns.Column style={{ marginTop: "40px" }}>
               <Card>
                 <Card.Content align="center">
-                  <Media>
-                    <Media.Item>
-                      <Heading size={5} align="center">LATEST DOMAIN REGISTERED</Heading>
-                    </Media.Item>
-                  </Media>
+                  <Box className="header-color">
+                    <Heading size={5} align="center" style={{color: "white"}}>LATEST DOMAIN REGISTERED</Heading>
+                  </Box>
                   <hr></hr>
                   <Content>
-                      {history.map((value, index) => {
-                        if (ban.indexOf(value.name) === -1) {
-                          return <div key={index}>
-                            <h4 stlye={{marginBottom:"-30px"}}>{value.name}</h4>
-                            registered by: <b>{value.owner} </b><hr/>
-                          </div>
-                        }else{
-                          return false;
-                        }
-                      })}
+                    {history.map((value, index) => {
+                      if (ban.indexOf(value.name) === -1) {
+                        return <div key={index}>
+                          <h4 stlye={{ marginBottom: "-30px" }}>{value.name}</h4>
+                            registered by: <b>{value.owner} </b><hr />
+                        </div>
+                      } else {
+                        return false;
+                      }
+                    })}
                   </Content>
                 </Card.Content>
               </Card>
@@ -84,6 +83,5 @@ export function Explore() {
           </Columns>
         </Container>
       </div>
-    </div>
   );
 }

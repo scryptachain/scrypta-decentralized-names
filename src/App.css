@@ -1,6 +1,8 @@
+
 .App {
   text-align: center;
 }
+
 
 .Splash {
   background-image: url('./assets/bg-home.png') ;
@@ -18,12 +20,34 @@
 }
 
 .Explore {
-  background-image: url('./assets/bg-home.png') ;
+  background-image: url('./assets/bg-end.png') ;
   background-repeat: no-repeat;
   background-size: contain;
-  background-position: right;
+  background-position: bottom;
   width: 100%;
-  min-height: 60vh;
+  height: 100vh;
+}
+
+.Login {
+  background-image: url('./assets/bg-end.png') ;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: bottom;
+  width: 100%;
+  height: 100vh;
+}
+
+.myInput {
+  height: 80px !important;
+  border-radius: 15px !important;
+}
+
+.myButton {
+  width: 150px;
+  height: 80px !important;
+  background-color: #005D7F !important;
+  border-top-right-radius: 15px !important;
+  border-bottom-right-radius: 15px !important;
 }
 
 #scrypta-login-wrapper {
@@ -36,6 +60,9 @@
 
 #scrypta-login-contents p{
   text-align: center;
+}
+.header-color {
+background-color: #005D7F !important;
 }
 
 @media (prefers-reduced-motion: no-preference) {

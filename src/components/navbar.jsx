@@ -23,7 +23,7 @@ export function NavBar() {
           return <Navbar.Menu >
                 <Navbar.Container position="end">
                     <Navbar.Item renderAs="a" href="#" onClick={() => { localStorage.removeItem('wallet'); localStorage.removeItem('SID'); setLogged(false) }}>
-                        <Button color="info">LOGOUT</Button>
+                        <Button color="danger">LOGOUT</Button>
                     </Navbar.Item>
                 </Navbar.Container>
             </Navbar.Menu>
@@ -31,7 +31,7 @@ export function NavBar() {
           return <Navbar.Menu >
                 <Navbar.Container position="end">
                     <Navbar.Item renderAs="a" href="/login">
-                        <Button color="info">LOGIN</Button>
+                        <Button color="success">LOGIN</Button>
                     </Navbar.Item>
                 </Navbar.Container>
             </Navbar.Menu>
@@ -42,11 +42,12 @@ export function NavBar() {
         <Navbar
             active={true}
             transparent={false}
-            color="primary"
+            style={{backgroundColor: "#005D7F"}}
         >
             <Navbar.Brand>
                 <Navbar.Item renderAs="a" href="/">
-                    <img src="/logo.png" alt="Scrypta Dentralized Names" style={{ marginRight: "15px" }} height="28" /> Decentralized Names
+                    <img src="/logo.png" alt="Scrypta Dentralized Names" style={{ marginRight: "15px" }} height="28"/> 
+                    <h1 style={{color: "white"}}>Decentralized Names</h1>
                     </Navbar.Item>
                 <Navbar.Burger />
             </Navbar.Brand>
