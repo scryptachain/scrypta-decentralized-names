@@ -66,7 +66,7 @@ export function Dashboard(props) {
               if (written.txs[0].length === 64) {
                 alert('Name registered!')
                 setAvailability(false)
-                setSearcher(false)
+                setSearcher("")
                 setRegistering(false)
                 setTimeout(async function () {
                   let address = await scrypta.createAddress('-', false)
