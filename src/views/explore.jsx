@@ -11,7 +11,6 @@ export function Explore() {
   let [history, setHistory] = useState([])
   let [searcher, setSearcher] = useState("")
   let ban = ["register:turinglabs"]
-  console.log('isExplore')
   useEffect(() => {
     async function init() {
       let address = await scrypta.createAddress('-', false)
@@ -48,7 +47,7 @@ export function Explore() {
             <Columns.Column style={{ marginTop: "40px" }}>
               <Box>
                 <h1><b>Search a name</b></h1>
-                <Input style={{width: "100%!important; padding-right:300px"}} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} />
+                <Input style={{width: "100%!important"}} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} />
                 <Control style={{ position: "absolute", top: "95px", right: "20px" }}>
                   <Button onClick={searchName} color="info">Search</Button>
                 </Control>
