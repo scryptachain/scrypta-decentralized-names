@@ -1,0 +1,169 @@
+/**
+ * NAME: SCRYPTA DECENTRALIZED NAMES
+ * DESCRIPTION: THIS CONTRACT WILL MAINTAIN A LIST OF NAMES (WHATEVER) ASSOCIATED TO ONE UNIQUE ADDRESS
+ * AUTHOR: TURINGLABS
+ * VERSION: 1.0.8
+ * IMMUTABLE: false
+ */
+
+// DEFINING COMPILER VERSION
+/* Scrypta v0.0.1 */
+
+async function constructor() {
+    
+}
+
+async function public: eachBlock(block){
+    searchdata(block['data_written'])
+    searchbuy(block['data_received'])
+}
+
+async function public: ifMempool(mempool){
+    searchdata(mempool['data_written'])
+}
+
+async function private: searchdata(data){
+    if(Object.keys(data).length > 0){
+        let keys = Object.keys(data)
+        for(let k in Object.keys(data)){
+            console.log('ANALYZING DATA FOR ' + keys[k])
+            for(let j in data[keys[k]]){
+                let written = data[keys[k]][j]
+                if(written.protocol === 'names://'){
+                    let data = written.data.split(':')
+                    let action = data[0]
+
+                    if(action === 'register'){
+                        let name = data[1]
+                        let check = await db.read({name: name})
+                        if(check.name === undefined){
+                            let obj = {
+                                name: name,
+                                owner: written.address,
+                                uuid: written.uuid,
+                                payment: null,
+                                price: null
+                            }
+                            let result = await db.insert(obj)
+                        } else {
+                            console.log('IGNORING, NAME ALREADY TAKEN')
+                        }
+                    }else if(action === 'transfer' && data[2] !== undefined){
+                        let name = data[1]
+                        let check = await db.read({name: name})
+                        let transferTo = data[2]
+                        if(check.owner !== undefined){
+                            if(check.owner === written.address){
+                                await db.update({name: name}, { $set: { owner: transferTo, payment: null, price: null } })
+                            }else{
+                                console.log('CAN\'T TRANSFER, NOT THE OWNER')
+                            }
+                        }else{
+                            console.log('NAME NEVER REGISTERED')
+                        }
+                    }else if(action === 'sell' && data[2] !== undefined && data[3] !== undefined){
+                        let uuid = data[1]
+                        let check = await db.read({uuid: uuid})
+                        let payment = data[2]
+                        let price = data[3]
+                        if(check.owner !== undefined){
+                            if(check.owner === written.address && check.payment === null && check.price === null){
+                                await db.update({uuid: uuid}, { $set: { payment: payment, price: price } })
+                            }else{
+                                console.log('CAN\'T SELL, NOT THE OWNER OR SELL PLACED YET')
+                            }
+                        }else{
+                            console.log('NAME NEVER REGISTERED')
+                        }
+                    }else if(action === 'remove' && data[2] !== undefined){
+                        let uuid = data[1]
+                        let check = await db.read({uuid: uuid})
+                        if(check.owner !== undefined){
+                            if(check.owner === written.address && check.payment !== null && check.price !== null){
+                                await db.update({uuid: uuid}, { $set: { payment: null, price: null } })
+                            }else{
+                                console.log('CAN\'T REMOVE, CONDITIONS NOT SATISFIED')
+                            }
+                        }else{
+                            console.log('NAME NEVER REGISTERED')
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+async function private: searchbuy(data){
+    if(Object.keys(data).length > 0){
+        let keys = Object.keys(data)
+        for(let k in Object.keys(data)){
+            console.log('ANALYZING DATA FOR ' + keys[k])
+            for(let j in data[keys[k]]){
+                let received = data[keys[k]][j]
+                if(received.data.indexOf('names://') === 0){
+                    let data = received.data.replace('names://','').split(':')
+                    let action = data[0]
+                    let uuid = data[1]
+
+                    if(action === 'buy'){
+                        let check = await db.read({uuid: uuid})
+                        if(check.payment === keys[k]){
+                          let balance = await scrypta.get('/balance' + keys[k])
+                          if(balance.balance > 0 && balance.balance >= check.price){
+                            await db.update({uuid: uuid}, { $set: { owner: received.sender, payment: null, price: null } })
+                          } else {
+                            console.log('REQUIRED BALANCE IS HIGHER')
+                          }
+                        }else{
+                          console.log('PAYMENT ADDRESS NOT VALIDATED')
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+function public: names(){
+    return new Promise(async response => {
+        let names = await db.read()
+        response(names)
+    })
+}
+
+function public: check(request) {
+    return new Promise(async response => {
+        if (request !== undefined && request.name !== undefined) {
+            let check = await db.read({name: request.name })
+            if(check.name !== undefined){
+                response({ message: "Name already taken.", available: false, record: check })
+            }else{
+                response({ message: "Name available.", available: true})
+            }
+        } else {
+            response('Please requests for a name first')
+        }
+    })
+}
+function public: search(request) {
+    return new Promise(async response => {
+        if (request !== undefined && request.name !== undefined) {
+            let check = await db.read({name: request.name })
+            if(check.name !== undefined){
+                response({ address: check.owner, error: false })
+            }else{
+                response({ message: "Name not found.", error: true})
+            }
+        } else if (request !== undefined && request.address !== undefined) {
+            let check = await db.read({ owner: request.address })
+            if(check.name !== undefined || check.length > 0){
+                response({ names: check, error: false })
+            }else{
+                response({ message: "Address not found.", error: true})
+            }
+        } else {
+            response('Please request for a name first')
+        }
+    })
+}
