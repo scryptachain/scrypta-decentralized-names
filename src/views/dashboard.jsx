@@ -15,7 +15,7 @@ export function Dashboard(props) {
   let [isSearching, setSearching] = useState(false)
   let [isRegistering, setRegistering] = useState(false)
   let [isAvailable, setAvailability] = useState(false)
-
+  let [checked, setChecked] = useState(false)
   let ban = ["register:turinglabs"]
   useEffect(() => {
     async function init() {
@@ -28,9 +28,10 @@ export function Dashboard(props) {
           registered.push(response[k])
         }
       }
+      setChecked(true)
       setOwned(registered)
     }
-    if (owned.length === 0) {
+    if (!checked) {
       init()
     }
   })
@@ -120,28 +121,20 @@ export function Dashboard(props) {
       let master = await scrypta.readxKey(password, props.user.walletstore)
       if (master !== false) {
         let key = await scrypta.deriveKeyFromSeed(master.seed, "m/0")
+        let masterkey = await scrypta.importPrivateKey(key.prv, '-', false)
         let balance = await scrypta.get('/balance/' + key.pub)
         if (balance.balance >= 10.002) {
-          let fee = await scrypta.send(props.user.walletstore, password, 'LSJq6a6AMigCiRHGrby4TuHeGirJw2PL5c', 10)
+          let fee = await scrypta.send(masterkey.walletstore, '-', 'LSJq6a6AMigCiRHGrby4TuHeGirJw2PL5c', 10)
           if (fee.length === 64) {
             setTimeout(async function () {
-              let written = await scrypta.write(props.user.walletstore, password, 'register:' + searcher, '', '', 'names://')
+              let written = await scrypta.write(masterkey.walletstore, '-', 'register:' + searcher, '', '', 'names://')
               if (written.txs[0].length === 64) {
                 alert('Name registered!')
                 setAvailability(false)
                 setSearcher("")
                 setRegistering(false)
                 setTimeout(async function () {
-                  let address = await scrypta.createAddress('-', false)
-                  let request = await scrypta.createContractRequest(address.walletstore, '-', { contract: "LcD7AGaY74xvVxDg3NkKjfP6QpG8Pmxpnu", function: "names", params: {} })
-                  let response = await scrypta.sendContractRequest(request)
-                  let registered = []
-                  for (let k in response) {
-                    if (response[k].owner === props.user.address && registered.indexOf(response[k].name) === -1) {
-                      registered.push(response[k])
-                    }
-                  }
-                  setOwned(registered)
+                  window.location.reload()
                 }, 1500)
               } else {
                 setRegistering(false)
@@ -169,7 +162,7 @@ export function Dashboard(props) {
         {owned.map((value, index) => {
           if (ban.indexOf(value.name) === -1) {
             return <div style={{position: "relative"}} key={index}>
-              <Button style={{ position: "absolute", top: "30px", right: "10px" }} color="success" renderAs="a"> Option </Button>
+              <Button style={{ position: "absolute", top: "30px", right: "10px" }} color="success" renderAs="a"> Details </Button>
               <h4 stlye={{ marginBottom: "-30px" }}>{value.name}</h4>
             registered by: <b>{value.owner} </b><hr />
             </div>
@@ -219,10 +212,10 @@ export function Dashboard(props) {
                 </Media.Item>
                 <Media.Item>
                   <Content>
-                    <p>
+                    <p style={{marginTop:"5px"}}>
+                      <small>My Blockchain Address</small><br/>
                       <strong>{props.user.address}</strong>
                       <br />
-                      <small>My Blockchain Address</small>
                     </p>
                   </Content>
                 </Media.Item>
