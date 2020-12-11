@@ -117,10 +117,10 @@ export function Dashboard(props) {
   async function registerName() {
     if (password.length > 0 && !isRegistering) {
       setRegistering(true)
-      let mnemonic = await scrypta.readxKey(password, props.user.walletstore)
-      if (mnemonic !== false) {
-        let key = await scrypta.deriveKeyFromMnemonic(mnemonic, "m/0")
-        let balance = await scrypta.get('/balance/' + props.user.address)
+      let master = await scrypta.readxKey(password, props.user.walletstore)
+      if (master !== false) {
+        let key = await scrypta.deriveKeyFromSeed(master.seed, "m/0")
+        let balance = await scrypta.get('/balance/' + key.pub)
         if (balance.balance >= 10.002) {
           let fee = await scrypta.send(props.user.walletstore, password, 'LSJq6a6AMigCiRHGrby4TuHeGirJw2PL5c', 10)
           if (fee.length === 64) {
@@ -168,7 +168,8 @@ export function Dashboard(props) {
       return <div>
         {owned.map((value, index) => {
           if (ban.indexOf(value.name) === -1) {
-            return <div key={index}>
+            return <div style={{position: "relative"}} key={index}>
+              <Button style={{ position: "absolute", top: "30px", right: "10px" }} color="success" renderAs="a"> Option </Button>
               <h4 stlye={{ marginBottom: "-30px" }}>{value.name}</h4>
             registered by: <b>{value.owner} </b><hr />
             </div>
@@ -193,8 +194,9 @@ export function Dashboard(props) {
       return <Modal show={isAvailable} onClose={() => setAvailability(false)}>
         <Modal.Content style={{ textAlign: "center" }}>
           <Section style={{ backgroundColor: 'white' }}>
-            <h1>Congratulations, this name is available,<br></br>enter your password to register it!</h1><br></br>
-            This transaction will cost <b>10 LYRA</b>!<br></br><br></br>
+            <Heading>Congratulations</Heading>
+            This name is available, enter your password to register it!<br /><br />
+            Transaction will cost <b>10 LYRA</b>!<br /><br />
             <Input style={{ width: "100%!important", textAlign: "center" }} type="password" onChange={(evt) => { setPassword(evt.target.value) }} value={password} /><br></br><br></br>
             {!isRegistering ? <Button onClick={registerName} color="info">REGISTER</Button> : <div>Registering, please wait...</div>}
           </Section>
@@ -204,59 +206,60 @@ export function Dashboard(props) {
   }
 
   return (
-    <div>
+
+    <div className="Explore">
       <NavBar />
-      <div className="Explore">
-        <Container>
-          <Columns>
-            <Columns.Column style={{ marginTop: "40px" }}>
-              <Box>
+      <Container>
+        <Columns>
+          <Columns.Column style={{ marginTop: "70px" }}>
+            <Box>
+              <Media>
+                <Media.Item renderAs="figure" position="left">
+                  <Gravatar style={{ borderRadius: "100px" }} email={props.user.address} />
+                </Media.Item>
+                <Media.Item>
+                  <Content>
+                    <p>
+                      <strong>{props.user.address}</strong>
+                      <br />
+                      <small>My Blockchain Address</small>
+                    </p>
+                  </Content>
+                </Media.Item>
+              </Media>
+            </Box>
+            <Container style={{ position: "relative" }}>
+              <h1 style={{ fontSize: "22px", fontWeight: 600, color: "#005D7F" }}><br />What do you want to register today?</h1><br></br>
+              <Input onKeyDown={_handleKeyDown} className="myInput" style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain domain"} />
+              {!isSearching ? <Control style={{ position: "absolute", bottom: 0, right: 0 }}>
+                <Button className="myButton" onClick={searchName} color="info">Search</Button>
+              </Control> : <div style={{ marginTop: "20px" }}>Searching...</div>}
+            </Container>
+          </Columns.Column>
+        </Columns>
+      </Container>
+      {returnRegisterBox()}
+      <Container>
+        <Columns>
+          <Columns.Column style={{ marginTop: "40px" }}>
+            <Card>
+              <Card.Content align="center">
                 <Media>
-                  <Media.Item renderAs="figure" position="left">
-                    <Gravatar style={{ borderRadius: "100px" }} email={props.user.address} />
-                  </Media.Item>
                   <Media.Item>
-                    <Content>
-                      <p>
-                        <strong>{props.user.address}</strong>
-                        <br />
-                        <small>My Blockchain Address</small>
-                      </p>
-                    </Content>
+                    <Box className="header-color">
+                      <Heading size={5} align="center" style={{ color: "white" }}>YOUR REGISTERED DOMAIN</Heading>
+                    </Box>
                   </Media.Item>
                 </Media>
-              </Box>
-              <Box style={{ position: "relative" }}>
-                <h1><br />What do you want to register today?</h1><br></br>
-                <Input onKeyDown={_handleKeyDown} className="myInput" style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain domain"} />
-                {!isSearching ? <Control style={{ position: "absolute", bottom: "20px", right: "20px" }}>
-                  <Button className="myButton" onClick={searchName} color="info">Search</Button>
-                </Control> : <div style={{ marginTop: "20px" }}>Searching...</div>}
-              </Box>
-            </Columns.Column>
-          </Columns>
-        </Container>
-        {returnRegisterBox()}
-        <Container>
-          <Columns>
-            <Columns.Column style={{ marginTop: "40px" }}>
-              <Card>
-                <Card.Content align="center">
-                  <Media>
-                    <Media.Item>
-                      <Heading size={5} align="center">YOUR REGISTERED DOMAINS</Heading>
-                    </Media.Item>
-                  </Media>
-                  <hr></hr>
-                  <Content>
-                    {returnOwned()}
-                  </Content>
-                </Card.Content>
-              </Card>
-            </Columns.Column>
-          </Columns>
-        </Container>
-      </div>
-    </div >
+                <hr></hr>
+                <Content>
+                  {returnOwned()}
+                </Content>
+              </Card.Content>
+            </Card>
+          </Columns.Column>
+        </Columns>
+      </Container>
+    </div>
   );
 }

@@ -45,6 +45,8 @@ export function Explore() {
     }
   }
 
+
+
   return (
     <div className="Explore">
       <NavBar />
@@ -71,7 +73,7 @@ export function Explore() {
                 <Box className="header-color">
                   <Heading size={5} align="center" style={{ color: "white" }}>LATEST DOMAIN REGISTERED</Heading>
                 </Box>
-                <Content>
+                <Content align="left">
                   {history.map((value, index) => {
                     if (ban.indexOf(value.name) === -1) {
                       return <div key={index}>
@@ -93,10 +95,11 @@ export function Explore() {
                 <Box className="header-color2">
                   <Heading size={5} align="center" style={{ color: "white" }}>NAMES FOR SALE</Heading>
                 </Box>
-                <Content>
+                <Content align="left">
                   {history.map((value, index) => {
                     if (ban.indexOf(value.name) === -1) {
-                      return <div key={index}>
+                      return <div style={{position: "relative"}} key={index}>
+                        <Button style={{position: "absolute", top: "30px", right: "10px"}} color="success" href="/login" renderAs="a"> BUY </Button>
                         <h4 stlye={{ marginBottom: "-30px" }}>{value.name}</h4>
                             registered by: <b>{value.owner} </b><br></br>
                             unique id: {value.uuid} <hr />
