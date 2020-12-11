@@ -22,8 +22,8 @@ export function NavBar() {
         if(logged){
           return <Navbar.Menu >
                 <Navbar.Container position="end">
-                    <Navbar.Item renderAs="a" href="#" onClick={() => { localStorage.removeItem('wallet'); localStorage.removeItem('SID'); setLogged(false) }}>
-                        <Button color="danger">LOGOUT</Button>
+                    <Navbar.Item renderAs="a" href="#" onClick={() => { localStorage.removeItem('wallet'); localStorage.removeItem('xSID'); setLogged(false) }}>
+                        <Button color="danger" style={{marginRight: "30px"}}>LOGOUT</Button>
                     </Navbar.Item>
                 </Navbar.Container>
             </Navbar.Menu>
@@ -31,7 +31,7 @@ export function NavBar() {
           return <Navbar.Menu >
                 <Navbar.Container position="end">
                     <Navbar.Item renderAs="a" href="/login">
-                        <Button color="success">LOGIN</Button>
+                        <Button color="success" style={{marginRight: "30px"}}>LOGIN</Button>
                     </Navbar.Item>
                 </Navbar.Container>
             </Navbar.Menu>

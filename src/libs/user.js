@@ -1,9 +1,14 @@
+const ScryptaCore = require("@scrypta/core")
+const scrypta = new ScryptaCore(true)
+
 module.exports.auth = async function auth(id) {
-    if(localStorage.getItem('SID') !== null){
-        let SIDS = localStorage.getItem('SID').split(':')
+    if(localStorage.getItem('xSID') !== null){
+        let SIDS = localStorage.getItem('xSID').split(':')
+        let address = await scrypta.deriveKeyfromXPub (SIDS[0], "m/0")
         return {
-            walletstore: localStorage.getItem('SID'),
-            address: SIDS[0]
+            address: address.pub,
+            walletstore: localStorage.getItem('xSID'),
+            xpub: SIDS[0]
         }
     }else{
         return false
