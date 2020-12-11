@@ -9,6 +9,7 @@ const { Input, Control } = Form;
 
 export function Explore() {
   let [history, setHistory] = useState([])
+  let [inSell, setSell] = useState([])
   let [searcher, setSearcher] = useState("")
   let ban = ["register:turinglabs"]
   useEffect(() => {
@@ -18,6 +19,13 @@ export function Explore() {
       let response = await scrypta.sendContractRequest(request)
       response = response.reverse()
       setHistory(response)
+      let sellArray = []
+      for(let k in response){
+        if(response[k].payment !== null && response[k].payment !== undefined){
+          sellArray.push(response[k])
+        }
+      }
+      setSell(sellArray)
     }
     if (history.length === 0) {
       init()
@@ -45,7 +53,27 @@ export function Explore() {
     }
   }
 
-
+  function returnSell(){
+    if(inSell.length > 0){
+      return <div>
+        {inSell.map((value, index) => {
+                    if (ban.indexOf(value.name) === -1 && value.payment !== null && value.payment !== undefined) {
+                      return <div key={index}>
+                        <h4 stlye={{ marginBottom: "-30px" }}>{value.name}</h4>
+                            registered by: <b>{value.owner} </b><br></br>
+                            unique id: {value.uuid} <hr />
+                      </div>
+                    } else {
+                      return false;
+                    }
+                  })}
+      </div>
+    }else{
+      return <div style={{textAlign:"center"}}>
+        No one sells domains.
+      </div>
+    }
+  }
 
   return (
     <div className="Explore">
@@ -96,18 +124,7 @@ export function Explore() {
                   <Heading size={5} align="center" style={{ color: "white" }}>NAMES FOR SALE</Heading>
                 </Box>
                 <Content align="left">
-                  {history.map((value, index) => {
-                    if (ban.indexOf(value.name) === -1) {
-                      return <div style={{position: "relative"}} key={index}>
-                        <Button style={{position: "absolute", top: "30px", right: "10px"}} color="success" href="/login" renderAs="a"> BUY </Button>
-                        <h4 stlye={{ marginBottom: "-30px" }}>{value.name}</h4>
-                            registered by: <b>{value.owner} </b><br></br>
-                            unique id: {value.uuid} <hr />
-                      </div>
-                    } else {
-                      return false;
-                    }
-                  })}
+                  {returnSell()}
                 </Content>
               </Card.Content>
             </Card>

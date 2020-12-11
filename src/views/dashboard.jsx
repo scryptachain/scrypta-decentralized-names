@@ -54,67 +54,6 @@ export function Dashboard(props) {
     }
   }
 
-  async function placeSell(toSell, price) {
-    if (password.length > 0 && !isRegistering) {
-      setRegistering(true)
-      let mnemonic = await scrypta.readxKey(password, props.user.walletstore)
-      if (mnemonic !== false) {
-        let SIDS = localStorage.getItem('xSID').split(':')
-        let hash = await scrypta.hash(toSell)
-        let path = await scrypta.hashtopath(hash)
-        let key = await scrypta.deriveKeyFromMnemonic(mnemonic, "m/0")
-        let paymentAddress = await scrypta.deriveKeyfromXPub(SIDS[0], path)
-        let toWrite = 'sell:' + toSell + ':' + paymentAddress.pub + ':' + price
-        let writingKey = await scrypta.importPrivateKey(key.prv, '-', false)
-        await scrypta.write(writingKey.walletstore, '-', toWrite, '', '', 'names://')
-        setRegistering(false)
-      } else {
-        setRegistering(false)
-        alert('Wrong password!')
-      }
-    }
-  }
-
-  async function removeSell(toRemove) {
-    if (password.length > 0 && !isRegistering) {
-      setRegistering(true)
-      let mnemonic = await scrypta.readxKey(password, props.user.walletstore)
-      if (mnemonic !== false) {
-        let key = await scrypta.deriveKeyFromMnemonic(mnemonic, "m/0")
-        let toWrite = 'remove:' + toRemove
-        let writingKey = await scrypta.importPrivateKey(key.prv, '-', false)
-        await scrypta.write(writingKey.walletstore, '-', toWrite, '', '', 'names://')
-      } else {
-        setRegistering(false)
-        alert('Wrong password!')
-      }
-    }
-  }
-
-  async function takeFunds(toTake) {
-    if (password.length > 0 && !isRegistering) {
-      setRegistering(true)
-      let mnemonic = await scrypta.readxKey(password, props.user.walletstore)
-      if (mnemonic !== false) {
-        let SIDS = localStorage.getItem('xSID').split(':')
-        let hash = await scrypta.hash(toTake)
-        let path = await scrypta.hashtopath(hash)
-        let key = await scrypta.deriveKeyFromMnemonic(mnemonic, "m/0")
-        let paymentAddress = await scrypta.deriveKeyfromXPub(SIDS[0], path)
-        let balance = await scrypta.get('/balance/' + paymentAddress)
-        if (balance.balance > 0) {
-          let masterKey = await scrypta.importPrivateKey(key.prv, '-', false)
-          // TODO: withdraw to main address
-        } else {
-          alert('Nothing to take!')
-        }
-      } else {
-        setRegistering(false)
-        alert('Wrong password!')
-      }
-    }
-  }
-
   async function registerName() {
     if (password.length > 0 && !isRegistering) {
       setRegistering(true)
@@ -161,10 +100,10 @@ export function Dashboard(props) {
       return <div>
         {owned.map((value, index) => {
           if (ban.indexOf(value.name) === -1) {
-            return <div style={{position: "relative"}} key={index}>
-              <Button style={{ position: "absolute", top: "30px", right: "10px" }} color="success" renderAs="a"> Details </Button>
+            return <div style={{ position: "relative", textAlign: "left" }} key={index}>
+              <Button style={{ position: "absolute", top: "20px", right: "10px" }} color="success" href={"/details/"+value.uuid} renderAs="a"> Details </Button>
               <h4 stlye={{ marginBottom: "-30px" }}>{value.name}</h4>
-            registered by: <b>{value.owner} </b><hr />
+              <b>{value.uuid} </b><hr />
             </div>
           } else {
             return false;
@@ -173,6 +112,36 @@ export function Dashboard(props) {
       </div>
     } else {
       return <div>You don't have any decentralized name yet, please register something first!</div>
+    }
+  }
+
+  const returnSell = () => {
+    if (owned.length > 0) {
+      let inSell = []
+      for(let k in owned){
+        if(owned[k].payment !== null && owned[k].payment !== null){
+          inSell.push(owned[k])
+        }
+      }
+      if(inSell.length > 0){
+      return <div>
+        {inSell.map((value, index) => {
+          if (ban.indexOf(value.name) === -1) {
+            return <div style={{ position: "relative" }} key={index}>
+              <Button style={{ position: "absolute", top: "-10px", right: "10px" }} color="success" href="/details" renderAs="a"> Details </Button>
+              <h4 stlye={{ marginBottom: "-30px" }}>{value.name}</h4>
+            registered by: <b>{value.owner} </b><hr />
+            </div>
+          } else {
+            return false;
+          }
+        })}
+      </div>
+      }else{
+        return <div>Nothing for sale</div>
+      }
+    } else {
+      return <div>Nothing to sell, register a domain first.</div>
     }
   }
 
@@ -190,7 +159,7 @@ export function Dashboard(props) {
             <Heading>Congratulations</Heading>
             This name is available, enter your password to register it!<br /><br />
             Transaction will cost <b>10 LYRA</b>!<br /><br />
-            <Input style={{ width: "100%!important", textAlign: "center" }} type="password" onChange={(evt) => { setPassword(evt.target.value) }} value={password} /><br></br><br></br>
+            <Input style={{ width: "100%!important", textAlign: "center" }} placeholder="Insert wallet password" type="password" onChange={(evt) => { setPassword(evt.target.value) }} value={password} /><br></br><br></br>
             {!isRegistering ? <Button onClick={registerName} color="info">REGISTER</Button> : <div>Registering, please wait...</div>}
           </Section>
         </Modal.Content>
@@ -212,8 +181,8 @@ export function Dashboard(props) {
                 </Media.Item>
                 <Media.Item>
                   <Content>
-                    <p style={{marginTop:"5px"}}>
-                      <small>My Blockchain Address</small><br/>
+                    <p style={{ marginTop: "5px" }}>
+                      <small>My Blockchain Address</small><br />
                       <strong>{props.user.address}</strong>
                       <br />
                     </p>
@@ -247,6 +216,23 @@ export function Dashboard(props) {
                 <hr></hr>
                 <Content>
                   {returnOwned()}
+                </Content>
+              </Card.Content>
+            </Card>
+          </Columns.Column>
+          <Columns.Column style={{ marginTop: "40px" }}>
+            <Card>
+              <Card.Content align="center">
+                <Media>
+                  <Media.Item>
+                    <Box className="header-color">
+                      <Heading size={5} align="center" style={{ color: "white" }}>FOR SALE</Heading>
+                    </Box>
+                  </Media.Item>
+                </Media>
+                <hr></hr>
+                <Content>
+                  {returnSell()}
                 </Content>
               </Card.Content>
             </Card>

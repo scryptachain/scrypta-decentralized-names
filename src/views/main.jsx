@@ -3,6 +3,7 @@ import { Splash } from './splash.jsx'
 import { Dashboard } from './dashboard.jsx'
 import { Explore } from './explore.jsx'
 import { Login } from './login.jsx'
+import { Details } from './details.jsx'
 import {
   BrowserRouter as Router,
   Switch,
@@ -49,7 +50,7 @@ export class Main extends Component {
           <Router>
             <Switch>
               <Route exact path="/"><Dashboard user={this.state.user} /></Route>
-              <Route exact path="/login"><Login /></Route>
+              <Route exact path="/details/:uuid"><Details user={this.state.user} /></Route>
             </Switch>
           </Router>
         )
