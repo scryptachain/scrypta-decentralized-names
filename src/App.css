@@ -35,6 +35,11 @@
   height: 100vh;
 }
 
+.selling-box {
+  background-color: rgba(238, 88, 88, 0.35)!important;
+  position: relative !important;
+}
+
 
 .Details {
   background-image: url('./assets/bg-end.png');

@@ -1,6 +1,6 @@
 import { Button } from 'react-bulma-components';
 import React, { useState, useEffect } from 'react';
-import { Form, Heading, Card, Content, Media, Container, Columns, Box, Modal, Section, Image } from 'react-bulma-components';
+import { Form, Heading, Card, Content, Media, Container, Columns, Box, Modal, Section, } from 'react-bulma-components';
 import { NavBar, } from '../components/navbar.jsx';
 import Gravatar from 'react-gravatar'
 const ScryptaCore = require('@scrypta/core')
@@ -101,7 +101,7 @@ export function Dashboard(props) {
         {owned.map((value, index) => {
           if (ban.indexOf(value.name) === -1) {
             return <div style={{ position: "relative", textAlign: "left" }} key={index}>
-              <Button style={{ position: "absolute", top: "20px", right: "10px" }} color="success" href={"/details/"+value.uuid} renderAs="a"> Details </Button>
+              <Button style={{ position: "absolute", top: "15px", right: "0px" }} color="success" href={"/details/" + value.uuid} renderAs="a"> Details </Button>
               <h4 stlye={{ marginBottom: "-30px" }}>{value.name}</h4>
               <b>{value.uuid} </b><hr />
             </div>
@@ -118,26 +118,34 @@ export function Dashboard(props) {
   const returnSell = () => {
     if (owned.length > 0) {
       let inSell = []
-      for(let k in owned){
-        if(owned[k].payment !== null && owned[k].payment !== null){
+      for (let k in owned) {
+        if (owned[k].payment !== null && owned[k].payment !== null) {
           inSell.push(owned[k])
         }
       }
-      if(inSell.length > 0){
-      return <div>
-        {inSell.map((value, index) => {
-          if (ban.indexOf(value.name) === -1) {
-            return <div style={{ position: "relative" }} key={index}>
-              <Button style={{ position: "absolute", top: "-10px", right: "10px" }} color="success" href="/details" renderAs="a"> Details </Button>
-              <h4 stlye={{ marginBottom: "-30px" }}>{value.name}</h4>
-            registered by: <b>{value.owner} </b><hr />
-            </div>
-          } else {
-            return false;
-          }
-        })}
-      </div>
-      }else{
+      if (inSell.length > 0) {
+        return <div>
+          {inSell.map((value, index) => {
+            if (ban.indexOf(value.name) === -1) {
+              return <div style={{ position: "relative" }} key={index}>
+                <Button.Group style={{ position: "absolute", top: "-10px", right: "0px" }}>
+                  <Button color="success" href={"/details/" + value.uuid} renderAs="a"> Details </Button>
+                  <Button color="danger" href="/details" renderAs="a"> Undo Sell </Button>
+                </Button.Group>
+
+                <div style={{ textAlign: "left" }}>
+                  <h4 stlye={{ marginBottom: "-30px" }}>{value.name}</h4>
+                  Registered by: <b>{value.owner} </b><br />
+                  Domain ID: <b>{value.uuid} </b><br />
+                  Price: <b> {value.price} LYRA</b> <hr />
+                </div>
+              </div>
+            } else {
+              return false;
+            }
+          })}
+        </div>
+      } else {
         return <div>Nothing for sale</div>
       }
     } else {
@@ -172,9 +180,9 @@ export function Dashboard(props) {
     <div className="Explore">
       <NavBar />
       <Container>
-        <Columns>
-          <Columns.Column style={{ marginTop: "70px" }}>
-            <Box>
+        <Columns style={{ marginTop: "70px" }}>
+          <Columns.Column size={9}>
+            <Box style={{height: "150px", padding: "50px 20px"}}>
               <Media>
                 <Media.Item renderAs="figure" position="left">
                   <Gravatar style={{ borderRadius: "100px" }} email={props.user.address} />
@@ -184,21 +192,27 @@ export function Dashboard(props) {
                     <p style={{ marginTop: "5px" }}>
                       <small>My Blockchain Address</small><br />
                       <strong>{props.user.address}</strong>
-                      <br />
                     </p>
                   </Content>
                 </Media.Item>
               </Media>
             </Box>
-            <Container style={{ position: "relative" }}>
-              <h1 style={{ fontSize: "22px", fontWeight: 600, color: "#005D7F" }}><br />What do you want to register today?</h1><br></br>
-              <Input onKeyDown={_handleKeyDown} className="myInput" style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain domain"} />
-              {!isSearching ? <Control style={{ position: "absolute", bottom: 0, right: 0 }}>
-                <Button className="myButton" onClick={searchName} color="info">Search</Button>
-              </Control> : <div style={{ marginTop: "20px" }}>Searching...</div>}
-            </Container>
+          </Columns.Column>
+          <Columns.Column align="center">
+            <Box style={{height: "150px", padding: "15px 20px", backgroundColor: "#8EC6C5"}}>
+              <h1>I have Earned:</h1>
+              <h1 style={{ fontSize: "32px" }}>10 LYRA</h1>
+              <Button style={{marginTop: "5px"}} color="success" href="/"  renderAs="a">Withdraw</Button>
+            </Box>
           </Columns.Column>
         </Columns>
+        <Container style={{ position: "relative" }}>
+          <h1 style={{ fontSize: "22px", fontWeight: 600, color: "#005D7F" }}><br />What do you want to register today?</h1><br></br>
+          <Input onKeyDown={_handleKeyDown} className="myInput" style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain domain"} />
+          {!isSearching ? <Control style={{ position: "absolute", bottom: 0, right: 0 }}>
+            <Button className="myButton" onClick={searchName} color="info">Search</Button>
+          </Control> : <div style={{ marginTop: "20px" }}>Searching...</div>}
+        </Container>
       </Container>
       {returnRegisterBox()}
       <Container>
@@ -213,7 +227,6 @@ export function Dashboard(props) {
                     </Box>
                   </Media.Item>
                 </Media>
-                <hr></hr>
                 <Content>
                   {returnOwned()}
                 </Content>
@@ -230,7 +243,6 @@ export function Dashboard(props) {
                     </Box>
                   </Media.Item>
                 </Media>
-                <hr></hr>
                 <Content>
                   {returnSell()}
                 </Content>

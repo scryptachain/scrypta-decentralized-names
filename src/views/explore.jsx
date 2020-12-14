@@ -20,8 +20,8 @@ export function Explore() {
       response = response.reverse()
       setHistory(response)
       let sellArray = []
-      for(let k in response){
-        if(response[k].payment !== null && response[k].payment !== undefined){
+      for (let k in response) {
+        if (response[k].payment !== null && response[k].payment !== undefined) {
           sellArray.push(response[k])
         }
       }
@@ -53,24 +53,34 @@ export function Explore() {
     }
   }
 
-  function returnSell(){
-    if(inSell.length > 0){
+  function returnSell() {
+    if (inSell.length > 0) {
       return <div>
         {inSell.map((value, index) => {
-                    if (ban.indexOf(value.name) === -1 && value.payment !== null && value.payment !== undefined) {
-                      return <div key={index}>
-                        <h4 stlye={{ marginBottom: "-30px" }}>{value.name}</h4>
-                            registered by: <b>{value.owner} </b><br></br>
-                            unique id: {value.uuid} <hr />
-                      </div>
-                    } else {
-                      return false;
-                    }
-                  })}
-      </div>
-    }else{
-      return <div style={{textAlign:"center"}}>
-        No one sells domains.
+          if (ban.indexOf(value.name) === -1 && value.payment !== null && value.payment !== undefined) {
+            return <div key={index}>
+              <Columns.Column style={{ marginTop: "40px" }}>
+                <Card className="selling-box">
+                  <Card.Content align="center">
+                    <Box className="header-color2">
+                      <Heading size={5} align="center" style={{ color: "white" }}>NAMES FOR SALE</Heading>
+                    </Box>
+                    <Content align="left">
+                      <small>Domain Name</small>
+                      <h4 stlye={{ marginBottom: "-30px", marginTop: 0 }}>{value.name}</h4>
+                            Registered by: <b>{value.owner} </b><br></br>
+                            Unique id: <b>{value.uuid}</b><br />
+                            Price: <b>{value.price} LYRA</b><hr />
+                      <Button style={{ position: "absolute", top: "120px", right: "25px" }} color="success" href="" renderAs="a"> BUY </Button>
+                    </Content>
+                  </Card.Content>
+                </Card>
+              </Columns.Column>
+            </div>
+          } else {
+            return false;
+          }
+        })}
       </div>
     }
   }
@@ -86,7 +96,7 @@ export function Explore() {
               </Content>
             </Card>
             <h1 style={{ fontSize: "40px", fontWeight: "600" }}>Blockchain Domain Names</h1>
-            <Box style={{position: "relative"}}>
+            <Box style={{ position: "relative" }}>
               <Input onKeyDown={_handleKeyDown} className="myInput" style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain domain"} />
               <Control style={{ position: "absolute", bottom: "20px", right: "20px" }}>
                 <Button className="myButton" onClick={searchName} color="info">Search</Button>
@@ -117,18 +127,7 @@ export function Explore() {
               </Card.Content>
             </Card>
           </Columns.Column>
-          <Columns.Column style={{ marginTop: "40px" }}>
-            <Card>
-              <Card.Content align="center">
-                <Box className="header-color2">
-                  <Heading size={5} align="center" style={{ color: "white" }}>NAMES FOR SALE</Heading>
-                </Box>
-                <Content align="left">
-                  {returnSell()}
-                </Content>
-              </Card.Content>
-            </Card>
-          </Columns.Column>
+          {returnSell()}
         </Columns>
       </Container>
     </div>

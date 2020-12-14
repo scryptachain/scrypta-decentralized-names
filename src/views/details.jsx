@@ -1,6 +1,6 @@
 import { Button } from 'react-bulma-components';
 import React, { useState, useEffect } from 'react';
-import { Form, Heading, Card, Content, Media, Container, Columns, Box, Modal, Section, Image } from 'react-bulma-components';
+import { Form, Heading, Content, Media, Container, Columns, Box, Modal, Section, Image } from 'react-bulma-components';
 import { NavBar, } from '../components/navbar.jsx';
 import Gravatar from 'react-gravatar'
 import { useParams } from 'react-router-dom';
@@ -21,8 +21,10 @@ export function Details(props) {
     let [to, setTo] = useState("")
     let [price, setPrice] = useState(0)
     let [isTransfering, setTransfering] = useState(false)
+    let [showTransfer, setShowTranfer] = useState(false)
     let [isSelling, setSelling] = useState(false)
-    let [showTransfer, setShow] = useState(false)
+    let [showSell, setShowSell] = useState(false)
+
 
     useEffect(() => {
         async function readBlockchain() {
@@ -48,22 +50,39 @@ export function Details(props) {
             </Container>
         </div>)
     } else {
-        async function placeSell(toSell, price) {
-            if (password.length > 0 && !isTransfering) {
-                setTransfering(true)
-                let mnemonic = await scrypta.readxKey(password, props.user.walletstore)
-                if (mnemonic !== false) {
+        async function placeSell() {
+            if (password.length > 0 && !isSelling && price > 0) {
+                setSelling(true)
+                let master = await scrypta.readxKey(password, props.user.walletstore)
+                if (master !== false) {
                     let SIDS = localStorage.getItem('xSID').split(':')
-                    let hash = await scrypta.hash(toSell)
+                    let hash = await scrypta.hash(blockchainData.uuid)
                     let path = await scrypta.hashtopath(hash)
-                    let key = await scrypta.deriveKeyFromMnemonic(mnemonic, "m/0")
-                    let paymentAddress = await scrypta.deriveKeyfromXPub(SIDS[0], path)
-                    let toWrite = 'sell:' + toSell + ':' + paymentAddress.pub + ':' + price
-                    let writingKey = await scrypta.importPrivateKey(key.prv, '-', false)
-                    await scrypta.write(writingKey.walletstore, '-', toWrite, '', '', 'names://')
-                    setTransfering(false)
+                    let key = await scrypta.deriveKeyFromSeed(master.seed, "m/0")
+                    let balance = await scrypta.get('/balance/' + key.pub)
+                    if (balance.balance >= 0.001) {
+                        let paymentAddress = await scrypta.deriveKeyfromXPub(SIDS[0], path)
+                        let toWrite = 'sell:' + blockchainData.uuid + ':' + paymentAddress.pub + ':' + price
+                        let writingKey = await scrypta.importPrivateKey(key.prv, '-', false)
+                        let written = await scrypta.write(writingKey.walletstore, '-', toWrite, '', '', 'names://')
+                        if(written.txs !== undefined && written.txs[0] !== undefined && written.txs[0].length === 64){
+                            setSelling(false)
+                            alert('Sell placed!')
+                            setShowSell(false)
+                            setSelling(false)
+                            setTimeout(async function () {
+                                window.location.reload()
+                            }, 1500)
+                        }else{
+                            setSelling(false)
+                            alert('Something goes wrong, retry!')
+                        }
+                    }else{
+                        setSelling(false)
+                        alert('Not enough balance!')
+                    }
                 } else {
-                    setTransfering(false)
+                    setSelling(false)
                     alert('Wrong password!')
                 }
             }
@@ -122,8 +141,8 @@ export function Details(props) {
                         if (validate.data.isvalid === true) {
                             let written = await scrypta.write(masterkey.walletstore, '-', 'transfer:' + uuid + ':' + to, '', '', 'names://')
                             if (written.txs[0].length === 64) {
-                                alert('Name registered!')
-                                setShow(false)
+                                alert('Name transfered!')
+                                setShowTranfer(false)
                                 setTo("")
                                 setTransfering(false)
                                 setTimeout(async function () {
@@ -149,11 +168,11 @@ export function Details(props) {
 
         const returnTransferBox = () => {
             if (showTransfer) {
-                return <Modal show={showTransfer} onClose={() => setShow(false)}>
+                return <Modal show={showTransfer} onClose={() => setShowTranfer(false)}>
                     <Modal.Content style={{ textAlign: "center" }}>
                         <Section style={{ backgroundColor: 'white' }}>
-                            <Heading>Transfer {blockchainData.domain}</Heading>
-                    Transfer this domain to a friend!<br /><br />
+                            <Heading>Transfer <span style={{ color: "#429A98" }}>{blockchainData.domain}</span></Heading>
+                            Transfer this domain to a friend!<br /><br />
                             <Input style={{ width: "100%!important", textAlign: "center" }} type="text" onChange={(evt) => { setTo(evt.target.value) }} placeholder="Insert recipient address" value={to} /><br></br>
                             <Input style={{ width: "100%!important", textAlign: "center", marginTop: "20px" }} type="password" onChange={(evt) => { setPassword(evt.target.value) }} placeholder="Insert wallet password" value={password} /><br></br><br></br>
                             {!isTransfering ? <Button onClick={transferName} color="success">TRANSFER</Button> : <div>Transferring, please wait...</div>}
@@ -164,15 +183,15 @@ export function Details(props) {
         }
 
         const returnSellBox = () => {
-            if (isSelling) {
-                return <Modal show={isSelling} onClose={() => setSelling(false)}>
+            if (showSell) {
+                return <Modal show={showSell} onClose={() => setShowSell(false)}>
                     <Modal.Content style={{ textAlign: "center" }}>
                         <Section style={{ backgroundColor: 'white' }}>
-                            <Heading>Sell {blockchainData.domain}</Heading>
-                                this domain <br /><br />
+                            <Heading>Sell <br /><span style={{ color: "#429A98" }}>{blockchainData.domain}</span></Heading>
+                            Enter the desired amount for your domain <br /><br />
                             <Input style={{ width: "100%!important", textAlign: "center" }} type="text" onChange={(evt) => { setPrice(evt.target.value) }} placeholder="Insert Amount" value={price} /><br></br>
                             <Input style={{ width: "100%!important", textAlign: "center", marginTop: "20px" }} type="password" onChange={(evt) => { setPassword(evt.target.value) }} placeholder="Insert wallet password" value={password} /><br></br><br></br>
-                            {!isSelling ? <Button onClick={placeSell} color="success">TRANSFER</Button> : <div>Transferring, please wait...</div>}
+                            {!isSelling ? <Button onClick={placeSell} color="success">SELL</Button> : <div>Placing Sell, please wait...</div>}
                         </Section>
                     </Modal.Content>
                 </Modal >
@@ -196,11 +215,11 @@ export function Details(props) {
                                     </Media.Item>
                                     <Media.Item>
                                         <Content>
-                                            <p style={{ marginTop: "5px" }}>
+                                            <div style={{ marginTop: "5px" }}>
                                                 <small>UUID Domain Name</small><br />
                                                 <h1 style={{ marginTop: 0 }}>{uuid}</h1>
                                                 <br />
-                                            </p>
+                                            </div>
                                         </Content>
                                     </Media.Item>
                                 </Media>
@@ -271,10 +290,10 @@ export function Details(props) {
                     </Columns>
                     <Columns>
                         <Columns.Column>
-                            <Button style={{width: "100%", height: "80px", fontSize: "22px"}} color="success" onClick={() => { setShow(true) }}>Transfer</Button>
+                            <Button style={{ width: "100%", height: "80px", fontSize: "22px" }} color="success" onClick={() => { setShowTranfer(true) }}>Transfer</Button>
                         </Columns.Column>
                         <Columns.Column>
-                            <Button style={{width: "100%", height: "80px", fontSize: "22px"}} color="danger" onClick={() => { setSelling(true) }}>Sell</Button>
+                            <Button style={{ width: "100%", height: "80px", fontSize: "22px" }} color="danger" onClick={() => { setShowSell(true) }}>Sell</Button>
                         </Columns.Column>
                     </Columns>
                 </Container>
