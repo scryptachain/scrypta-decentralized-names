@@ -17,7 +17,7 @@ export function Showcase(props) {
     let [isAvailable, setAvailability] = useState(false)
     let [checked, setChecked] = useState(false)
     let [balance, setBalance] = useState(0)
-    
+
 
     let ban = ["register:turinglabs"]
     useEffect(() => {
@@ -90,16 +90,16 @@ export function Showcase(props) {
                             return <div>
                                 <Card>
                                     <Card.Content align="center">
-                                        <h1 style={{ fontSize: "32px", fontWeight: "600" }}>{value.name}</h1>
+                                        <h1 style={{ fontSize: "26px", fontWeight: "600" }}>{value.name}</h1>
                                         <Gravatar style={{ marginTop: "10px", width: "100%" }} email={value.uuid} />
-                                        <div style={{ position: "relative" }} key={index}>
+                                        <div style={{ position: "relative", fontSize: "12px" }} key={index}>
                                             <div style={{ textAlign: "left" }}>
                                                 Registered by: <b>{value.owner} </b><br />
                                                 Domain ID: <b>{value.uuid} </b><br />
                                             </div>
-                                            <h1 style={{ fontSize: "30px", marginTop: "10px" }}>Price: <b> {value.price} LYRA</b></h1>
+                                            <h1 style={{ fontSize: "22px", marginTop: "10px" }}>Price: <b> {value.price} LYRA</b></h1>
                                         </div>
-                                        <Button style={{ marginTop: "20px" }} color="success" renderAs="a">BUY</Button>
+                                        <Button style={{ marginTop: "10px" }} color="success" renderAs="a">BUY</Button>
                                     </Card.Content>
                                 </Card>
                             </div>
@@ -121,18 +121,20 @@ export function Showcase(props) {
     return (
         <div className="Showcase">
             <NavBar />
-            <Container style={{ position: "relative" }}>
-                <h1 style={{ fontSize: "22px", fontWeight: 600, color: "#005D7F" }}><br />What do you want to register today?</h1><br></br>
-                <Input onKeyDown={_handleKeyDown} className="myInput" style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain domain"} />
-                {!isSearching ? <Control style={{ position: "absolute", bottom: 0, right: 0 }}>
-                    <Button className="myButton" onClick={searchName} color="info">Search</Button>
-                </Control> : <div style={{ marginTop: "20px" }}>Searching...</div>}
-            </Container>
-            <Columns align="center">
-                <Columns.Column size={3} style={{ marginTop: "40px" }}>
-                    {returnSell()}
-                </Columns.Column>
-            </Columns>
+            <Section>
+                <Container style={{ position: "relative" }}>
+                    <h1 style={{ fontSize: "22px", fontWeight: 600, color: "#005D7F" }}><br />What do you want to register today?</h1><br></br>
+                    <Input onKeyDown={_handleKeyDown} className="myInput" style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain domain"} />
+                    {!isSearching ? <Control style={{ position: "absolute", bottom: 0, right: 0 }}>
+                        <Button className="myButton" onClick={searchName} color="info">Search</Button>
+                    </Control> : <div style={{ marginTop: "20px" }}>Searching...</div>}
+                </Container>
+                <Columns align="center">
+                    <Columns.Column size={3} style={{ marginTop: "40px" }}>
+                        {returnSell()}
+                    </Columns.Column>
+                </Columns>
+            </Section>
         </div>
     );
 }

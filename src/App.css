@@ -50,6 +50,15 @@
   min-height: 100vh;
 }
 
+.Showcase {
+  background-image: url('./assets/bg-end.png');
+  background-repeat: no-repeat;
+  background-size: 125vh;
+  background-position: bottom left;
+  width: 100vw;
+  min-height: 100vh;
+}
+
 .myInput {
   height: 80px !important;
   border-radius: 15px !important;
