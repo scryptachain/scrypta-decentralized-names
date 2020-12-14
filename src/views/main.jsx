@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Splash } from './splash.jsx'
 import { Dashboard } from './dashboard.jsx'
+import { Showcase } from './showcase.jsx'
 import { Explore } from './explore.jsx'
 import { Login } from './login.jsx'
 import { Details } from './details.jsx'
@@ -51,6 +52,7 @@ export class Main extends Component {
             <Switch>
               <Route exact path="/"><Dashboard user={this.state.user} /></Route>
               <Route exact path="/details/:uuid"><Details user={this.state.user} /></Route>
+              <Route expact path="/showcase"><Showcase user={this.state.user} /></Route>
             </Switch>
           </Router>
         )

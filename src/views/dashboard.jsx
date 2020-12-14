@@ -16,6 +16,10 @@ export function Dashboard(props) {
   let [isRegistering, setRegistering] = useState(false)
   let [isAvailable, setAvailability] = useState(false)
   let [checked, setChecked] = useState(false)
+  let [balance, setBalance] = useState(0)
+  let [isWithdrawing, setWithdrawing] = useState(false)
+  let [showWithdraw, setShowWithdraw] = useState(false)
+
   let ban = ["register:turinglabs"]
   useEffect(() => {
     async function init() {
@@ -28,8 +32,25 @@ export function Dashboard(props) {
           registered.push(response[k])
         }
       }
+      let written = await scrypta.post("/read", { address: props.user.address })
+      let totalBalance = 0
+      let totFees = 0
+      for (let k in written.data) {
+        if (written.data[k].data.indexOf("sell:") === 0) {
+          let split = written.data[k].data.split(':')
+          let balance = await scrypta.get("/balance/" + split[2])
+          if(balance.balance > 0){
+            let fees = balance.balance / 100 * 10
+            let canWithdraw = balance.balance - fees - 0.002
+            totFees += fees
+            totalBalance += canWithdraw
+          }
+        }
+      }
+      totalBalance = totalBalance.toFixed(8)
       setChecked(true)
       setOwned(registered)
+      setBalance(totalBalance)
     }
     if (!checked) {
       init()
@@ -94,6 +115,60 @@ export function Dashboard(props) {
       }
     }
   }
+  async function withdrawFunds() {
+    if (password.length > 0 && !isWithdrawing) {
+      setWithdrawing(true)
+      let master = await scrypta.readxKey(password, props.user.walletstore)
+      if (master !== false) {
+        let written = await scrypta.post("/read", { address: props.user.address })
+        for (let k in written.data) {
+          if (written.data[k].data.indexOf("sell:") === 0) {
+            let split = written.data[k].data.split(':')
+            let balance = await scrypta.get("/balance/" + split[2])
+            let fees = balance.balance / 100 * 10
+            let canWithdraw = balance.balance - fees - 0.002 
+            if (balance.balance > 0) {
+              let hash = await scrypta.hash(split[1])
+              let path = await scrypta.hashtopath(hash)
+              let key = await scrypta.deriveKeyFromSeed(master.seed, "m/0")
+              let balance = await scrypta.get('/balance/' + key.pub)
+              if (balance.balance >= 0.001) {
+                let paymentAddress = await scrypta.deriveKeyFromSeed(master.seed, path)
+                let writingKey = await scrypta.importPrivateKey(paymentAddress.prv, '-', false)
+                let fee = await scrypta.send(writingKey.walletstore, '-', 'LSJq6a6AMigCiRHGrby4TuHeGirJw2PL5c', fees)
+                if (fee.length === 64){
+                  setTimeout(async function(){
+                    await scrypta.send(writingKey.walletstore, '-', props.user.address, canWithdraw)
+                    alert('Withdraw successfully done!')
+                    setWithdrawing(false)
+                    setShowWithdraw(false)
+                    setTimeout(async function(){
+                      let totalBalance = 0
+                      for (let k in written.data) {
+                        if (written.data[k].data.indexOf("sell:") === 0) {
+                          let split = written.data[k].data.split(':')
+                          let balance = await scrypta.get("/balance/" + split[2])
+                          if(balance.balance > 0){
+                            let fees = balance.balance / 100 * 10
+                            let canWithdraw = balance.balance - fees - 0.002
+                            totalBalance += canWithdraw
+                          }
+                        }
+                      }
+                      totalBalance = totalBalance.toFixed(8)
+                    }, 1000)
+                  }, 1000)
+                }
+              }
+            }
+          }
+        }
+      } else {
+        setWithdrawing(false)
+        alert('Wrong password!')
+      }
+    }
+  }
 
   const returnOwned = () => {
     if (owned.length > 0) {
@@ -102,7 +177,8 @@ export function Dashboard(props) {
           if (ban.indexOf(value.name) === -1) {
             return <div style={{ position: "relative", textAlign: "left" }} key={index}>
               <Button style={{ position: "absolute", top: "15px", right: "0px" }} color="success" href={"/details/" + value.uuid} renderAs="a"> Details </Button>
-              <h4 stlye={{ marginBottom: "-30px" }}>{value.name}</h4>
+              <small>Domain Name:</small>
+              <h4 stlye={{ marginBottom: "-30px", marginTop: 0 }}>{value.name}</h4>
               <b>{value.uuid} </b><hr />
             </div>
           } else {
@@ -127,31 +203,44 @@ export function Dashboard(props) {
         return <div>
           {inSell.map((value, index) => {
             if (ban.indexOf(value.name) === -1) {
-              return <div style={{ position: "relative" }} key={index}>
-                <Button.Group style={{ position: "absolute", top: "-10px", right: "0px" }}>
-                  <Button color="success" href={"/details/" + value.uuid} renderAs="a"> Details </Button>
-                  <Button color="danger" href="/details" renderAs="a"> Undo Sell </Button>
-                </Button.Group>
-
-                <div style={{ textAlign: "left" }}>
-                  <h4 stlye={{ marginBottom: "-30px" }}>{value.name}</h4>
-                  Registered by: <b>{value.owner} </b><br />
-                  Domain ID: <b>{value.uuid} </b><br />
-                  Price: <b> {value.price} LYRA</b> <hr />
-                </div>
+              return <div> <Columns.Column style={{ marginTop: "40px" }}>
+                <Card>
+                  <Card.Content align="center">
+                    <Media>
+                      <Media.Item>
+                        <Box className="header-color">
+                          <Heading size={5} align="center" style={{ color: "white" }}>FOR SALE</Heading>
+                        </Box>
+                      </Media.Item>
+                    </Media>
+                    <Content>
+                      <div style={{ position: "relative" }} key={index}>
+                        <Button.Group style={{ position: "absolute", top: 0, right: "0px" }}>
+                          <Button color="success" href={"/details/" + value.uuid} renderAs="a"> Details </Button>
+                          <Button color="danger" href="/details" renderAs="a"> Undo Sell </Button>
+                        </Button.Group>
+                        <div style={{ textAlign: "left" }}>
+                          <small>Domain Name:</small>
+                          <h4 stlye={{ marginBottom: "-30px" }}>{value.name}</h4>
+                            Registered by: <b>{value.owner} </b><br />
+                            Domain ID: <b>{value.uuid} </b><br />
+                            Price: <b> {value.price} LYRA</b> <hr />
+                        </div>
+                      </div>
+                    </Content>
+                  </Card.Content>
+                </Card>
+              </Columns.Column>
               </div>
             } else {
               return false;
             }
           })}
         </div>
-      } else {
-        return <div>Nothing for sale</div>
       }
-    } else {
-      return <div>Nothing to sell, register a domain first.</div>
     }
   }
+
 
   function _handleKeyDown(e) {
     if (e.key === 'Enter') {
@@ -175,14 +264,27 @@ export function Dashboard(props) {
     }
   }
 
-  return (
+  const returnWithdrawBox = () => {
+    if (showWithdraw) {
+      return <Modal show={showWithdraw} onClose={() => setShowWithdraw(false)}>
+        <Modal.Content style={{ textAlign: "center" }}>
+          <Section style={{ backgroundColor: 'white' }}>
+            <Heading>Withdraw all</Heading> <br /><br />
+            <Input style={{ width: "100%!important", textAlign: "center", marginTop: "20px" }} type="password" onChange={(evt) => { setPassword(evt.target.value) }} placeholder="Insert wallet password" value={password} /><br></br><br></br>
+            {!isWithdrawing ? <Button onClick={withdrawFunds} color="success">WITHDRAW ALL FUNDS</Button> : <div>Withdrawing, please wait...</div>}
+          </Section>
+        </Modal.Content>
+      </Modal >
+    }
+  }
 
+  return (
     <div className="Explore">
       <NavBar />
       <Container>
         <Columns style={{ marginTop: "70px" }}>
           <Columns.Column size={9}>
-            <Box style={{height: "150px", padding: "50px 20px"}}>
+            <Box style={{ height: "150px", padding: "50px 20px" }}>
               <Media>
                 <Media.Item renderAs="figure" position="left">
                   <Gravatar style={{ borderRadius: "100px" }} email={props.user.address} />
@@ -199,10 +301,10 @@ export function Dashboard(props) {
             </Box>
           </Columns.Column>
           <Columns.Column align="center">
-            <Box style={{height: "150px", padding: "15px 20px", backgroundColor: "#8EC6C5"}}>
+            <Box style={{ height: "150px", padding: "15px 20px", backgroundColor: "#429A98", color: "white" }}>
               <h1>I have Earned:</h1>
-              <h1 style={{ fontSize: "32px" }}>10 LYRA</h1>
-              <Button style={{marginTop: "5px"}} color="success" href="/"  renderAs="a">Withdraw</Button>
+              <h1 style={{ fontSize: "22px", fontWeight: 600 }}>{balance} LYRA</h1>
+              <Button style={{ marginTop: "5px" }} color="success" onClick={() => setShowWithdraw(true)}>Withdraw</Button>
             </Box>
           </Columns.Column>
         </Columns>
@@ -215,6 +317,7 @@ export function Dashboard(props) {
         </Container>
       </Container>
       {returnRegisterBox()}
+      {returnWithdrawBox()}
       <Container>
         <Columns>
           <Columns.Column style={{ marginTop: "40px" }}>
@@ -233,22 +336,7 @@ export function Dashboard(props) {
               </Card.Content>
             </Card>
           </Columns.Column>
-          <Columns.Column style={{ marginTop: "40px" }}>
-            <Card>
-              <Card.Content align="center">
-                <Media>
-                  <Media.Item>
-                    <Box className="header-color">
-                      <Heading size={5} align="center" style={{ color: "white" }}>FOR SALE</Heading>
-                    </Box>
-                  </Media.Item>
-                </Media>
-                <Content>
-                  {returnSell()}
-                </Content>
-              </Card.Content>
-            </Card>
-          </Columns.Column>
+          {returnSell()}
         </Columns>
       </Container>
     </div>

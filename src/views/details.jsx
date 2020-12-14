@@ -34,7 +34,6 @@ export function Details(props) {
             domain.time = domain.time * 1000
             domain.domain = split[1]
             domain.date = new Date(domain.time).getDate() + ' ' + (new Date(domain.time).getMonth() + 1) + ' ' + new Date(domain.time).getFullYear()
-            console.log(domain)
             setData(domain)
         }
         if (blockchainData.uuid === "") {
@@ -196,7 +195,7 @@ export function Details(props) {
                     </Modal.Content>
                 </Modal >
             }
-        } // QUALCOSA NON VA :D.. Ma ci ho provato 
+        }
 
         return (
             <div className="Details">

@@ -66,7 +66,7 @@ export function Explore() {
                       <Heading size={5} align="center" style={{ color: "white" }}>NAMES FOR SALE</Heading>
                     </Box>
                     <Content align="left">
-                      <small>Domain Name</small>
+                      <small>Domain Name:</small>
                       <h4 stlye={{ marginBottom: "-30px", marginTop: 0 }}>{value.name}</h4>
                             Registered by: <b>{value.owner} </b><br></br>
                             Unique id: <b>{value.uuid}</b><br />
@@ -116,8 +116,8 @@ export function Explore() {
                     if (ban.indexOf(value.name) === -1) {
                       return <div key={index}>
                         <h4 stlye={{ marginBottom: "-30px" }}>{value.name}</h4>
-                            registered by: <b>{value.owner} </b><br></br>
-                            unique id: {value.uuid} <hr />
+                            Registered by: <b>{value.owner} </b><br></br>
+                            Unique ID: {value.uuid} <hr />
                       </div>
                     } else {
                       return false;
