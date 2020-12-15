@@ -1,5 +1,5 @@
 import { Navbar } from 'react-bulma-components';
-import { Button } from 'react-bulma-components';
+import { button } from 'react-bulma-components';
 import React, { useState, useEffect } from 'react';
 const User = require("../libs/user");
 
@@ -23,7 +23,7 @@ export function NavBar() {
             return <Navbar.Menu >
                 <Navbar.Container position="end">
                     <Navbar.Item onClick={() => { localStorage.removeItem('wallet'); localStorage.removeItem('xSID'); localStorage.removeItem('SID'); setLogged(false) }}>
-                        <Button color="danger" style={{ marginRight: "30px" }}>LOGOUT</Button>
+                        <button  className="nes-btn is-danger" style={{ marginRight: "30px" }}>LOGOUT</button>
                     </Navbar.Item>
                 </Navbar.Container>
             </Navbar.Menu>
@@ -31,7 +31,7 @@ export function NavBar() {
             return <Navbar.Menu >
                 <Navbar.Container position="end">
                     <Navbar.Item renderAs="a" href="/login">
-                        <Button color="success" style={{ marginRight: "30px" }}>LOGIN</Button>
+                        <button className="nes-btn is-warning" style={{ marginRight: "30px" }}>LOGIN</button>
                     </Navbar.Item>
                 </Navbar.Container>
             </Navbar.Menu>

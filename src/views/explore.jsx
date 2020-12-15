@@ -10,6 +10,9 @@ const { Input, Control } = Form;
 export function Explore() {
   let [history, setHistory] = useState([])
   let [inSell, setSell] = useState([])
+  let [showDialog, setShowDialog] = useState(false)
+  let [textDialog, setTextDialog] = useState("")
+  let [titleDialog, setTitleDialog] = useState("")
   let [searcher, setSearcher] = useState("")
   let ban = ["register:turinglabs"]
   useEffect(() => {
@@ -44,12 +47,12 @@ export function Explore() {
       let request = await scrypta.createContractRequest(address.walletstore, '-', { contract: "LcD7AGaY74xvVxDg3NkKjfP6QpG8Pmxpnu", function: "search", params: { "name": searcher } })
       let response = await scrypta.sendContractRequest(request)
       if (response.message !== undefined && response.message === 'Name not found.') {
-        alert('This domain is available, proceed!')
+        openDialog('Well done', 'Proceed with login and register this name!')
       } else if (response.address !== undefined) {
-        alert('This domain is taken by ' + response.address)
+        openDialog('Ops', 'This domain is taken by ' + response.address)
       }
     } else {
-      alert('Write a name first!')
+      openDialog('Ops', 'Write a name to search first!')
     }
   }
 
@@ -59,8 +62,7 @@ export function Explore() {
         {inSell.map((value, index) => {
           if (ban.indexOf(value.name) === -1 && value.payment !== null && value.payment !== undefined) {
             return <div key={index}>
-              <Columns.Column style={{ marginTop: "40px" }}>
-                <Card className="selling-box">
+                <Card>
                   <Card.Content align="center">
                     <Box className="header-color2">
                       <Heading size={5} align="center" style={{ color: "white" }}>NAMES FOR SALE</Heading>
@@ -71,11 +73,10 @@ export function Explore() {
                             Registered by: <b>{value.owner} </b><br></br>
                             Unique id: <b>{value.uuid}</b><br />
                             Price: <b>{value.price} LYRA</b><hr />
-                      <Button style={{ position: "absolute", top: "120px", right: "25px" }} color="success" href="" renderAs="a"> BUY </Button>
+                      <button className="nes-btn" style={{ position: "absolute", top: "120px", right: "25px" }} color="success" href="" renderAs="a"> BUY </button>
                     </Content>
                   </Card.Content>
                 </Card>
-              </Columns.Column>
             </div>
           } else {
             return false;
@@ -85,27 +86,46 @@ export function Explore() {
     }
   }
 
+  function returnDialog() {
+    if (showDialog) {
+      return (
+        <div class="dialog-wrapper">
+          <dialog class="nes-dialog" open>
+            <p class="title">{titleDialog}</p>
+            <p>{textDialog}</p>
+            <menu class="dialog-menu">
+              <button className="nes-btn" onClick={() => { setShowDialog(false) }} class="nes-btn is-primary">OK</button>
+            </menu>
+          </dialog>
+        </div>
+      )
+    }
+  }
+
+  function openDialog(title, text) {
+    setTitleDialog(title)
+    setTextDialog(text)
+    setShowDialog(true)
+  }
+
   return (
     <div className="Explore">
       <NavBar />
+      {returnDialog()}
       <Container>
         <Columns>
-          <Columns.Column style={{ marginTop: "50px" }} align="center">
-            <Card>
-              <Content>
-              </Content>
-            </Card>
+          <Columns.Column style={{ marginTop: "130px" }} align="center">
             <h1 style={{ fontSize: "40px", fontWeight: "600" }}>Blockchain Domain Names</h1>
-            <Box style={{ position: "relative" }}>
-              <Input onKeyDown={_handleKeyDown} className="myInput" style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain domain"} />
-              <Control style={{ position: "absolute", bottom: "20px", right: "20px" }}>
-                <Button className="myButton" onClick={searchName} color="info">Search</Button>
+            <div style={{ position: "relative", marginTop: "40px" }}>
+              <div className="nes-field">
+                <input className="nes-input mod-size" onKeyDown={_handleKeyDown} style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain domain"} /></div>
+              <Control style={{ position: "absolute", bottom: -4, right: 0 }}>
+                <button className="nes-btn mod-size is-primary" onClick={searchName}>Search</button>
               </Control>
-            </Box>
+            </div>
           </Columns.Column>
         </Columns>
-        <Columns>
-          <Columns.Column style={{ marginTop: "40px" }}>
+          <Container style={{ marginTop: "40px" }}>
             <Card>
               <Card.Content align="center">
                 <Box className="header-color">
@@ -126,9 +146,10 @@ export function Explore() {
                 </Content>
               </Card.Content>
             </Card>
-          </Columns.Column>
+          </Container><br></br>
+        <Container>
           {returnSell()}
-        </Columns>
+        </Container>
       </Container>
     </div>
   );
