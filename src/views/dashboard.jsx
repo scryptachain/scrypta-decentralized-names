@@ -204,6 +204,7 @@ export function Dashboard(props) {
           {inSell.map((value, index) => {
             if (ban.indexOf(value.name) === -1) {
               return <div> <Columns.Column style={{ marginTop: "40px" }}>
+                <Button color="success" renderAs="a" href="/showcase">Go to Showcase</Button>
                 <Card>
                   <Card.Content align="center">
                     <Media>

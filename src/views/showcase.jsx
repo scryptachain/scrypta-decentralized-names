@@ -10,7 +10,7 @@ scrypta.staticnodes = true
 const { Input, Control } = Form;
 
 export function Showcase(props) {
-    let [owned, setOwned] = useState([])
+    let [listed, setList] = useState([])
     let [searcher, setSearcher] = useState("")
     let [password, setPassword] = useState("")
     let [isSearching, setSearching] = useState(false)
@@ -30,13 +30,12 @@ export function Showcase(props) {
             let response = await scrypta.sendContractRequest(request)
             let registered = []
             for (let k in response) {
-                console.log(response[k].price)
                 if (response[k].owner !== props.user.address && registered.indexOf(response[k].name) === -1 && response[k].price !== undefined && response[k].price !== null) {
                     registered.push(response[k])
                 }
             }
             setChecked(true)
-            setOwned(registered)
+            setList(registered)
         }
         if (!checked) {
             init()
@@ -63,11 +62,11 @@ export function Showcase(props) {
     }
 
     const returnSell = () => {
-        if (owned.length > 0) {
+        if (listed.length > 0) {
             let inSell = []
-            for (let k in owned) {
-                if (owned[k].payment !== null && owned[k].payment !== null) {
-                    inSell.push(owned[k])
+            for (let k in listed) {
+                if (listed[k].payment !== null && listed[k].payment !== null) {
+                    inSell.push(listed[k])
                 }
             }
             if (inSell.length > 0) {
@@ -96,8 +95,12 @@ export function Showcase(props) {
                         }
                     })}
                 </div>
-            }
-        }
+            } 
+        } else {
+            return (
+                <p>Nothing to show</p>
+            )
+         }
     }
 
     function _handleKeyDown(e) {
@@ -133,7 +136,7 @@ export function Showcase(props) {
                                 }
                             }
                             setChecked(true)
-                            setOwned(registered)
+                            setList(registered)
                         }, 1500)
                     } else {
                         setBuying(false)
