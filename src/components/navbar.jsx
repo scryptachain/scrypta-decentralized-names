@@ -22,7 +22,7 @@ export function NavBar() {
         if (logged) {
             return <Navbar.Menu >
                 <Navbar.Container position="end">
-                    <Navbar.Item onClick={() => { localStorage.removeItem('wallet'); localStorage.removeItem('xSID'); setLogged(false) }}>
+                    <Navbar.Item onClick={() => { localStorage.removeItem('wallet'); localStorage.removeItem('xSID'); localStorage.removeItem('SID'); setLogged(false) }}>
                         <Button color="danger" style={{ marginRight: "30px" }}>LOGOUT</Button>
                     </Navbar.Item>
                 </Navbar.Container>

@@ -22,7 +22,7 @@ export function Login() {
     <div className="Login">
       <NavBar />
       <Container style={{ marginTop: "10px" }} align="center">
-        <Columns style={{ marginTop: "20%" }}>
+        <Columns style={{ marginTop: "200px" }}>
           <Columns.Column>
             <Box className="myBox" style={{ padding: "50px 20px" }}>
               <Media>
