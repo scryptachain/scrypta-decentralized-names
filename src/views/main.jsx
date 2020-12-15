@@ -53,6 +53,7 @@ export class Main extends Component {
               <Route exact path="/"><Dashboard user={this.state.user} /></Route>
               <Route exact path="/details/:uuid"><Details user={this.state.user} /></Route>
               <Route expact path="/showcase"><Showcase user={this.state.user} /></Route>
+              <Route exact path="/login"><Login /></Route>
             </Switch>
           </Router>
         )

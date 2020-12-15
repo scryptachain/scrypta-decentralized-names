@@ -71,7 +71,7 @@ export function Login() {
         </Columns>
       </Container>
       <Container align= "center" style={{ marginTop: "100px"}}>
-        <div id="scrypta-login" dapp="Demo dApp"></div>
+        <div id="scrypta-login" dapp="Scrypta Decentralized Names"></div>
       </Container>
     </div>
   );
