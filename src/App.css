@@ -72,12 +72,7 @@
 }
 
 .Explore {
-  background-image: url('./assets/bg-end.png');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: bottom;
-  width: 100vw;
-  min-height: 100vh;
+border: 10px solid #000000;
 }
 
 .Login {
