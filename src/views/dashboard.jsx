@@ -218,7 +218,6 @@ export function Dashboard(props) {
                       <div style={{ position: "relative" }} key={index}>
                         <Button.Group style={{ position: "absolute", top: 0, right: "0px" }}>
                           <Button color="success" href={"/details/" + value.uuid} renderAs="a"> Details </Button>
-                          <Button color="danger" href="/details" renderAs="a"> Undo Sell </Button>
                         </Button.Group>
                         <div style={{ textAlign: "left" }}>
                           <small>Domain Name:</small>
@@ -241,6 +240,8 @@ export function Dashboard(props) {
       }
     }
   }
+
+
 
 
   function _handleKeyDown(e) {

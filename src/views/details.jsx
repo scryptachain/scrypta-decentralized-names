@@ -24,6 +24,8 @@ export function Details(props) {
     let [showTransfer, setShowTranfer] = useState(false)
     let [isSelling, setSelling] = useState(false)
     let [showSell, setShowSell] = useState(false)
+    let [showRemove, setShowRemove] = useState(false)
+    let [isRemoving, setRemoving] = useState (false)
 
 
     useEffect(() => {
@@ -34,6 +36,10 @@ export function Details(props) {
             domain.time = domain.time * 1000
             domain.domain = split[1]
             domain.date = new Date(domain.time).getDate() + ' ' + (new Date(domain.time).getMonth() + 1) + ' ' + new Date(domain.time).getFullYear()
+            let address = await scrypta.createAddress('-', false)
+            let request = await scrypta.createContractRequest(address.walletstore, '-', { contract: "LcD7AGaY74xvVxDg3NkKjfP6QpG8Pmxpnu", function: "check", params: { name: domain.domain} })
+            let response = await scrypta.sendContractRequest(request)
+            domain.smartcontract = response.record
             setData(domain)
         }
         if (blockchainData.uuid === "") {
@@ -64,7 +70,7 @@ export function Details(props) {
                         let toWrite = 'sell:' + blockchainData.uuid + ':' + paymentAddress.pub + ':' + price
                         let writingKey = await scrypta.importPrivateKey(key.prv, '-', false)
                         let written = await scrypta.write(writingKey.walletstore, '-', toWrite, '', '', 'names://')
-                        if(written.txs !== undefined && written.txs[0] !== undefined && written.txs[0].length === 64){
+                        if (written.txs !== undefined && written.txs[0] !== undefined && written.txs[0].length === 64) {
                             setSelling(false)
                             alert('Sell placed!')
                             setShowSell(false)
@@ -72,11 +78,11 @@ export function Details(props) {
                             setTimeout(async function () {
                                 window.location.reload()
                             }, 1500)
-                        }else{
+                        } else {
                             setSelling(false)
                             alert('Something goes wrong, retry!')
                         }
-                    }else{
+                    } else {
                         setSelling(false)
                         alert('Not enough balance!')
                     }
@@ -87,43 +93,26 @@ export function Details(props) {
             }
         }
 
-        async function removeSell(toRemove) {
-            if (password.length > 0 && !isTransfering) {
-                setTransfering(true)
+        async function removeSell() {
+            if (password.length > 0 && !isRemoving) {
+                setRemoving(true)
                 let mnemonic = await scrypta.readxKey(password, props.user.walletstore)
                 if (mnemonic !== false) {
-                    let key = await scrypta.deriveKeyFromMnemonic(mnemonic, "m/0")
-                    let toWrite = 'remove:' + toRemove
+                    let key = await scrypta.deriveKeyFromSeed(mnemonic.seed, "m/0")
+                    console.log(key)
+                    let toWrite = 'remove:' + blockchainData.uuid
                     let writingKey = await scrypta.importPrivateKey(key.prv, '-', false)
-                    await scrypta.write(writingKey.walletstore, '-', toWrite, '', '', 'names://')
-                } else {
-                    setTransfering(false)
-                    alert('Wrong password!')
-                }
-            }
-        }
-
-        async function takeFunds(toTake) {
-            if (password.length > 0 && !isTransfering) {
-                setTransfering(true)
-                let mnemonic = await scrypta.readxKey(password, props.user.walletstore)
-                if (mnemonic !== false) {
-                    let SIDS = localStorage.getItem('xSID').split(':')
-                    let hash = await scrypta.hash(toTake)
-                    let path = await scrypta.hashtopath(hash)
-                    let key = await scrypta.deriveKeyFromMnemonic(mnemonic, "m/0")
-                    let paymentAddress = await scrypta.deriveKeyfromXPub(SIDS[0], path)
-                    let balance = await scrypta.get('/balance/' + paymentAddress)
-                    if (balance.balance > 0) {
-                        let masterKey = await scrypta.importPrivateKey(key.prv, '-', false)
-                        // TODO: withdraw to main address
+                    let written = await scrypta.write(writingKey.walletstore, '-', toWrite, '', '', 'names://')
+                    if (written.txs !== undefined && written.txs[0] !== undefined && written.txs[0].length === 64){
+                        alert("Sell removed")
+                        window.location.reload()
                     } else {
-                        alert('Nothing to take!')
-                    }
+                        alert("Something goes wrong!")
+                    } 
                 } else {
-                    setTransfering(false)
+                    setRemoving(false)
                     alert('Wrong password!')
-                }
+                } 
             }
         }
 
@@ -181,6 +170,21 @@ export function Details(props) {
             }
         }
 
+        const buttonForSale = () => {
+            if (blockchainData.smartcontract.price === null) {
+                return <div>
+                    <Columns.Column>
+                        <Button style={{ width: "100%", height: "80px", fontSize: "22px" }} color="success" onClick={() => { setShowTranfer(true) }}>Transfer</Button>
+                    </Columns.Column>
+                    <Columns.Column>
+                        <Button style={{ width: "100%", height: "80px", fontSize: "22px" }} color="danger" onClick={() => { setShowSell(true) }}>Sell</Button>
+                    </Columns.Column>
+                </div>
+            } else {
+                return <Button style={{ width: "100%", height: "80px", fontSize: "22px" }} color="danger" onClick={() => { setShowRemove(true) }}>Undo Sell</Button>
+            }
+        }
+
         const returnSellBox = () => {
             if (showSell) {
                 return <Modal show={showSell} onClose={() => setShowSell(false)}>
@@ -197,10 +201,26 @@ export function Details(props) {
             }
         }
 
+        const returnRemoveBox = () => {
+            if (showRemove) {
+                return <Modal show={showRemove} onClose={() => setShowRemove(false)}>
+                    <Modal.Content style={{ textAlign: "center" }}>
+                        <Section style={{ backgroundColor: 'white' }}>
+                            <Heading>Remove form Showcase <br /><span style={{ color: "#429A98" }}>{blockchainData.domain}</span></Heading>
+                            If doesn't want sell this domain, enter the password to confirm! <br /><br />
+                            <Input style={{ width: "100%!important", textAlign: "center", marginTop: "20px" }} type="password" onChange={(evt) => { setPassword(evt.target.value) }} placeholder="Insert wallet password" value={password} /><br></br><br></br>
+                            {!isRemoving ? <Button onClick={removeSell} color="success">Remove from Showcase</Button> : <div>Removing from Showcase, please wait...</div>}
+                        </Section>
+                    </Modal.Content>
+                </Modal >
+            }
+        }
+
         return (
             <div className="Details">
                 {returnTransferBox()}
                 {returnSellBox()}
+                {returnRemoveBox()}
                 <NavBar />
                 <Container style={{ marginTop: "120px" }}>
                     <h1 style={{ fontSize: "30px" }}>Details of: <span style={{ fontWeight: 600 }}>{blockchainData.domain}</span></h1>
@@ -288,12 +308,7 @@ export function Details(props) {
                         </Columns.Column>
                     </Columns>
                     <Columns>
-                        <Columns.Column>
-                            <Button style={{ width: "100%", height: "80px", fontSize: "22px" }} color="success" onClick={() => { setShowTranfer(true) }}>Transfer</Button>
-                        </Columns.Column>
-                        <Columns.Column>
-                            <Button style={{ width: "100%", height: "80px", fontSize: "22px" }} color="danger" onClick={() => { setShowSell(true) }}>Sell</Button>
-                        </Columns.Column>
+                        {buttonForSale()}
                     </Columns>
                 </Container>
             </div>
