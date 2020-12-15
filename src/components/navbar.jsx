@@ -21,16 +21,8 @@ export function NavBar() {
     const LoginButton = () => {
         if (logged) {
             return <Navbar.Menu >
-                <Navbar.Container position="start">
-                    <Navbar.Item>
-                        <Button.Group>
-                            <Button color="info" renderAs="a" href="/">Dashboard</Button>
-                            <Button color="success" renderAs="a" href="/showcase">Showcase</Button>
-                        </Button.Group>
-                    </Navbar.Item>
-                </Navbar.Container>
                 <Navbar.Container position="end">
-                    <Navbar.Item renderAs="a" href="#" onClick={() => { localStorage.removeItem('wallet'); localStorage.removeItem('xSID'); setLogged(false) }}>
+                    <Navbar.Item onClick={() => { localStorage.removeItem('wallet'); localStorage.removeItem('xSID'); setLogged(false) }}>
                         <Button color="danger" style={{ marginRight: "30px" }}>LOGOUT</Button>
                     </Navbar.Item>
                 </Navbar.Container>
