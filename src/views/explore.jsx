@@ -58,31 +58,33 @@ export function Explore() {
 
   function returnSell() {
     if (inSell.length > 0) {
-      return <div>
-        {inSell.map((value, index) => {
-          if (ban.indexOf(value.name) === -1 && value.payment !== null && value.payment !== undefined) {
-            return <div key={index}>
-                <Card>
-                  <Card.Content align="center">
-                    <Box className="header-color2">
-                      <Heading size={5} align="center" style={{ color: "white" }}>NAMES FOR SALE</Heading>
-                    </Box>
-                    <Content align="left">
-                      <small>Domain Name:</small>
-                      <h4 stlye={{ marginBottom: "-30px", marginTop: 0 }}>{value.name}</h4>
-                            Registered by: <b>{value.owner} </b><br></br>
-                            Unique id: <b>{value.uuid}</b><br />
-                            Price: <b>{value.price} LYRA</b><hr />
-                      <button className="nes-btn" style={{ position: "absolute", top: "120px", right: "25px" }} color="success" href="" renderAs="a"> BUY </button>
-                    </Content>
-                  </Card.Content>
-                </Card>
-            </div>
-          } else {
-            return false;
-          }
-        })}
-      </div>
+      return (
+        <div>                 
+          <div align="center">
+            <Box className="header-color2">
+              <Heading size={5} align="center" style={{ color: "white" }}>NAMES FOR SALE</Heading>
+            </Box>
+            <Container align="left">
+              {inSell.map((value, index) => {
+                if (ban.indexOf(value.name) === -1 && value.payment !== null && value.payment !== undefined) {
+                  return (
+                    <div key={index}>
+                      <div className="nes-container is-rounded with-title" stlye={{ marginBottom: "-30px", marginTop: 0 }}>
+                        <p className="title">{value.name}</p>
+                        Registered by: <b>{value.owner} </b><br></br>
+                        Unique id: <b>{value.uuid}</b><br />
+                        Price: <b>{value.price} LYRA</b>
+                      </div>
+                      </div>
+                  )
+              } else {
+                return false;
+              }
+              })}
+            </Container>
+          </div>
+        </div>
+      )
     }
   }
 
@@ -112,43 +114,45 @@ export function Explore() {
     <div className="Explore">
       <NavBar />
       {returnDialog()}
-      <Container>
-        <Columns>
-          <Columns.Column style={{ marginTop: "130px" }} align="center">
-            <h1 style={{ fontSize: "40px", fontWeight: "600" }}>Blockchain Domain Names</h1>
-            <div style={{ position: "relative", marginTop: "40px" }}>
-              <div className="nes-field">
-                <input className="nes-input mod-size" onKeyDown={_handleKeyDown} style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain domain"} /></div>
-              <Control style={{ position: "absolute", bottom: -4, right: 0 }}>
-                <button className="nes-btn mod-size is-primary" onClick={searchName}>Search</button>
-              </Control>
-            </div>
-          </Columns.Column>
-        </Columns>
-          <Container style={{ marginTop: "40px" }}>
-            <Card>
-              <Card.Content align="center">
+      <Container style={{ padding: "150px 0", backgroundColor: "#470F47" }}>
+        <Container className="nes-container is-rounded" style={{ backgroundColor: "white" }}>
+          <Columns>
+            <Columns.Column align="center">
+              <h1 style={{ fontSize: "30px", fontWeight: "600", margin: "20px 0" }}>Blockchain Names</h1>
+              <div style={{ position: "relative", marginTop: "40px" }}>
+                <div className="nes-field">
+                  <input className="nes-input mod-size" onKeyDown={_handleKeyDown} style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain name"} /></div>
+                <Control style={{ position: "absolute", bottom: -4, right: 0 }}>
+                  <button className="nes-btn mod-size is-primary" onClick={searchName}>Search</button>
+                </Control>
+              </div>
+            </Columns.Column>
+          </Columns>
+          <Container className="nes-container is-rounded" style={{ marginTop: "40px" }}>
+            <div>
+              <div align="center">
                 <Box className="header-color">
                   <Heading size={5} align="center" style={{ color: "white" }}>LATEST DOMAIN REGISTERED</Heading>
                 </Box>
-                <Content align="left">
+                <Container align="left">
                   {history.map((value, index) => {
                     if (ban.indexOf(value.name) === -1) {
-                      return <div key={index}>
-                        <h4 stlye={{ marginBottom: "-30px" }}>{value.name}</h4>
+                      return <div style={{ marginBottom: "30px" }} key={index}>
+                        <div className="nes-container is-rounded with-title" > <p className="title">{value.name}</p>
                             Registered by: <b>{value.owner} </b><br></br>
-                            Unique ID: {value.uuid} <hr />
+                            Unique ID: {value.uuid} </div>
                       </div>
                     } else {
                       return false;
                     }
                   })}
-                </Content>
-              </Card.Content>
-            </Card>
-          </Container><br></br>
-        <Container>
-          {returnSell()}
+                </Container>
+              </div>
+            </div>
+          </Container>
+          <Container className="nes-container is-rounded" style={{marginTop: "50px"}}>
+            {returnSell()}
+          </Container>
         </Container>
       </Container>
     </div>

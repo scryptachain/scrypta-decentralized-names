@@ -1,5 +1,14 @@
+body, html {
+  background-color: #470F47 !important;
+}
 .App {
   text-align: center;
+  min-height: 100% !important;
+}
+
+.navbar-link.is-active, .navbar-link:focus, .navbar-link:focus-within, .navbar-link:hover, a.navbar-item.is-active, a.navbar-item:focus, a.navbar-item:focus-within, a.navbar-item:hover {
+  background: transparent !important;
+  text-decoration: none !important;
 }
 
 .navbar {
@@ -70,18 +79,12 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
 }
-
 .Explore {
-border: 10px solid #000000;
+  background-color: #470F47;
 }
 
 .Login {
-  background-image: url('./assets/bg-end.png');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: bottom;
-  width: 100%;
-  height: 100vh;
+  background-color: #470F47;
 }
 
 .selling-box {
@@ -145,10 +148,25 @@ border: 10px solid #000000;
 
 .header-color {
   background-color: #005D7F !important;
+  border-bottom: 10px solid #004660 !important;
+  border-right: 10px solid #004660 !important;
+}
+
+.nes-container .title{
+  font-size: 22px!important;
+  line-height: 5px!important;
+  color: rgb(228, 46, 73) !important;
+}
+
+.header-color h1.title, .header-color2 h1.title {
+  margin-top: 15px;
+  color:rgb(255, 255, 255) !important;
 }
 
 .header-color2 {
   background-color: rgb(228, 46, 73) !important;
+  border-bottom: 10px solid rgb(176, 35, 56) !important;
+  border-right: 10px solid rgb(176, 35, 56) !important;
 }
 
 @media (prefers-reduced-motion: no-preference) {

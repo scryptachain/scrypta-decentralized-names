@@ -21,10 +21,10 @@ export function Login() {
   return (
     <div className="Login">
       <NavBar />
-      <Container style={{ marginTop: "10px" }} align="center">
-        <Columns style={{ marginTop: "200px" }}>
+      <Container style={{ padding: "220px 0", backgroundColor: "#470F47" }} align="center">
+        <Columns>
           <Columns.Column>
-            <Box className="myBox" style={{ padding: "50px 20px" }}>
+            <Box className="nes-container is-rounded" style={{ padding: "50px 20px" }}>
               <Media>
                 <Media.Item renderAs="figure" position="left">
                   <Image size={64} alt="64x64" src={LoginOne} />
@@ -39,7 +39,7 @@ export function Login() {
             </Box>
           </Columns.Column>
           <Columns.Column>
-            <Box className="myBox" style={{ padding: "50px 20px" }}>
+            <Box className="nes-container is-rounded" style={{ padding: "50px 20px" }}>
               <Media>
                 <Media.Item renderAs="figure" position="left">
                   <Image size={64} alt="64x64" src={Domain} />
@@ -54,7 +54,7 @@ export function Login() {
             </Box>
           </Columns.Column>
           <Columns.Column>
-            <Box className="myBox" style={{ padding: "50px 20px" }}>
+            <Box className="nes-container is-rounded" style={{ padding: "50px 20px" }}>
               <Media>
                 <Media.Item renderAs="figure" position="left">
                   <Image size={64} alt="64x64" src={Check} />
@@ -62,16 +62,16 @@ export function Login() {
                 <Media.Item>
                   <Content>
                     <h1 style={{ color: "#005D7F" }}>Step Three</h1>
-                    <p style={{ color: "#005D7F", fontSize: "16px" }}>By clicking on the confirmation button you will have registered your Domain Name forever. The registration fee is only 10 LYRA. Enjoy!<br /><br /></p>
+                    <p style={{ color: "#005D7F", fontSize: "16px", marginBottom: "30px" }}>By clicking on the confirmation button you will have registered your Domain Name forever. The registration fee is only 10 LYRA.</p>
                   </Content>
                 </Media.Item>
               </Media>
             </Box>
           </Columns.Column>
         </Columns>
-      </Container>
-      <Container align= "center" style={{ marginTop: "100px"}}>
-        <div id="scrypta-login" dapp="Scrypta Decentralized Names"></div>
+        <div align="center" style={{ width: "100%", marginTop: "30px" }}>
+          <div id="scrypta-login" dapp="Scrypta Decentralized Names"></div>
+        </div>
       </Container>
     </div>
   );
