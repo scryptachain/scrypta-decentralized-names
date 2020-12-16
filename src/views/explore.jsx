@@ -59,7 +59,7 @@ export function Explore() {
   function returnSell() {
     if (inSell.length > 0) {
       return (
-        <div>                 
+        <div>
           <div align="center">
             <Box className="header-color2">
               <Heading size={5} align="center" style={{ color: "white" }}>NAMES FOR SALE</Heading>
@@ -73,13 +73,15 @@ export function Explore() {
                         <p className="title">{value.name}</p>
                         Registered by: <b>{value.owner} </b><br></br>
                         Unique id: <b>{value.uuid}</b><br />
-                        Price: <b>{value.price} LYRA</b>
+                        <div style={{ display: "flex", margin: "7px 0" }}>
+                          <i class="nes-icon coin"></i>
+                          <p style={{ margin: "7px 7px" }}> Price: <b>{value.price} LYRA</b></p></div>
                       </div>
-                      </div>
+                    </div>
                   )
-              } else {
-                return false;
-              }
+                } else {
+                  return false;
+                }
               })}
             </Container>
           </div>
@@ -115,7 +117,7 @@ export function Explore() {
       <NavBar />
       {returnDialog()}
       <Container style={{ padding: "150px 0", backgroundColor: "#470F47" }}>
-        <Container className="nes-container is-rounded" style={{ backgroundColor: "white" }}>
+        <Container className="nes-container  is-rounded" style={{ backgroundColor: "white" }}>
           <Columns>
             <Columns.Column align="center">
               <h1 style={{ fontSize: "30px", fontWeight: "600", margin: "20px 0" }}>Blockchain Names</h1>
@@ -150,7 +152,7 @@ export function Explore() {
               </div>
             </div>
           </Container>
-          <Container className="nes-container is-rounded" style={{marginTop: "50px"}}>
+          <Container className="nes-container is-rounded" style={{ marginTop: "50px" }}>
             {returnSell()}
           </Container>
         </Container>

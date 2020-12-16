@@ -39,7 +39,7 @@ export function Dashboard(props) {
         if (written.data[k].data.indexOf("sell:") === 0) {
           let split = written.data[k].data.split(':')
           let balance = await scrypta.get("/balance/" + split[2])
-          if(balance.balance > 0){
+          if (balance.balance > 0) {
             let fees = balance.balance / 100 * 10
             let canWithdraw = balance.balance - fees - 0.002
             totFees += fees
@@ -126,7 +126,7 @@ export function Dashboard(props) {
             let split = written.data[k].data.split(':')
             let balance = await scrypta.get("/balance/" + split[2])
             let fees = balance.balance / 100 * 10
-            let canWithdraw = balance.balance - fees - 0.002 
+            let canWithdraw = balance.balance - fees - 0.002
             if (balance.balance > 0) {
               let hash = await scrypta.hash(split[1])
               let path = await scrypta.hashtopath(hash)
@@ -136,19 +136,19 @@ export function Dashboard(props) {
                 let paymentAddress = await scrypta.deriveKeyFromSeed(master.seed, path)
                 let writingKey = await scrypta.importPrivateKey(paymentAddress.prv, '-', false)
                 let fee = await scrypta.send(writingKey.walletstore, '-', 'LSJq6a6AMigCiRHGrby4TuHeGirJw2PL5c', fees)
-                if (fee.length === 64){
-                  setTimeout(async function(){
+                if (fee.length === 64) {
+                  setTimeout(async function () {
                     await scrypta.send(writingKey.walletstore, '-', props.user.address, canWithdraw)
                     alert('Withdraw successfully done!')
                     setWithdrawing(false)
                     setShowWithdraw(false)
-                    setTimeout(async function(){
+                    setTimeout(async function () {
                       let totalBalance = 0
                       for (let k in written.data) {
                         if (written.data[k].data.indexOf("sell:") === 0) {
                           let split = written.data[k].data.split(':')
                           let balance = await scrypta.get("/balance/" + split[2])
-                          if(balance.balance > 0){
+                          if (balance.balance > 0) {
                             let fees = balance.balance / 100 * 10
                             let canWithdraw = balance.balance - fees - 0.002
                             totalBalance += canWithdraw
@@ -283,64 +283,64 @@ export function Dashboard(props) {
   return (
     <div className="Explore">
       <NavBar />
-      <Container>
-        <Columns style={{ marginTop: "70px" }}>
-          <Columns.Column size={9}>
-            <Box style={{ height: "150px", padding: "50px 20px" }}>
-              <Media>
-                <Media.Item renderAs="figure" position="left">
-                  <Gravatar style={{ borderRadius: "100px" }} email={props.user.address} />
-                </Media.Item>
-                <Media.Item>
-                  <Content>
-                    <p style={{ marginTop: "5px" }}>
-                      <small>My Blockchain Address</small><br />
-                      <strong>{props.user.address}</strong>
-                    </p>
-                  </Content>
-                </Media.Item>
-              </Media>
-            </Box>
-          </Columns.Column>
-          <Columns.Column align="center">
-            <Box style={{ height: "150px", padding: "15px 20px", backgroundColor: "#429A98", color: "white" }}>
-              <h1>I have Earned:</h1>
-              <h1 style={{ fontSize: "22px", fontWeight: 600 }}>{balance} LYRA</h1>
-              <Button style={{ marginTop: "5px" }} color="success" onClick={() => setShowWithdraw(true)}>Withdraw</Button>
-            </Box>
-          </Columns.Column>
-        </Columns>
-        <Container style={{ position: "relative" }}>
-          <h1 style={{ fontSize: "22px", fontWeight: 600, color: "#005D7F" }}><br />What do you want to register today?</h1><br></br>
-          <Input onKeyDown={_handleKeyDown} className="myInput" style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain domain"} />
-          {!isSearching ? <Control style={{ position: "absolute", bottom: 0, right: 0 }}>
-            <Button className="myButton" onClick={searchName} color="info">Search</Button>
-          </Control> : <div style={{ marginTop: "20px" }}>Searching...</div>}
-        </Container>
-      </Container>
-      {returnRegisterBox()}
-      {returnWithdrawBox()}
-      <Container>
-        <Columns>
-          <Columns.Column style={{ marginTop: "40px" }}>
-            <Card>
-              <Card.Content align="center">
+      <Container style={{ padding: "150px 0", backgroundColor: "#470F47" }}>
+        <Container>
+          <Columns style={{ marginTop: "70px" }}>
+            <Columns.Column size={9}>
+              <Box className="nes-container is-rounded is-dark dashboard-box">
                 <Media>
+                  <Media.Item renderAs="figure" position="left">
+                    <Gravatar style={{ width: "90px" }} email={props.user.address} />
+                  </Media.Item>
                   <Media.Item>
-                    <Box className="header-color">
-                      <Heading size={5} align="center" style={{ color: "white" }}>YOUR REGISTERED DOMAIN</Heading>
-                    </Box>
+                    <Content>
+                      <p style={{ fontSize: "22px", marginTop: "10px" }}>
+                        <small>My Blockchain Address</small><br />
+                        <strong style={{ color: "white" }}>{props.user.address}</strong>
+                      </p>
+                    </Content>
                   </Media.Item>
                 </Media>
-                <Content>
-                  {returnOwned()}
-                </Content>
-              </Card.Content>
-            </Card>
-          </Columns.Column>
-          {returnSell()}
-        </Columns>
+              </Box>
+            </Columns.Column>
+            <Columns.Column align="center">
+              <Box className="nes-container is-rounded is-dark" style={{ height: "220px", padding: "15px", color: "white", textAlign: "center" }}>
+                <h1>I have Earned:</h1>
+                <div style={{ fontSize: "16px", fontWeight: 600, }}>
+                  <i style={{ margin: "10px 20px" }} class="nes-icon coin"></i>
+                  <span>{balance} LYRA</span>
+                </div>
+                <button className="nes-btn is-primary" style={{ marginTop: "20px" }} color="success" onClick={() => setShowWithdraw(true)}>Withdraw</button>
+              </Box>
+            </Columns.Column>
+          </Columns>
+          <Container style={{marginBottom:"50px", position: "relative" }}>
+            <h1 style={{ fontSize: "22px", fontWeight: 600, color: "#ffff" }}><br />What do you want to register today?</h1><br></br>
+            <div className="nes-field">
+              <input className="nes-input mod-size" onKeyDown={_handleKeyDown} style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain name"} /></div>
+            {!isSearching ? <Control style={{ position: "absolute", bottom: -4, right: 0 }}>
+              <button className="nes-btn mod-size is-primary" onClick={searchName}>Search</button>
+            </Control> : <div style={{ marginTop: "20px" }}>Searching...</div>}
+          </Container>
+        </Container>
+        {returnRegisterBox()}
+        {returnWithdrawBox()}
+        <Container className="nes-container is-rounded is-dark" >
+          <Columns>
+            <Columns.Column style={{ marginTop: "40px" }}>
+                <Card.Content align="center">
+                      <Box className="header-color">
+                        <Heading size={5} align="center" style={{ color: "white" }}>YOUR REGISTERED DOMAIN</Heading>
+                      </Box>
+                  <Content>
+                    {returnOwned()}
+                  </Content>
+                </Card.Content>
+            </Columns.Column>
+            {returnSell()}
+          </Columns>
+        </Container>
       </Container>
-    </div>
+    </div >
   );
 }

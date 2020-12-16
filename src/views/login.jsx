@@ -24,7 +24,7 @@ export function Login() {
       <Container style={{ padding: "220px 0", backgroundColor: "#470F47" }} align="center">
         <Columns>
           <Columns.Column>
-            <Box className="nes-container is-rounded" style={{ padding: "50px 20px" }}>
+            <Box className="nes-container is-rounded myBox" style={{ padding: "50px 20px" }}>
               <Media>
                 <Media.Item renderAs="figure" position="left">
                   <Image size={64} alt="64x64" src={LoginOne} />
@@ -39,7 +39,7 @@ export function Login() {
             </Box>
           </Columns.Column>
           <Columns.Column>
-            <Box className="nes-container is-rounded" style={{ padding: "50px 20px" }}>
+            <Box className="nes-container is-rounded myBox" style={{ padding: "50px 20px" }}>
               <Media>
                 <Media.Item renderAs="figure" position="left">
                   <Image size={64} alt="64x64" src={Domain} />
@@ -54,7 +54,7 @@ export function Login() {
             </Box>
           </Columns.Column>
           <Columns.Column>
-            <Box className="nes-container is-rounded" style={{ padding: "50px 20px" }}>
+            <Box className="nes-container is-rounded myBox" style={{ padding: "50px 20px" }}>
               <Media>
                 <Media.Item renderAs="figure" position="left">
                   <Image size={64} alt="64x64" src={Check} />
@@ -70,7 +70,7 @@ export function Login() {
           </Columns.Column>
         </Columns>
         <div align="center" style={{ width: "100%", marginTop: "30px" }}>
-          <div id="scrypta-login" dapp="Scrypta Decentralized Names"></div>
+          <div className="login-button" id="scrypta-login" dapp="Scrypta Decentralized Names"></div>
         </div>
       </Container>
     </div>

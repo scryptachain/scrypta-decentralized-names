@@ -1,6 +1,7 @@
 body, html {
   background-color: #470F47 !important;
 }
+
 .App {
   text-align: center;
   min-height: 100% !important;
@@ -13,17 +14,17 @@ body, html {
 
 .navbar {
   height: 80px;
-  background-color: #198DE0 !important;
-  border-bottom: 7px solid #1268A5;
-  border-left: 7px solid #1268A5;
-  box-shadow: 5px 7px #000000;
+  background-color: #009DDC !important;
+  border-bottom: 7px solid #017fb1;
+  border-left: 7px solid #017fb1;
+  box-shadow: 5px 7px #005e83;
   position: fixed !important;
   top: 0;
   left: 0;
   width: 100%;
 }
 
-.mod-size{
+.mod-size {
   height: 70px;
 }
 
@@ -79,6 +80,7 @@ body, html {
   justify-content: center;
   font-size: calc(10px + 2vmin);
 }
+
 .Explore {
   background-color: #470F47;
 }
@@ -90,6 +92,11 @@ body, html {
 .selling-box {
   background-color: rgba(238, 88, 88, 0.35)!important;
   position: relative !important;
+}
+
+.dashboard-box {
+  padding: 60px 30px !important;
+  height: 220px;
 }
 
 .Details {
@@ -121,7 +128,8 @@ body, html {
 }
 
 .myBox {
-  box-shadow: 5px 7px 18px rgba(0, 0, 0, 0.4) !important;
+  border-bottom: 10px solid #000000 !important;
+  border-right: 10px solid #000000 !important;
 }
 
 #scrypta-login button, #confirm-button {
@@ -129,9 +137,10 @@ body, html {
   height: 100px;
   font-size: 30px;
   font-weight: 600;
-  border-radius: 25px !important;
-  background-color: #005D7F !important;
-  box-shadow: 5px 7px 18px rgba(0, 0, 0, 0.3);
+  background-color: #009DDC !important;
+  border-bottom: 10px solid #017fb1 !important;
+  border-right: 10px solid #017fb1!important;
+  font-family: 'Press Start 2P', cursive !important;
 }
 
 #scrypta-login-wrapper {
@@ -147,12 +156,12 @@ body, html {
 }
 
 .header-color {
-  background-color: #005D7F !important;
-  border-bottom: 10px solid #004660 !important;
-  border-right: 10px solid #004660 !important;
+  background-color: #009DDC !important;
+  border-bottom: 10px solid #017fb1 !important;
+  border-right: 10px solid #017fb1!important;
 }
 
-.nes-container .title{
+.nes-container .title {
   font-size: 22px!important;
   line-height: 5px!important;
   color: rgb(228, 46, 73) !important;
@@ -160,7 +169,7 @@ body, html {
 
 .header-color h1.title, .header-color2 h1.title {
   margin-top: 15px;
-  color:rgb(255, 255, 255) !important;
+  color: rgb(255, 255, 255) !important;
 }
 
 .header-color2 {
