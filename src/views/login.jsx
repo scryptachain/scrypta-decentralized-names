@@ -4,13 +4,35 @@ import React, { useEffect } from 'react';
 import Play from '../assets/play.png'
 import Search from '../assets/mush.png'
 import Enter from '../assets/enter.png'
-const User = require("../libs/user");
+
+const ScryptaCore = require('@scrypta/core')
+const scrypta = new ScryptaCore(true)
 
 export function Login() {
   let user
+
+  async function authUser() {
+    if(localStorage.getItem('SID') !== null){
+        if(localStorage.getItem('SID').indexOf('xpub') !== -1){
+            localStorage.setItem('xSID', localStorage.getItem('SID'))
+        }
+    }
+    if(localStorage.getItem('xSID') !== null){
+        let SIDS = localStorage.getItem('xSID').split(':')
+        let address = await scrypta.deriveKeyfromXPub (SIDS[0], "m/0")
+        return {
+            address: address.pub,
+            walletstore: localStorage.getItem('xSID'),
+            xpub: SIDS[0]
+        }
+    }else{
+        return false
+    }
+}
+
   useEffect(() => {
     async function fetchUser() {
-      let auth = await User.auth()
+      let auth = await authUser()
       if (auth !== false) {
         window.location = '/'
       }

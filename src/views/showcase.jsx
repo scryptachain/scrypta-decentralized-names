@@ -211,7 +211,7 @@ export function Showcase(props) {
                 <div style={{ marginTop: "150px" }}>
                     <div className="nes-container is-rounded" style={{ position: "relative" }}>
                         <div className="nes-field">
-                            <Input className="nes-input" onKeyDown={_handleKeyDown} style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain domain"} />
+                            <Input className="nes-input" onKeyDown={_handleKeyDown} style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain name"} />
                         </div>
                         {!isSearching ? <Control style={{ position: "absolute", bottom: 13, right: 15 }}>
                             <button className="nes-btn is-primary" onClick={searchName} color="info">Search</button>

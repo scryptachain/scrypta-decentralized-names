@@ -4936,7 +4936,7 @@ function Showcase(props) {
                 setSearcher(evt.target.value);
               },
               value: searcher,
-              placeholder: "Search a blockchain domain"
+              placeholder: "Search a blockchain name"
             }, void 0, false, {
               fileName: _jsxFileName,
               lineNumber: 212,

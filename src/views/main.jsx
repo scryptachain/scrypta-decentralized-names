@@ -10,7 +10,8 @@ import {
   Switch,
   Route
 } from "react-router-dom";
-const User = require("../libs/user");
+const ScryptaCore = require('@scrypta/core')
+const scrypta = new ScryptaCore(true)
 
 export class Main extends Component {
   constructor() {
@@ -18,8 +19,27 @@ export class Main extends Component {
     this.state = {user: false, guest: false}
   }
 
+  async authUser() {
+    if(localStorage.getItem('SID') !== null){
+        if(localStorage.getItem('SID').indexOf('xpub') !== -1){
+            localStorage.setItem('xSID', localStorage.getItem('SID'))
+        }
+    }
+    if(localStorage.getItem('xSID') !== null){
+        let SIDS = localStorage.getItem('xSID').split(':')
+        let address = await scrypta.deriveKeyfromXPub (SIDS[0], "m/0")
+        return {
+            address: address.pub,
+            walletstore: localStorage.getItem('xSID'),
+            xpub: SIDS[0]
+        }
+    }else{
+        return false
+    }
+  }
+
   async fetchUser() {
-      let auth = await User.auth();
+      let auth = await this.authUser();
       if (auth !== false) {
         this.setState(() => { return { user: auth } })
       }

@@ -1,7 +1,7 @@
 const ScryptaCore = require("@scrypta/core")
 const scrypta = new ScryptaCore(true)
 
-module.exports.auth = async function auth(id) {
+module.exports.auth = async function auth() {
     if(localStorage.getItem('SID') !== null){
         if(localStorage.getItem('SID').indexOf('xpub') !== -1){
             localStorage.setItem('xSID', localStorage.getItem('SID'))

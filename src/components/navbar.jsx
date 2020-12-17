@@ -1,14 +1,35 @@
 import { Navbar } from 'react-bulma-components';
 import { button } from 'react-bulma-components';
 import React, { useState, useEffect } from 'react';
-const User = require("../libs/user");
+
+const ScryptaCore = require('@scrypta/core')
+const scrypta = new ScryptaCore(true)
 
 export function NavBar() {
     let [logged, setLogged] = useState(false)
 
+    async function authUser() {
+        if(localStorage.getItem('SID') !== null){
+            if(localStorage.getItem('SID').indexOf('xpub') !== -1){
+                localStorage.setItem('xSID', localStorage.getItem('SID'))
+            }
+        }
+        if(localStorage.getItem('xSID') !== null){
+            let SIDS = localStorage.getItem('xSID').split(':')
+            let address = await scrypta.deriveKeyfromXPub (SIDS[0], "m/0")
+            return {
+                address: address.pub,
+                walletstore: localStorage.getItem('xSID'),
+                xpub: SIDS[0]
+            }
+        }else{
+            return false
+        }
+    }
+
     useEffect(() => {
         async function fetchUser() {
-            let auth = await User.auth();
+            let auth = await authUser();
             if (auth !== false) {
                 setLogged(true)
             }
