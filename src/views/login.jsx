@@ -1,9 +1,9 @@
 import { NavBar } from "../components/navbar";
-import { Container, Columns, Box, Media, Image, Content } from 'react-bulma-components';
+import { Container, Columns, Box, Content } from 'react-bulma-components';
 import React, { useEffect } from 'react';
-import LoginOne from '../assets/login.svg'
-import Domain from '../assets/domain.svg'
-import Check from '../assets/check.svg'
+import Play from '../assets/play.png'
+import Search from '../assets/mush.png'
+import Enter from '../assets/enter.png'
 const User = require("../libs/user");
 
 export function Login() {
@@ -24,54 +24,33 @@ export function Login() {
       <Container style={{ padding: "220px 0", backgroundColor: "#470F47" }} align="center">
         <Columns>
           <Columns.Column>
-            <Box className="nes-container is-rounded myBox" style={{ padding: "50px 20px" }}>
-              <Media>
-                <Media.Item renderAs="figure" position="left">
-                  <Image size={64} alt="64x64" src={LoginOne} />
-                </Media.Item>
-                <Media.Item>
-                  <Content>
-                    <h1 style={{ color: "#005D7F" }}>Step One</h1>
-                    <p style={{ color: "#005D7F", fontSize: "16px" }}>Please login with Scrypta ID by clicking on the button below. You can synchronize it with Manent App, use the Scrypta Card or simply upload the .sid file</p>
-                  </Content>
-                </Media.Item>
-              </Media>
+            <Box className="nes-container is-rounded" style={{ padding: "30px 20px",  }}>
+              <h1 style={{ color: "#005D7F", fontSize:"28px", fontWeight:"600" }}>Login</h1>
+              <img src={Enter} style={{ height: "250px" }} alt="Login" />
+              <Content>
+                <p style={{ color: "#005D7F", fontSize: "16px", marginTop: "30px" }}>Login with Scrypta Manent Exstension.<br/>You can download it for Firefox or Chromium-based browsers.</p>
+              </Content>
             </Box>
           </Columns.Column>
           <Columns.Column>
-            <Box className="nes-container is-rounded myBox" style={{ padding: "50px 20px" }}>
-              <Media>
-                <Media.Item renderAs="figure" position="left">
-                  <Image size={64} alt="64x64" src={Domain} />
-                </Media.Item>
-                <Media.Item>
-                  <Content>
-                    <h1 style={{ color: "#005D7F" }}>Step Two</h1>
-                    <p style={{ color: "#005D7F", fontSize: "16px" }}>Once logged in, simply enter the Domain Name in the search bar to check if it is available and proceed with the domain registration.<br /><br /></p>
-                  </Content>
-                </Media.Item>
-              </Media>
+            <Box className="nes-container is-rounded" style={{ padding: "30px 20px" }}>
+            <h1 style={{ color: "#005D7F", fontSize:"28px", fontWeight:"600" }}>Search</h1>
+            <img src={Search} style={{ height: "250px" }} alt="Search" />
+              <Content>
+                <p style={{ color: "#005D7F", fontSize: "16px", marginTop: "30px" }}>Search your blockchain name and check if it is available or buy an existent blockchain name sold by someone.</p>
+              </Content>
             </Box>
           </Columns.Column>
           <Columns.Column>
-            <Box className="nes-container is-rounded myBox" style={{ padding: "50px 20px" }}>
-              <Media>
-                <Media.Item renderAs="figure" position="left">
-                  <Image size={64} alt="64x64" src={Check} />
-                </Media.Item>
-                <Media.Item>
-                  <Content>
-                    <h1 style={{ color: "#005D7F" }}>Step Three</h1>
-                    <p style={{ color: "#005D7F", fontSize: "16px", marginBottom: "30px" }}>By clicking on the confirmation button you will have registered your Domain Name forever. The registration fee is only 10 LYRA.</p>
-                  </Content>
-                </Media.Item>
-              </Media>
+            <Box className="nes-container is-rounded" style={{ padding: "30px 20px" }}>
+            <h1 style={{ color: "#005D7F", fontSize:"28px", fontWeight:"600" }}>Register</h1>
+              <img src={Play} style={{ height: "250px" }} alt="play"/>
+              <Content>
+                <p style={{ color: "#005D7F", fontSize: "16px", marginTop: "30px"}}>Register your blockchain name forever. Your address will be linked to that name.</p>
+              </Content>
             </Box>
           </Columns.Column>
         </Columns>
-        <div align="center" style={{ width: "100%", marginTop: "30px" }}>
-          <div className="login-button" id="scrypta-login" dapp="Scrypta Decentralized Names"></div>
-        </div>
       </Container>
     </div>
   );

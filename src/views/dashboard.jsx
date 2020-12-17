@@ -175,12 +175,17 @@ export function Dashboard(props) {
       return <div>
         {owned.map((value, index) => {
           if (ban.indexOf(value.name) === -1) {
-            return <div style={{ position: "relative", textAlign: "left" }} key={index}>
-              <Button style={{ position: "absolute", top: "15px", right: "0px" }} color="success" href={"/details/" + value.uuid} renderAs="a"> Details </Button>
-              <small>Domain Name:</small>
-              <h4 stlye={{ marginBottom: "-30px", marginTop: 0 }}>{value.name}</h4>
-              <b>{value.uuid} </b><hr />
-            </div>
+            return (
+              <div style={{ position: "relative", textAlign: "left", margin: "40px 0" }} key={index}>
+                <div className="nes-container is-rounded with-title">
+                  <h4 className="title">{value.name}</h4>
+                  <b>{value.uuid} </b>
+                  <a href={"/details/" + value.uuid}>
+                    <button className="nes-btn is-success" style={{ position: "absolute", top: "5px", right: "0px" }} > Details </button>
+                  </a>
+                </div>
+              </div>
+            )
           } else {
             return false;
           }
@@ -200,38 +205,27 @@ export function Dashboard(props) {
         }
       }
       if (inSell.length > 0) {
-        return <div>
+        return <div style={{ marginTop: "50px" }}>
+          <Box className="header-color2">
+            <Heading size={5} align="center" style={{ color: "white" }}>FOR SALE</Heading>
+          </Box>
           {inSell.map((value, index) => {
             if (ban.indexOf(value.name) === -1) {
-              return <div> <Columns.Column style={{ marginTop: "40px" }}>
-                <Button color="success" renderAs="a" href="/showcase">Go to Showcase</Button>
-                <Card>
-                  <Card.Content align="center">
-                    <Media>
-                      <Media.Item>
-                        <Box className="header-color">
-                          <Heading size={5} align="center" style={{ color: "white" }}>FOR SALE</Heading>
-                        </Box>
-                      </Media.Item>
-                    </Media>
-                    <Content>
-                      <div style={{ position: "relative" }} key={index}>
-                        <Button.Group style={{ position: "absolute", top: 0, right: "0px" }}>
-                          <Button color="success" href={"/details/" + value.uuid} renderAs="a"> Details </Button>
-                        </Button.Group>
-                        <div style={{ textAlign: "left" }}>
-                          <small>Domain Name:</small>
-                          <h4 stlye={{ marginBottom: "-30px" }}>{value.name}</h4>
-                            Registered by: <b>{value.owner} </b><br />
-                            Domain ID: <b>{value.uuid} </b><br />
-                            Price: <b> {value.price} LYRA</b> <hr />
-                        </div>
-                      </div>
-                    </Content>
-                  </Card.Content>
-                </Card>
-              </Columns.Column>
-              </div>
+              return (
+                <div style={{ position: "relative", marginTop: "40px" }} key={index}>
+                  <div className="nes-container is-rounded with-title" style={{ textAlign: "left" }}>
+                    <h4 className="title" stlye={{ marginBottom: "-30px" }}>{value.name}</h4>
+                      Registered by: <b>{value.owner} </b><br />
+                      Domain ID: <b>{value.uuid} </b><br />
+                    <div style={{ display: "flex", margin: "7px 0", textAlign: "left" }}>
+                      <i class="nes-icon coin"></i>
+                      <p style={{ margin: "7px 7px" }}> Price: <b>{value.price} LYRA</b></p></div>
+                  </div>
+                  <a href={"/details/" + value.uuid}>
+                    <button className="nes-btn is-success" style={{ position: "absolute", top: 40, right: 20 }}> Details
+                  </button>
+                  </a>
+                </div>)
             } else {
               return false;
             }
@@ -259,7 +253,7 @@ export function Dashboard(props) {
             This name is available, enter your password to register it!<br /><br />
             Transaction will cost <b>10 LYRA</b>!<br /><br />
             <Input style={{ width: "100%!important", textAlign: "center" }} placeholder="Insert wallet password" type="password" onChange={(evt) => { setPassword(evt.target.value) }} value={password} /><br></br><br></br>
-            {!isRegistering ? <Button onClick={registerName} color="info">REGISTER</Button> : <div>Registering, please wait...</div>}
+            {!isRegistering ? <button className="nes-btn is-primary" onClick={registerName} color="info">REGISTER</button> : <div>Registering, please wait...</div>}
           </Section>
         </Modal.Content>
       </Modal >
@@ -269,11 +263,13 @@ export function Dashboard(props) {
   const returnWithdrawBox = () => {
     if (showWithdraw) {
       return <Modal show={showWithdraw} onClose={() => setShowWithdraw(false)}>
-        <Modal.Content style={{ textAlign: "center" }}>
+        <Modal.Content style={{ textAlign: "center", border:"5px solid #000000" }}>
           <Section style={{ backgroundColor: 'white' }}>
-            <Heading>Withdraw all</Heading> <br /><br />
-            <Input style={{ width: "100%!important", textAlign: "center", marginTop: "20px" }} type="password" onChange={(evt) => { setPassword(evt.target.value) }} placeholder="Insert wallet password" value={password} /><br></br><br></br>
-            {!isWithdrawing ? <Button onClick={withdrawFunds} color="success">WITHDRAW ALL FUNDS</Button> : <div>Withdrawing, please wait...</div>}
+            <Heading>Withdraw all</Heading><br />
+            <div className="nes-field">
+              <Input className="nes-input" style={{ width: "100%!important", textAlign: "center", marginTop: "20px" }} type="password" onChange={(evt) => { setPassword(evt.target.value) }} placeholder="Insert wallet password" value={password} />
+            </div><br /><br />
+            {!isWithdrawing ? <button className="nes-btn is-success" onClick={withdrawFunds} color="success">WITHDRAW ALL FUNDS</button> : <div>Withdrawing, please wait...</div>}
           </Section>
         </Modal.Content>
       </Modal >
@@ -283,63 +279,62 @@ export function Dashboard(props) {
   return (
     <div className="Explore">
       <NavBar />
-      <Container style={{ padding: "150px 0", backgroundColor: "#470F47" }}>
-        <Container>
-          <Columns style={{ marginTop: "70px" }}>
-            <Columns.Column size={9}>
-              <Box className="nes-container is-rounded is-dark dashboard-box">
-                <Media>
-                  <Media.Item renderAs="figure" position="left">
-                    <Gravatar style={{ width: "90px" }} email={props.user.address} />
-                  </Media.Item>
-                  <Media.Item>
-                    <Content>
-                      <p style={{ fontSize: "22px", marginTop: "10px" }}>
-                        <small>My Blockchain Address</small><br />
-                        <strong style={{ color: "white" }}>{props.user.address}</strong>
-                      </p>
-                    </Content>
-                  </Media.Item>
-                </Media>
-              </Box>
-            </Columns.Column>
-            <Columns.Column align="center">
-              <Box className="nes-container is-rounded is-dark" style={{ height: "220px", padding: "15px", color: "white", textAlign: "center" }}>
-                <h1>I have Earned:</h1>
-                <div style={{ fontSize: "16px", fontWeight: 600, }}>
-                  <i style={{ margin: "10px 20px" }} class="nes-icon coin"></i>
-                  <span>{balance} LYRA</span>
-                </div>
-                <button className="nes-btn is-primary" style={{ marginTop: "20px" }} color="success" onClick={() => setShowWithdraw(true)}>Withdraw</button>
-              </Box>
-            </Columns.Column>
-          </Columns>
-          <Container style={{marginBottom:"50px", position: "relative" }}>
-            <h1 style={{ fontSize: "22px", fontWeight: 600, color: "#ffff" }}><br />What do you want to register today?</h1><br></br>
-            <div className="nes-field">
-              <input className="nes-input mod-size" onKeyDown={_handleKeyDown} style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain name"} /></div>
-            {!isSearching ? <Control style={{ position: "absolute", bottom: -4, right: 0 }}>
-              <button className="nes-btn mod-size is-primary" onClick={searchName}>Search</button>
-            </Control> : <div style={{ marginTop: "20px" }}>Searching...</div>}
+      <Container style={{ padding: "150px 0" }}>
+        <div >
+          <Container>
+            <Columns style={{ marginTop: "70px" }}>
+              <Columns.Column size={9}>
+                <Box className="nes-container is-rounded dashboard-box">
+                  <Media>
+                    <Media.Item renderAs="figure" position="left">
+                      <Gravatar style={{ width: "90px" }} email={props.user.address} />
+                    </Media.Item>
+                    <Media.Item>
+                      <Content>
+                        <p style={{ fontSize: "22px", marginTop: "10px" }}>
+                          <small>My Blockchain Address</small><br />
+                          <strong>{props.user.address}</strong>
+                        </p>
+                      </Content>
+                    </Media.Item>
+                  </Media>
+                </Box>
+              </Columns.Column>
+              <Columns.Column align="center">
+                <Box className="nes-container is-rounded" style={{ height: "220px", padding: "15px", textAlign: "center" }}>
+                  <h1>You have earned:</h1>
+                  <div style={{ fontSize: "16px", fontWeight: 600, marginTop: "15px", textAlign: "left" }}>
+                    <div style={{ float: "left" }}>
+                      <i style={{ margin: "0" }} class="nes-icon big coin"></i>
+                    </div>
+                    <div style={{ float: "left", paddingLeft: "60px", marginTop: "10px" }}>{balance}<br />LYRA</div>
+                  </div>
+                  <br /><br />
+                  <button className="nes-btn is-primary" style={{ marginTop: "35px", width: "100%" }} color="success" onClick={() => setShowWithdraw(true)}>Withdraw</button>
+                </Box>
+              </Columns.Column>
+            </Columns>
+            <div className="nes-container is-rounded" style={{ marginBottom: "50px", position: "relative" }}>
+              <h1 style={{ backgroundColor: "none", lineHeight: "20px", fontSize: "22px", fontWeight: 600 }}><br />What do you want to register today?</h1><br></br>
+              <div className="nes-field">
+                <input className="nes-input mod-size" onKeyDown={_handleKeyDown} style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain name"} /></div>
+              {!isSearching ? <Control style={{ position: "absolute", bottom: 16, right: 21 }}>
+                <button className="nes-btn mod-size is-primary" onClick={searchName}>Search</button>
+              </Control> : <div style={{ marginTop: "20px" }}>Searching...</div>}
+            </div>
           </Container>
-        </Container>
-        {returnRegisterBox()}
-        {returnWithdrawBox()}
-        <Container className="nes-container is-rounded is-dark" >
-          <Columns>
-            <Columns.Column style={{ marginTop: "40px" }}>
-                <Card.Content align="center">
-                      <Box className="header-color">
-                        <Heading size={5} align="center" style={{ color: "white" }}>YOUR REGISTERED DOMAIN</Heading>
-                      </Box>
-                  <Content>
-                    {returnOwned()}
-                  </Content>
-                </Card.Content>
-            </Columns.Column>
+          {returnRegisterBox()}
+          {returnWithdrawBox()}
+          <div className="nes-container is-rounded" >
+            <Box style={{ marginTop: "40px" }} className="header-color">
+              <Heading size={5} align="center" style={{ color: "white" }}>YOUR REGISTERED DOMAIN</Heading>
+            </Box>
+            {returnOwned()}
+          </div>
+          <div className="nes-container is-rounded" style={{ marginTop: "40px" }} >
             {returnSell()}
-          </Columns>
-        </Container>
+          </div>
+        </div>
       </Container>
     </div >
   );

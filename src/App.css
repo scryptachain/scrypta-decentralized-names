@@ -48,7 +48,7 @@ body, html {
   top: 50%;
   margin-top: -109px;
   background: #fff;
-  border: 2px solid #000000;
+  border: 5px solid #000000;
   text-align: center;
   left: 50%;
   margin-left: -300px;
@@ -57,6 +57,14 @@ body, html {
 
 .nes-dialog .nes-btn {
   margin-left: 0;
+}
+
+.nes-icon.big{
+  transform: scale(4);
+}
+
+.nes-container {
+  background-color: #fff !important;
 }
 
 .nes-dialog .dialog-menu {
@@ -81,11 +89,7 @@ body, html {
   font-size: calc(10px + 2vmin);
 }
 
-.Explore {
-  background-color: #470F47;
-}
-
-.Login {
+.Explore, .Login, .Details {
   background-color: #470F47;
 }
 
@@ -99,14 +103,6 @@ body, html {
   height: 220px;
 }
 
-.Details {
-  background-image: url('./assets/bg-end.png');
-  background-repeat: no-repeat;
-  background-size: 125vh;
-  background-position: bottom left;
-  width: 100vw;
-  min-height: 100vh;
-}
 
 .Showcase {
   background-image: url('./assets/bg-end.png');
@@ -125,11 +121,6 @@ body, html {
   width: 150px;
   height: 80px !important;
   background-color: #005D7F !important;
-}
-
-.myBox {
-  border-bottom: 10px solid #000000 !important;
-  border-right: 10px solid #000000 !important;
 }
 
 #scrypta-login button, #confirm-button {

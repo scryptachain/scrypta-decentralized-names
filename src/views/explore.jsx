@@ -56,6 +56,31 @@ export function Explore() {
     }
   }
 
+  function returnRegistered() {
+    if (history.length > 0) {
+      return (
+        <Container align="left">
+          {history.map((value, index) => {
+            if (ban.indexOf(value.name) === -1) {
+              return <div style={{ marginBottom: "30px" }} key={index}>
+                <div className="nes-container is-rounded with-title" >
+                  <p className="title">{value.name}</p>
+                  Registered by: <b>{value.owner} </b><br></br>
+                  Unique ID: {value.uuid} </div>
+              </div>
+            } else {
+              return false;
+            }
+          })}
+        </Container>
+      )
+    } else {
+      return (
+        <div>Loading from blockchain...</div>
+      )
+    }
+  }
+
   function returnSell() {
     if (inSell.length > 0) {
       return (
@@ -68,8 +93,8 @@ export function Explore() {
               {inSell.map((value, index) => {
                 if (ban.indexOf(value.name) === -1 && value.payment !== null && value.payment !== undefined) {
                   return (
-                    <div key={index}>
-                      <div className="nes-container is-rounded with-title" stlye={{ marginBottom: "-30px", marginTop: 0 }}>
+                    <div key={index} style={{ margin: "30px 0" }}>
+                      <div className="nes-container is-rounded with-title" >
                         <p className="title">{value.name}</p>
                         Registered by: <b>{value.owner} </b><br></br>
                         Unique id: <b>{value.uuid}</b><br />
@@ -86,6 +111,10 @@ export function Explore() {
             </Container>
           </div>
         </div>
+      )
+    } else {
+      return (
+        <div>Nothing to show...</div>
       )
     }
   }
@@ -116,47 +145,31 @@ export function Explore() {
     <div className="Explore">
       <NavBar />
       {returnDialog()}
-      <Container style={{ padding: "150px 0", backgroundColor: "#470F47" }}>
-        <Container className="nes-container  is-rounded" style={{ backgroundColor: "white" }}>
-          <Columns>
-            <Columns.Column align="center">
-              <h1 style={{ fontSize: "30px", fontWeight: "600", margin: "20px 0" }}>Blockchain Names</h1>
-              <div style={{ position: "relative", marginTop: "40px" }}>
-                <div className="nes-field">
-                  <input className="nes-input mod-size" onKeyDown={_handleKeyDown} style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain name"} /></div>
-                <Control style={{ position: "absolute", bottom: -4, right: 0 }}>
-                  <button className="nes-btn mod-size is-primary" onClick={searchName}>Search</button>
-                </Control>
-              </div>
-            </Columns.Column>
-          </Columns>
-          <Container className="nes-container is-rounded" style={{ marginTop: "40px" }}>
-            <div>
-              <div align="center">
-                <Box className="header-color">
-                  <Heading size={5} align="center" style={{ color: "white" }}>LATEST DOMAIN REGISTERED</Heading>
-                </Box>
-                <Container align="left">
-                  {history.map((value, index) => {
-                    if (ban.indexOf(value.name) === -1) {
-                      return <div style={{ marginBottom: "30px" }} key={index}>
-                        <div className="nes-container is-rounded with-title" > <p className="title">{value.name}</p>
-                            Registered by: <b>{value.owner} </b><br></br>
-                            Unique ID: {value.uuid} </div>
-                      </div>
-                    } else {
-                      return false;
-                    }
-                  })}
-                </Container>
-              </div>
+      <div style={{ padding: "150px 200px", backgroundColor: "#470F47" }}>
+        <div className="nes-container is-rounded" align="center">
+          <h1 style={{ fontSize: "30px", fontWeight: "600", margin: "20px 0" }}>Blockchain Names</h1>
+          <div style={{ position: "relative", marginTop: "40px" }}>
+            <div className="nes-field">
+              <input className="nes-input mod-size" onKeyDown={_handleKeyDown} style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain name"} /></div>
+            <Control style={{ position: "absolute", bottom: -4, right: 0 }}>
+              <button className="nes-btn mod-size is-primary" onClick={searchName}>Search</button>
+            </Control>
+          </div>
+        </div>
+        <Container className="nes-container is-rounded" style={{ marginTop: "40px" }}>
+          <div>
+            <div align="center">
+              <Box className="header-color">
+                <Heading size={5} align="center" style={{ color: "white" }}>LATEST REGISTERED NAMES</Heading>
+              </Box>
+              {returnRegistered()}
             </div>
-          </Container>
-          <Container className="nes-container is-rounded" style={{ marginTop: "50px" }}>
-            {returnSell()}
-          </Container>
+          </div>
         </Container>
-      </Container>
+        <Container className="nes-container is-rounded" style={{ marginTop: "50px" }}>
+          {returnSell()}
+        </Container>
+      </div>
     </div>
   );
 }
