@@ -19,6 +19,9 @@ export function Dashboard(props) {
   let [balance, setBalance] = useState(0)
   let [isWithdrawing, setWithdrawing] = useState(false)
   let [showWithdraw, setShowWithdraw] = useState(false)
+  let [showDialog, setShowDialog] = useState(false)
+  let [textDialog, setTextDialog] = useState("")
+  let [titleDialog, setTitleDialog] = useState("")
 
   let ban = ["register:turinglabs"]
   useEffect(() => {
@@ -67,11 +70,11 @@ export function Dashboard(props) {
       if (response.message !== undefined && response.message === 'Name not found.') {
         setAvailability(true)
       } else if (response.address !== undefined) {
-        alert('This domain is taken by ' + response.address)
+        openDialog('Ops', 'This domain is taken by ' + response.address)
         setAvailability(false)
       }
     } else {
-      alert('Write a name first!')
+      openDialog('Ops', 'Write a name first!')
     }
   }
 
@@ -89,7 +92,7 @@ export function Dashboard(props) {
             setTimeout(async function () {
               let written = await scrypta.write(masterkey.walletstore, '-', 'register:' + searcher, '', '', 'names://')
               if (written.txs[0].length === 64) {
-                alert('Name registered!')
+                openDialog('Well Done', 'Name registered! Wait block to see it in your Dashboard')
                 setAvailability(false)
                 setSearcher("")
                 setRegistering(false)
@@ -98,20 +101,20 @@ export function Dashboard(props) {
                 }, 1500)
               } else {
                 setRegistering(false)
-                alert('Something goes wrong, please retry!')
+                openDialog('Ops', 'Something goes wrong, please retry!')
               }
             }, 1500)
           } else {
             setRegistering(false)
-            alert('Something goes wrong, please retry!')
+            openDialog('Ops', 'Something goes wrong, please retry!')
           }
         } else {
           setRegistering(false)
-          alert('Not enough funds!')
+          openDialog('Ops', 'Not enough funds!')
         }
       } else {
         setRegistering(false)
-        alert('Wrong password!')
+        openDialog('Ops', 'Wrong password!')
       }
     }
   }
@@ -139,7 +142,7 @@ export function Dashboard(props) {
                 if (fee.length === 64) {
                   setTimeout(async function () {
                     await scrypta.send(writingKey.walletstore, '-', props.user.address, canWithdraw)
-                    alert('Withdraw successfully done!')
+                    openDialog('Well Done', 'Withdraw successfully done!')
                     setWithdrawing(false)
                     setShowWithdraw(false)
                     setTimeout(async function () {
@@ -165,7 +168,7 @@ export function Dashboard(props) {
         }
       } else {
         setWithdrawing(false)
-        alert('Wrong password!')
+        openDialog('Ops', 'Wrong password!')
       }
     }
   }
@@ -235,9 +238,6 @@ export function Dashboard(props) {
     }
   }
 
-
-
-
   function _handleKeyDown(e) {
     if (e.key === 'Enter') {
       searchName()
@@ -263,7 +263,7 @@ export function Dashboard(props) {
   const returnWithdrawBox = () => {
     if (showWithdraw) {
       return <Modal show={showWithdraw} onClose={() => setShowWithdraw(false)}>
-        <Modal.Content style={{ textAlign: "center", border:"5px solid #000000" }}>
+        <Modal.Content style={{ textAlign: "center", border: "5px solid #000000" }}>
           <Section style={{ backgroundColor: 'white' }}>
             <Heading>Withdraw all</Heading><br />
             <div className="nes-field">
@@ -276,8 +276,31 @@ export function Dashboard(props) {
     }
   }
 
+  function returnDialog() {
+    if (showDialog) {
+      return (
+        <div class="dialog-wrapper">
+          <dialog class="nes-dialog" open>
+            <p class="title">{titleDialog}</p>
+            <p>{textDialog}</p>
+            <menu class="dialog-menu">
+              <button className="nes-btn" onClick={() => { setShowDialog(false) }} class="nes-btn is-primary">OK</button>
+            </menu>
+          </dialog>
+        </div>
+      )
+    }
+  }
+
+  function openDialog(title, text) {
+    setTitleDialog(title)
+    setTextDialog(text)
+    setShowDialog(true)
+  }
+
   return (
     <div className="Explore">
+      {returnDialog()}
       <NavBar />
       <Container style={{ padding: "150px 0" }}>
         <div >

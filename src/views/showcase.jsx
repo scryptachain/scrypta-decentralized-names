@@ -1,6 +1,5 @@
-import { Button } from 'react-bulma-components';
 import React, { useState, useEffect } from 'react';
-import { Form, Heading, Card, Content, Media, Container, Columns, Box, Modal, Section, } from 'react-bulma-components';
+import { Form, Heading, Container, Columns, Modal, Section, } from 'react-bulma-components';
 import { NavBar, } from '../components/navbar.jsx';
 import { useParams } from 'react-router-dom';
 import Gravatar from 'react-gravatar'
@@ -20,6 +19,9 @@ export function Showcase(props) {
     let [isBuying, setBuying] = useState(false)
     let [showConfirm, setShowConfirm] = useState(false)
     let [selected, setSelected] = useState({})
+    let [showDialog, setShowDialog] = useState(false)
+    let [textDialog, setTextDialog] = useState("")
+    let [titleDialog, setTitleDialog] = useState("")
 
 
     let ban = ["register:turinglabs"]
@@ -53,11 +55,11 @@ export function Showcase(props) {
             if (response.message !== undefined && response.message === 'Name not found.') {
                 setAvailability(true)
             } else if (response.address !== undefined) {
-                alert('This domain is taken by ' + response.address)
+                openDialog('Ops', 'This domain is taken by ' + response.address)
                 setAvailability(false)
             }
         } else {
-            alert('Write a name first!')
+            openDialog('Ops', 'Write a name first!')
         }
     }
 
@@ -70,37 +72,41 @@ export function Showcase(props) {
                 }
             }
             if (inSell.length > 0) {
-                return <div>
+                return <Columns style={{ marginTop: "40px" }}>
                     {inSell.map((value, index) => {
                         if (ban.indexOf(value.name) === -1) {
-                            return <div key={index}>
-                                <Card>
-                                    <Card.Content align="center">
-                                        <h1 style={{ fontSize: "26px", fontWeight: "600" }}>{value.name}</h1>
-                                        <Gravatar style={{ marginTop: "10px", width: "100%" }} email={value.uuid} />
-                                        <div style={{ position: "relative", fontSize: "12px" }} >
-                                            <div style={{ textAlign: "left" }}>
-                                                Registered by: <b>{value.owner} </b><br />
-                                                Domain ID: <b>{value.uuid} </b><br />
+                            return (
+                                <Columns.Column key={index} size="half" >
+                                    <div className="nes-container is-rounded">
+                                        <div className="nes-container is-rounded with-title" align="center" style={{ marginTop: "30px" }} >
+                                            <h1 className="title" style={{ fontSize: "22px", fontWeight: "600" }}>{value.name}</h1>
+                                            <Gravatar style={{ padding: 0, margin: "10px 0", width: "50%" }} email={value.uuid} />
+                                            <div style={{ textAlign: "left", marginTop: "10px" }}>
+                                                <p style={{ fontSize: "12px" }}>Registered by:<br /> <b>{value.owner} </b></p>
+                                                <p style={{ fontSize: "12px" }}>Domain ID:<br /><b>{value.uuid} </b></p><br />
                                             </div>
-                                            <h1 style={{ fontSize: "22px", marginTop: "10px" }}>Price: <b> {value.price} LYRA</b></h1>
+                                            <div style={{}}>
+                                                <div style={{ float: "left" }}>
+                                                    <i style={{ margin: "0" }} className="nes-icon big coin"></i>
+                                                </div>
+                                                <h1 style={{float: "left", paddingLeft: "60px", marginTop: "10px" }}>Price:<br/> <b> {value.price} LYRA</b></h1>
+                                                <button className="nes-btn is-success" style={{ marginTop: "15px", marginLeft: "260px" }} onClick={() => { setShowConfirm(true); setSelected(value) }}>BUY</button>
+                                            </div>
                                         </div>
-                                        <Button style={{ marginTop: "10px" }} color="success" onClick={() => { setShowConfirm(true); setSelected(value) }} renderAs="a">BUY</Button>
-
-                                    </Card.Content>
-                                </Card>
-                            </div>
+                                    </div>
+                                </Columns.Column>
+                            )
                         } else {
                             return false;
                         }
                     })}
-                </div>
-            } 
+                </Columns>
+            }
         } else {
             return (
                 <p>Nothing to show</p>
             )
-         }
+        }
     }
 
     function _handleKeyDown(e) {
@@ -121,10 +127,12 @@ export function Showcase(props) {
                 if (balance.balance >= (parseFloat(selected.price) + 0.001)) {
                     let buyTx = await scrypta.send(masterkey.walletstore, '-', selected.payment, parseFloat(selected.price), "names://buy:" + selected.uuid)
                     if (buyTx !== null && buyTx.length === 64) {
-                        alert('Name bougth!')
+                        openDialog('Well Done', 'Name bougth!')
                         setAvailability(false)
                         setSearcher("")
                         setBuying(false)
+                        setShowConfirm(false)
+                        setPassword("")
                         setTimeout(async function () {
                             let address = await scrypta.createAddress('-', false)
                             let request = await scrypta.createContractRequest(address.walletstore, '-', { contract: "LcD7AGaY74xvVxDg3NkKjfP6QpG8Pmxpnu", function: "names", params: {} })
@@ -137,18 +145,19 @@ export function Showcase(props) {
                             }
                             setChecked(true)
                             setList(registered)
+                            
                         }, 1500)
                     } else {
                         setBuying(false)
-                        alert('Something goes wrong, please retry!')
+                        openDialog('Ops', 'Something goes wrong, please retry!')
                     }
                 } else {
                     setBuying(false)
-                    alert('Not enough funds!')
+                    openDialog('Ops', 'Not enough funds!')
                 }
             } else {
                 setBuying(false)
-                alert('Wrong password!')
+                openDialog('Ops', 'Wrong password!')
             }
         }
     }
@@ -159,32 +168,58 @@ export function Showcase(props) {
                 <Modal.Content style={{ textAlign: "center" }}>
                     <Section style={{ backgroundColor: 'white' }}>
                         <Heading>Confirm to Buy</Heading>
-                This name is still available, enter your password to buy it!<br /><br />
-                        <Input style={{ width: "100%!important", textAlign: "center" }} placeholder="Insert wallet password" type="password" onChange={(evt) => { setPassword(evt.target.value) }} value={password} /><br></br><br></br>
-                        {!isBuying ? <Button onClick={buyDomain} color="info">Confirm and Buy</Button> : <div>Registering, please wait...</div>}
+                            This name is still available, enter your password to buy it!<br /><br />
+                        <div className="nes-field">
+                            <Input className="nes-input" style={{ width: "100%!important", textAlign: "center" }} placeholder="Insert wallet password" type="password" onChange={(evt) => { setPassword(evt.target.value) }} value={password} />
+                            <br></br><br></br>
+                        </div>
+                        {!isBuying ? <button className="nes-btn is-success" onClick={buyDomain}>Confirm and Buy</button> : <div>Registering, please wait...</div>}
                     </Section>
                 </Modal.Content>
             </Modal>
         }
     }
 
+    function returnDialog() {
+        if (showDialog) {
+            return (
+                <div class="dialog-wrapper">
+                    <dialog class="nes-dialog" open>
+                        <p class="title">{titleDialog}</p>
+                        <p>{textDialog}</p>
+                        <menu class="dialog-menu">
+                            <button className="nes-btn" onClick={() => { setShowDialog(false) }} class="nes-btn is-primary">OK</button>
+                        </menu>
+                    </dialog>
+                </div>
+            )
+        }
+    }
+
+    function openDialog(title, text) {
+        setTitleDialog(title)
+        setTextDialog(text)
+        setShowDialog(true)
+    }
+
     return (
         <div className="Showcase">
             {returnConfirmBox()}
+            {returnDialog()}
             <NavBar />
-            <Section>
-                <Container style={{ position: "relative" }}>
-                    <Input onKeyDown={_handleKeyDown} className="myInput" style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain domain"} />
-                    {!isSearching ? <Control style={{ position: "absolute", bottom: 0, right: 0 }}>
-                        <Button className="myButton" onClick={searchName} color="info">Search</Button>
-                    </Control> : <div style={{ marginTop: "20px" }}>Searching...</div>}
-                </Container>
-                <Columns align="center">
-                    <Columns.Column size={3} style={{ marginTop: "40px" }}>
-                        {returnSell()}
-                    </Columns.Column>
-                </Columns>
-            </Section>
+            <Container>
+                <div style={{ marginTop: "150px" }}>
+                    <div className="nes-container is-rounded" style={{ position: "relative" }}>
+                        <div className="nes-field">
+                            <Input className="nes-input" onKeyDown={_handleKeyDown} style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain domain"} />
+                        </div>
+                        {!isSearching ? <Control style={{ position: "absolute", bottom: 13, right: 15 }}>
+                            <button className="nes-btn is-primary" onClick={searchName} color="info">Search</button>
+                        </Control> : <div style={{ marginTop: "20px" }}>Searching...</div>}
+                    </div>
+                </div>
+                    {returnSell()}
+            </Container>
         </div>
     );
 }

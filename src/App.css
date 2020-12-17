@@ -89,7 +89,7 @@ body, html {
   font-size: calc(10px + 2vmin);
 }
 
-.Explore, .Login, .Details {
+.Explore, .Login, .Details .Showcase {
   background-color: #470F47;
 }
 
@@ -103,25 +103,12 @@ body, html {
   height: 220px;
 }
 
-
-.Showcase {
-  background-image: url('./assets/bg-end.png');
-  background-repeat: no-repeat;
-  background-size: 125vh;
-  background-position: bottom left;
-  width: 100vw;
-  min-height: 100vh;
-}
-
-.myInput {
-  height: 80px !important;
-}
-
 .myButton {
   width: 150px;
   height: 80px !important;
   background-color: #005D7F !important;
 }
+
 
 #scrypta-login button, #confirm-button {
   width: 80% !important;

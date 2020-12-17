@@ -1,4 +1,3 @@
-import { Button } from 'react-bulma-components';
 import React, { useState, useEffect } from 'react';
 import { Form, Heading, Content, Media, Container, Columns, Box, Modal, Section, Image } from 'react-bulma-components';
 import { NavBar, } from '../components/navbar.jsx';
@@ -26,6 +25,9 @@ export function Details(props) {
     let [showSell, setShowSell] = useState(false)
     let [showRemove, setShowRemove] = useState(false)
     let [isRemoving, setRemoving] = useState(false)
+    let [showDialog, setShowDialog] = useState(false)
+    let [textDialog, setTextDialog] = useState("")
+    let [titleDialog, setTitleDialog] = useState("")
 
 
     useEffect(() => {
@@ -72,23 +74,20 @@ export function Details(props) {
                         let written = await scrypta.write(writingKey.walletstore, '-', toWrite, '', '', 'names://')
                         if (written.txs !== undefined && written.txs[0] !== undefined && written.txs[0].length === 64) {
                             setSelling(false)
-                            alert('Sell placed!')
+                            openDialog('Well Done', 'Sell placed! Please wait for block for confirmation')
                             setShowSell(false)
                             setSelling(false)
-                            setTimeout(async function () {
-                                window.location.reload()
-                            }, 1500)
                         } else {
                             setSelling(false)
-                            alert('Something goes wrong, retry!')
+                            openDialog('Ops', 'Something goes wrong, retry!')
                         }
                     } else {
                         setSelling(false)
-                        alert('Not enough balance!')
+                        openDialog('Ops', 'Not enough balance!')
                     }
                 } else {
                     setSelling(false)
-                    alert('Wrong password!')
+                    openDialog('Ops', 'Wrong password!')
                 }
             }
         }
@@ -104,14 +103,13 @@ export function Details(props) {
                     let writingKey = await scrypta.importPrivateKey(key.prv, '-', false)
                     let written = await scrypta.write(writingKey.walletstore, '-', toWrite, '', '', 'names://')
                     if (written.txs !== undefined && written.txs[0] !== undefined && written.txs[0].length === 64) {
-                        alert("Sell removed")
-                        window.location.reload()
+                        openDialog('Well Done', 'Sell removed, wait for next block for confirmation.')
                     } else {
-                        alert("Something goes wrong!")
+                        openDialog('Ops', 'Something goes wrong!')
                     }
                 } else {
                     setRemoving(false)
-                    alert('Wrong password!')
+                    openDialog('Ops', 'Wrong password!')
                 }
             }
         }
@@ -129,7 +127,7 @@ export function Details(props) {
                         if (validate.data.isvalid === true) {
                             let written = await scrypta.write(masterkey.walletstore, '-', 'transfer:' + uuid + ':' + to, '', '', 'names://')
                             if (written.txs[0].length === 64) {
-                                alert('Name transfered!')
+                                openDialog('Well Done', 'Name transfered!')
                                 setShowTranfer(false)
                                 setTo("")
                                 setTransfering(false)
@@ -138,18 +136,18 @@ export function Details(props) {
                                 }, 1500)
                             } else {
                                 setTransfering(false)
-                                alert('Something goes wrong, please retry!')
+                                openDialog('Ops', 'Something goes wrong, please retry!')
                             }
                         } else {
-                            alert('Recipient address is not valid')
+                            openDialog('Ops', 'Recipient address is not valid')
                         }
                     } else {
                         setTransfering(false)
-                        alert('Not enough funds!')
+                        openDialog('Ops', 'Not enough funds!')
                     }
                 } else {
                     setTransfering(false)
-                    alert('Wrong password!')
+                    openDialog('Ops', 'Wrong password!')
                 }
             }
         }
@@ -163,7 +161,7 @@ export function Details(props) {
                             Transfer this domain to a friend!<br /><br />
                             <Input style={{ width: "100%!important", textAlign: "center" }} type="text" onChange={(evt) => { setTo(evt.target.value) }} placeholder="Insert recipient address" value={to} /><br></br>
                             <Input style={{ width: "100%!important", textAlign: "center", marginTop: "20px" }} type="password" onChange={(evt) => { setPassword(evt.target.value) }} placeholder="Insert wallet password" value={password} /><br></br><br></br>
-                            {!isTransfering ? <Button onClick={transferName} color="success">TRANSFER</Button> : <div>Transferring, please wait...</div>}
+                            {!isTransfering ? <button className="nes-btn is-success" onClick={transferName} >TRANSFER</button> : <div>Transferring, please wait...</div>}
                         </Section>
                     </Modal.Content>
                 </Modal >
@@ -192,11 +190,11 @@ export function Details(props) {
                 return <Modal show={showSell} onClose={() => setShowSell(false)}>
                     <Modal.Content style={{ textAlign: "center" }}>
                         <Section style={{ backgroundColor: 'white' }}>
-                            <Heading>Sell <br /><span style={{ color: "#429A98" }}>{blockchainData.domain}</span></Heading>
+                            <Heading style={{ fontSize: "22px" }}>Sell <br /><span style={{ color: "#429A98" }}>{blockchainData.domain}</span></Heading>
                             Enter the desired amount for your domain <br /><br />
                             <Input style={{ width: "100%!important", textAlign: "center" }} type="text" onChange={(evt) => { setPrice(evt.target.value) }} placeholder="Insert Amount" value={price} /><br></br>
                             <Input style={{ width: "100%!important", textAlign: "center", marginTop: "20px" }} type="password" onChange={(evt) => { setPassword(evt.target.value) }} placeholder="Insert wallet password" value={password} /><br></br><br></br>
-                            {!isSelling ? <Button onClick={placeSell} color="success">SELL</Button> : <div>Placing Sell, please wait...</div>}
+                            {!isSelling ? <button className="nes-btn is-success" onClick={placeSell}>SELL</button> : <div>Placing Sell, please wait...</div>}
                         </Section>
                     </Modal.Content>
                 </Modal >
@@ -220,14 +218,37 @@ export function Details(props) {
             }
         }
 
+        function returnDialog() {
+            if (showDialog) {
+                return (
+                    <div class="dialog-wrapper">
+                        <dialog class="nes-dialog" open>
+                            <p class="title">{titleDialog}</p>
+                            <p>{textDialog}</p>
+                            <menu class="dialog-menu">
+                                <button className="nes-btn" onClick={() => { setShowDialog(false) }} class="nes-btn is-primary">OK</button>
+                            </menu>
+                        </dialog>
+                    </div>
+                )
+            }
+        }
+
+        function openDialog(title, text) {
+            setTitleDialog(title)
+            setTextDialog(text)
+            setShowDialog(true)
+        }
+
         return (
             <div className="Details">
                 {returnTransferBox()}
                 {returnSellBox()}
                 {returnRemoveBox()}
+                {returnDialog()}
                 <NavBar />
                 <Container style={{ marginTop: "150px" }}>
-                    <div className="nes-container is-rounded" style={{paddingTop: "30px"}}>
+                    <div className="nes-container is-rounded" style={{ paddingTop: "30px" }}>
                         <div class="nes-container is-rounded with-title" style={{ marginBottom: "30px" }}>
                             <div className="title">
                                 <h1 style={{ color: "red", fontWeight: 600, fontSize: "32px" }}>{blockchainData.domain}</h1><br /><br />
@@ -239,11 +260,10 @@ export function Details(props) {
                                 <Media.Item>
                                     <Content>
                                         <div style={{ marginTop: "5px" }}>
-                                            <small>UUID Name</small><br />
-                                            <h6 style={{ marginTop: 0 }}>{uuid}</h6>
-                                            <p>Block: <b>{blockchainData.block}</b></p>
-                                            <p>TxID:</p><b>{blockchainData.txid}</b>
-                                            <p>Timestamp</p><b>{blockchainData.date}</b>
+                                            <p style={{ marginTop: 0 }}>NFT identifier:<br /><b>{uuid}</b></p>
+                                            <p style={{ marginTop: 0 }}>Block:<br /> <b>{blockchainData.block}</b></p>
+                                            <p style={{ marginTop: 0 }}>TxID:<br /><b>{blockchainData.txid}</b></p>
+                                            <p style={{ marginTop: 0 }}>Timestamp:<br /><b>{blockchainData.date}</b></p>
                                         </div>
                                     </Content>
                                 </Media.Item>

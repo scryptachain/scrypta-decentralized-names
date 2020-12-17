@@ -1,4 +1,3 @@
-import { Button } from 'react-bulma-components';
 import { Section, Image, Container, Heading } from 'react-bulma-components';
 import React, { useState } from 'react';
 import LogoWhite from '../assets/logo-white.svg'
@@ -15,13 +14,13 @@ export function Splash() {
                             <Image alt="Scrypta" src={LogoWhite} />
                         </div>
                     </Heading>
-                    <Heading style={{ color: "white", marginTop:"30px", fontSize: "30px" }}>
+                    <Heading style={{ color: "white", marginTop: "30px", fontSize: "30px" }}>
                         Decentralized Names
                     </Heading>
                 </Container>
                 <Section>
                     <p>
-                        Please login with your <a style={{color: "#fff", textDecoration: "underline"}} href="https://chrome.google.com/webstore/detail/scrypta-manent-wallet/didcemkbebjgcbblnimfajmnmedgagjf" target="_blank">extension</a> to start play with this dApp.<br /><br />
+                        Please login with your <a style={{ color: "#fff", textDecoration: "underline" }} href="https://chrome.google.com/webstore/detail/scrypta-manent-wallet/didcemkbebjgcbblnimfajmnmedgagjf" target="_blank">extension</a> to start play with this dApp.<br /><br />
                         This is what you can do here:
                     </p>
                     <ul>

@@ -27,7 +27,7 @@ export function NavBar() {
                             <button className="nes-btn is-success" >Go to Showcase</button>
                         </a>
                     </Navbar.Item>
-                    <Navbar.Item onClick={() => { localStorage.removeItem('wallet'); localStorage.removeItem('xSID'); localStorage.removeItem('SID'); setLogged(false); window.location="/" }}>
+                    <Navbar.Item onClick={() => { localStorage.removeItem('wallet'); localStorage.removeItem('xSID'); localStorage.removeItem('SID'); setLogged(false); window.location = "/" }}>
                         <button className="nes-btn is-error" style={{ marginRight: "30px" }}>LOGOUT</button>
                     </Navbar.Item>
                 </Navbar.Container>
@@ -35,7 +35,7 @@ export function NavBar() {
         } else {
             return <Navbar.Menu >
                 <Navbar.Container position="end">
-                    <Navbar.Item renderAs="a" href="/how-it-works">
+                    <Navbar.Item href="/how-it-works">
                         <button className="nes-btn is-warning" style={{ marginRight: "30px" }}>HOW IT WORKS</button>
                     </Navbar.Item>
                 </Navbar.Container>
@@ -50,7 +50,7 @@ export function NavBar() {
             style={{ backgroundColor: "#005D7F" }}
         >
             <Navbar.Brand>
-                <Navbar.Item renderAs="a" href="/">
+                <Navbar.Item href="/">
                     <img src="/logo.png" alt="Scrypta Dentralized Names" style={{ marginRight: "15px" }} height="28" />
                     <h1 style={{ color: "white", marginTop: "12px" }}>Decentralized Names</h1>
                 </Navbar.Item>
