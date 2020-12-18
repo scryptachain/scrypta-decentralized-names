@@ -76,9 +76,9 @@ export function Showcase(props) {
                     {inSell.map((value, index) => {
                         if (ban.indexOf(value.name) === -1) {
                             return (
-                                <Columns.Column key={index} size="half" >
+                                <Columns.Column key={index} size="half">
                                     <div className="nes-container is-rounded">
-                                        <div className="nes-container is-rounded with-title" align="center" style={{ marginTop: "30px" }} >
+                                        <div className="nes-container is-rounded with-title" align="center" style={{ marginTop: "10px" }} >
                                             <h1 className="title" style={{ fontSize: "22px", fontWeight: "600" }}>{value.name}</h1>
                                             <Gravatar style={{ padding: 0, margin: "10px 0", width: "50%" }} email={value.uuid} />
                                             <div style={{ textAlign: "left", marginTop: "10px" }}>

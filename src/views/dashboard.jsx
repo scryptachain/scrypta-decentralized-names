@@ -184,7 +184,7 @@ export function Dashboard(props) {
                   <h4 className="title">{value.name}</h4>
                   <b>{value.uuid} </b>
                   <a href={"/details/" + value.uuid}>
-                    <button className="nes-btn is-success" style={{ position: "absolute", top: "5px", right: "0px" }} > Details </button>
+                    <button className="nes-btn is-success" style={{ position: "absolute", top: "5px", right: "10px" }}> Details </button>
                   </a>
                 </div>
               </div>
@@ -208,7 +208,7 @@ export function Dashboard(props) {
         }
       }
       if (inSell.length > 0) {
-        return <div style={{ marginTop: "50px" }}>
+        return <div style={{ marginTop: "20px" }}>
           <Box className="header-color2">
             <Heading size={5} align="center" style={{ color: "white" }}>FOR SALE</Heading>
           </Box>
@@ -337,7 +337,7 @@ export function Dashboard(props) {
                 </Box>
               </Columns.Column>
             </Columns>
-            <div className="nes-container is-rounded" style={{ marginBottom: "50px", position: "relative" }}>
+            <div className="nes-container is-rounded" style={{ marginBottom: "30px", position: "relative" }}>
               <h1 style={{ backgroundColor: "none", lineHeight: "20px", fontSize: "22px", fontWeight: 600 }}><br />What do you want to register today?</h1><br></br>
               <div className="nes-field">
                 <input className="nes-input mod-size" onKeyDown={_handleKeyDown} style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain name"} /></div>
@@ -349,12 +349,12 @@ export function Dashboard(props) {
           {returnRegisterBox()}
           {returnWithdrawBox()}
           <div className="nes-container is-rounded" >
-            <Box style={{ marginTop: "40px" }} className="header-color">
-              <Heading size={5} align="center" style={{ color: "white" }}>YOUR REGISTERED DOMAIN</Heading>
+            <Box style={{ marginTop: "20px" }} className="header-color">
+              <Heading size={5} align="center" style={{ color: "white" }}>YOUR REGISTERED NAMES</Heading>
             </Box>
             {returnOwned()}
           </div>
-          <div className="nes-container is-rounded" style={{ marginTop: "40px" }} >
+          <div className="nes-container is-rounded" style={{ marginTop: "30px" }} >
             {returnSell()}
           </div>
         </div>

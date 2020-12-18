@@ -9,20 +9,20 @@ export function NavBar() {
     let [logged, setLogged] = useState(false)
 
     async function authUser() {
-        if(localStorage.getItem('SID') !== null){
-            if(localStorage.getItem('SID').indexOf('xpub') !== -1){
+        if (localStorage.getItem('SID') !== null) {
+            if (localStorage.getItem('SID').indexOf('xpub') !== -1) {
                 localStorage.setItem('xSID', localStorage.getItem('SID'))
             }
         }
-        if(localStorage.getItem('xSID') !== null){
+        if (localStorage.getItem('xSID') !== null) {
             let SIDS = localStorage.getItem('xSID').split(':')
-            let address = await scrypta.deriveKeyfromXPub (SIDS[0], "m/0")
+            let address = await scrypta.deriveKeyfromXPub(SIDS[0], "m/0")
             return {
                 address: address.pub,
                 walletstore: localStorage.getItem('xSID'),
                 xpub: SIDS[0]
             }
-        }else{
+        } else {
             return false
         }
     }
@@ -45,7 +45,12 @@ export function NavBar() {
                 <Navbar.Container position="end">
                     <Navbar.Item>
                         <a href="/showcase">
-                            <button className="nes-btn is-success" >Go to Showcase</button>
+                            <button className="nes-btn is-warning" >Dashboard</button>
+                        </a>
+                    </Navbar.Item>
+                    <Navbar.Item>
+                        <a href="/showcase">
+                            <button className="nes-btn is-success" >Showcase</button>
                         </a>
                     </Navbar.Item>
                     <Navbar.Item onClick={() => { localStorage.removeItem('wallet'); localStorage.removeItem('xSID'); localStorage.removeItem('SID'); setLogged(false); window.location = "/" }}>
@@ -56,8 +61,10 @@ export function NavBar() {
         } else {
             return <Navbar.Menu >
                 <Navbar.Container position="end">
-                    <Navbar.Item href="/how-it-works">
-                        <button className="nes-btn is-warning" style={{ marginRight: "30px" }}>HOW IT WORKS</button>
+                    <Navbar.Item>
+                        <a href="/how-it-works">
+                            <button className="nes-btn is-warning" style={{ marginRight: "30px" }}>HOW IT WORKS</button>
+                        </a>
                     </Navbar.Item>
                 </Navbar.Container>
             </Navbar.Menu>

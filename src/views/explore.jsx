@@ -145,7 +145,7 @@ export function Explore() {
     <div className="Explore">
       <NavBar />
       {returnDialog()}
-      <div style={{ padding: "150px 200px", backgroundColor: "#470F47" }}>
+      <Container style={{marginTop: "150px", marginBottom: "60px"}}>
         <div className="nes-container is-rounded" align="center">
           <h1 style={{ fontSize: "30px", fontWeight: "600", margin: "20px 0" }}>Blockchain Names</h1>
           <div style={{ position: "relative", marginTop: "40px" }}>
@@ -169,7 +169,7 @@ export function Explore() {
         <Container className="nes-container is-rounded" style={{ marginTop: "50px" }}>
           {returnSell()}
         </Container>
-      </div>
+      </Container>
     </div>
   );
 }
