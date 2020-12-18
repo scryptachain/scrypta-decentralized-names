@@ -75,6 +75,9 @@ export class Main extends Component {
               <Route expact path="/showcase"><Showcase user={this.state.user} /></Route>
               <Route exact path="/how-it-works"><Login /></Route>
             </Switch>
+            <div style={{marginTop: "20px", padding: "20px 10px", color: "white", fontSize: "10px", textAlign: "center", borderTop: "1px solid #fff"}}>
+              Scrypta Decentralized Name is an <a href="https://github.com/scryptachain/scrypta-decentralized-name" target="_blank">open-source</a> project by <a href="https://scrypta.foundation" target="_blank">Scrypta Foundation</a>
+            </div>
           </Router>
         )
       }

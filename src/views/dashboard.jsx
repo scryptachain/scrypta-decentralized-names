@@ -204,7 +204,7 @@ export function Dashboard(props) {
         }
       }
       if (inSell.length > 0) {
-        return <div style={{ marginTop: "20px" }}>
+        return <div className="nes-container is-rounded" style={{ marginTop: "20px" }}>
           <Box className="header-color2">
             <Heading size={5} align="center" style={{ color: "white" }}>FOR SALE</Heading>
           </Box>
@@ -350,9 +350,7 @@ export function Dashboard(props) {
             </Box>
             {returnOwned()}
           </div>
-          <div className="nes-container is-rounded" style={{ marginTop: "30px" }} >
-            {returnSell()}
-          </div>
+          {returnSell()}
         </div>
       </Container>
     </div >
