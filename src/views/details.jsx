@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Heading, Content, Media, Container, Columns, Box, Modal, Section, Image } from 'react-bulma-components';
+import { Form, Heading, Content, Media, Container, Columns, Modal, Section, } from 'react-bulma-components';
 import { NavBar, } from '../components/navbar.jsx';
 import Gravatar from 'react-gravatar'
 import { useParams } from 'react-router-dom';
@@ -37,7 +37,7 @@ export function Details(props) {
             let split = domain.data.split(':')
             domain.time = domain.time * 1000
             domain.domain = split[1]
-            domain.date = new Date(domain.time).getDate() + ' ' + (new Date(domain.time).getMonth() + 1) + ' ' + new Date(domain.time).getFullYear()
+            domain.date = new Date(domain.time).getDate() + '/' + (new Date(domain.time).getMonth() + 1) + '/' + new Date(domain.time).getFullYear() + ' at ' + new Date(domain.time).getHours() + ':' + new Date(domain.time).getMinutes() + ':' + new Date(domain.time).getSeconds()
             let address = await scrypta.createAddress('-', false)
             let request = await scrypta.createContractRequest(address.walletstore, '-', { contract: "LcD7AGaY74xvVxDg3NkKjfP6QpG8Pmxpnu", function: "check", params: { name: domain.domain } })
             let response = await scrypta.sendContractRequest(request)
@@ -74,7 +74,7 @@ export function Details(props) {
                         let written = await scrypta.write(writingKey.walletstore, '-', toWrite, '', '', 'names://')
                         if (written.txs !== undefined && written.txs[0] !== undefined && written.txs[0].length === 64) {
                             setSelling(false)
-                            openDialog('Well Done', 'Sell placed! Please wait for block for confirmation')
+                            openDialog('Sell placed!', ' Please wait next block for confirmation.')
                             setShowSell(false)
                             setSelling(false)
                         } else {
@@ -221,12 +221,12 @@ export function Details(props) {
         function returnDialog() {
             if (showDialog) {
                 return (
-                    <div class="dialog-wrapper">
-                        <dialog class="nes-dialog" open>
-                            <p class="title">{titleDialog}</p>
+                    <div className="dialog-wrapper">
+                        <dialog className="nes-dialog" open>
+                            <p className="title">{titleDialog}</p>
                             <p>{textDialog}</p>
-                            <menu class="dialog-menu">
-                                <button className="nes-btn" onClick={() => { setShowDialog(false) }} class="nes-btn is-primary">OK</button>
+                            <menu className="dialog-menu">
+                                <button className="nes-btn" onClick={() => { setShowDialog(false) }} className="nes-btn is-primary">OK</button>
                             </menu>
                         </dialog>
                     </div>
@@ -249,7 +249,7 @@ export function Details(props) {
                 <NavBar />
                 <Container style={{ marginTop: "150px" }}>
                     <div className="nes-container is-rounded" style={{ paddingTop: "30px" }}>
-                        <div class="nes-container is-rounded with-title" style={{ marginBottom: "30px" }}>
+                        <div className="nes-container is-rounded with-title" style={{ marginBottom: "30px" }}>
                             <div className="title">
                                 <h1 style={{ color: "red", fontWeight: 600, fontSize: "32px" }}>{blockchainData.domain}</h1><br /><br />
                             </div>

@@ -32,7 +32,7 @@ export function Showcase(props) {
             let response = await scrypta.sendContractRequest(request)
             let registered = []
             for (let k in response) {
-                if (response[k].owner !== props.user.address && registered.indexOf(response[k].name) === -1 && response[k].price !== undefined && response[k].price !== null) {
+                if (registered.indexOf(response[k].name) === -1 && response[k].price !== undefined && response[k].price !== null) {
                     registered.push(response[k])
                 }
             }
@@ -71,6 +71,7 @@ export function Showcase(props) {
                     inSell.push(listed[k])
                 }
             }
+            inSell = inSell.reverse()
             if (inSell.length > 0) {
                 return <Columns style={{ marginTop: "40px" }}>
                     {inSell.map((value, index) => {
@@ -85,12 +86,12 @@ export function Showcase(props) {
                                                 <p style={{ fontSize: "12px" }}>Registered by:<br /> <b>{value.owner} </b></p>
                                                 <p style={{ fontSize: "12px" }}>Domain ID:<br /><b>{value.uuid} </b></p><br />
                                             </div>
-                                            <div style={{}}>
+                                            <div style={{ height: "70px"}}>
                                                 <div style={{ float: "left" }}>
                                                     <i style={{ margin: "0" }} className="nes-icon big coin"></i>
                                                 </div>
-                                                <h1 style={{float: "left", paddingLeft: "60px", marginTop: "10px" }}>Price:<br/> <b> {value.price} LYRA</b></h1>
-                                                <button className="nes-btn is-success" style={{ marginTop: "15px", marginLeft: "260px" }} onClick={() => { setShowConfirm(true); setSelected(value) }}>BUY</button>
+                                                <h1 style={{float: "left", paddingLeft: "60px", textAlign: "left", marginTop: "10px" }}>Price:<br/> <b> {value.price} LYRA</b></h1>
+                                                {returnBuyButton(value)}
                                             </div>
                                         </div>
                                     </div>
@@ -183,12 +184,12 @@ export function Showcase(props) {
     function returnDialog() {
         if (showDialog) {
             return (
-                <div class="dialog-wrapper">
-                    <dialog class="nes-dialog" open>
-                        <p class="title">{titleDialog}</p>
+                <div className="dialog-wrapper">
+                    <dialog className="nes-dialog" open>
+                        <p className="title">{titleDialog}</p>
                         <p>{textDialog}</p>
-                        <menu class="dialog-menu">
-                            <button className="nes-btn" onClick={() => { setShowDialog(false) }} class="nes-btn is-primary">OK</button>
+                        <menu className="dialog-menu">
+                            <button className="nes-btn" onClick={() => { setShowDialog(false) }} className="nes-btn is-primary">OK</button>
                         </menu>
                     </dialog>
                 </div>
@@ -196,6 +197,17 @@ export function Showcase(props) {
         }
     }
 
+    function returnBuyButton(value){
+        if(props.user.address !== value.owner) {
+            return(
+                <button className="nes-btn is-success" style={{ marginTop: "15px", float: "right" }} onClick={() => { setShowConfirm(true); setSelected(value) }}>BUY</button>
+            )
+        }else{
+            return(
+                <button className="nes-btn is-primary" style={{ marginTop: "15px", float: "right" }} onClick={() => { window.location = '/details/' + value.uuid }}>DETAILS</button>
+            )
+        }
+    }
     function openDialog(title, text) {
         setTitleDialog(title)
         setTextDialog(text)

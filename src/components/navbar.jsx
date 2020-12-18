@@ -1,6 +1,8 @@
 import { Navbar } from 'react-bulma-components';
 import { button } from 'react-bulma-components';
 import React, { useState, useEffect } from 'react';
+import Scrypta from '../assets/logo.png'
+
 
 const ScryptaCore = require('@scrypta/core')
 const scrypta = new ScryptaCore(true)
@@ -41,38 +43,59 @@ export function NavBar() {
 
     const LoginButton = () => {
         if (logged) {
-            return <Navbar.Menu >
-                <Navbar.Container position="end">
-                    <Navbar.Item>
-                        <a href="/showcase">
-                            <button className="nes-btn is-warning" >Dashboard</button>
-                        </a>
-                    </Navbar.Item>
-                    <Navbar.Item>
-                        <a href="/showcase">
-                            <button className="nes-btn is-success" >Showcase</button>
-                        </a>
-                    </Navbar.Item>
-                    <Navbar.Item onClick={() => { localStorage.removeItem('wallet'); localStorage.removeItem('xSID'); localStorage.removeItem('SID'); setLogged(false); window.location = "/" }}>
-                        <button className="nes-btn is-error" style={{ marginRight: "30px" }}>LOGOUT</button>
-                    </Navbar.Item>
-                </Navbar.Container>
-            </Navbar.Menu>
+            return (
+                <Navbar className="noMobile">
+                    <Navbar.Brand>
+                        <Navbar.Item renderAs="a" href="#">
+                            <img src={Scrypta} style={{ paddingRight: "20px" }} alt="Scrypta Decentralized Names" />
+                            <h1 style={{ color: "white", margin: "10px 0" }}>Scrypta Decentralizes Names</h1>
+                        </Navbar.Item>
+                    </Navbar.Brand>
+                    <Navbar.Container position="end">
+                        <Navbar.Menu >
+                            <Navbar.Item>
+                                <a href="/">
+                                    <button className="nes-btn is-warning" >Dashboard</button>
+                                </a>
+                            </Navbar.Item>
+                            <Navbar.Item>
+                                <a href="/showcase">
+                                    <button className="nes-btn is-success" >Showcase</button>
+                                </a>
+                            </Navbar.Item>
+                            <Navbar.Item onClick={() => { localStorage.removeItem('wallet'); localStorage.removeItem('xSID'); localStorage.removeItem('SID'); setLogged(false); window.location = "/" }}>
+                                <button className="nes-btn is-error" style={{ marginRight: "30px" }}>LOGOUT</button>
+                            </Navbar.Item>
+                        </Navbar.Menu>
+                    </Navbar.Container>
+                </Navbar>
+            )
         } else {
-            return <Navbar.Menu >
-                <Navbar.Container position="end">
-                    <Navbar.Item>
-                        <a href="/how-it-works">
-                            <button className="nes-btn is-warning" style={{ marginRight: "30px" }}>HOW IT WORKS</button>
-                        </a>
-                    </Navbar.Item>
-                </Navbar.Container>
-            </Navbar.Menu>
+            return (
+                <Navbar>
+                    <Navbar.Brand>
+                        <Navbar.Item renderAs="a" href="#">
+                            <img src={Scrypta} style={{ paddingRight: "20px" }} alt="Scrypta Decentralized Names" />
+                            <h1 style={{ color: "white", margin: "10px 0" }}>Scrypta Decentralized Names</h1>
+                        </Navbar.Item>
+                        <Navbar.Burger />
+                    </Navbar.Brand>
+                    <Navbar.Container position="end">
+                        <Navbar.Menu >
+                                <Navbar.Item>
+                                    <a href="/how-it-works">
+                                        <button className="nes-btn is-warning" style={{ marginRight: "30px" }}>HOW IT WORKS</button>
+                                    </a>
+                                </Navbar.Item>
+                        </Navbar.Menu>
+                    </Navbar.Container>
+                </Navbar>
+            )
         }
     }
 
     return (
-        <Navbar
+        <Navbar className="noMobile"
             active={true}
             transparent={false}
             style={{ backgroundColor: "#005D7F" }}

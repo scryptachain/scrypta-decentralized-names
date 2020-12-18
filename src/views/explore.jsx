@@ -1,6 +1,5 @@
-import { Button } from 'react-bulma-components';
 import React, { useState, useEffect } from 'react';
-import { Form, Heading, Card, Content, Container, Columns, Box, } from 'react-bulma-components';
+import { Form, Heading, Container, Box, } from 'react-bulma-components';
 import { NavBar, } from '../components/navbar.jsx';
 const ScryptaCore = require('@scrypta/core')
 const scrypta = new ScryptaCore(true)
@@ -94,10 +93,10 @@ export function Explore() {
                 if (ban.indexOf(value.name) === -1 && value.payment !== null && value.payment !== undefined) {
                   return (
                     <div key={index} style={{ margin: "30px 0" }}>
-                      <div className="nes-container is-rounded with-title" >
+                      <div className="nes-container is-rounded with-title mobile-sell" >
                         <p className="title">{value.name}</p>
-                        Registered by: <b>{value.owner} </b><br></br>
-                        Unique id: <b>{value.uuid}</b><br />
+                          Registered by: <b>{value.owner} </b><br></br>
+                          Unique id: <b>{value.uuid}</b><br />
                         <div style={{ display: "flex", margin: "7px 0" }}>
                           <i class="nes-icon coin"></i>
                           <p style={{ margin: "7px 7px" }}> Price: <b>{value.price} LYRA</b></p></div>
@@ -122,12 +121,12 @@ export function Explore() {
   function returnDialog() {
     if (showDialog) {
       return (
-        <div class="dialog-wrapper">
-          <dialog class="nes-dialog" open>
-            <p class="title">{titleDialog}</p>
+        <div className="dialog-wrapper">
+          <dialog className="nes-dialog" open>
+            <p className="title">{titleDialog}</p>
             <p>{textDialog}</p>
-            <menu class="dialog-menu">
-              <button className="nes-btn" onClick={() => { setShowDialog(false) }} class="nes-btn is-primary">OK</button>
+            <menu className="dialog-menu">
+              <button className="nes-btn" onClick={() => { setShowDialog(false) }} className="nes-btn is-primary">OK</button>
             </menu>
           </dialog>
         </div>

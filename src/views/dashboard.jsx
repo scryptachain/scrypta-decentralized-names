@@ -1,6 +1,5 @@
-import { Button } from 'react-bulma-components';
 import React, { useState, useEffect } from 'react';
-import { Form, Heading, Card, Content, Media, Container, Columns, Box, Modal, Section, } from 'react-bulma-components';
+import { Form, Heading, Content, Media, Container, Columns, Box, Modal, Section, } from 'react-bulma-components';
 import { NavBar, } from '../components/navbar.jsx';
 import Gravatar from 'react-gravatar'
 const ScryptaCore = require('@scrypta/core')
@@ -92,13 +91,10 @@ export function Dashboard(props) {
             setTimeout(async function () {
               let written = await scrypta.write(masterkey.walletstore, '-', 'register:' + searcher, '', '', 'names://')
               if (written.txs[0].length === 64) {
-                openDialog('Well Done', 'Name registered! Wait block to see it in your Dashboard')
+                openDialog('Well Done', 'Name registered! Wait next confirmed block to see it in your Dashboard')
                 setAvailability(false)
                 setSearcher("")
                 setRegistering(false)
-                setTimeout(async function () {
-                  window.location.reload()
-                }, 1500)
               } else {
                 setRegistering(false)
                 openDialog('Ops', 'Something goes wrong, please retry!')
@@ -180,11 +176,11 @@ export function Dashboard(props) {
           if (ban.indexOf(value.name) === -1) {
             return (
               <div style={{ position: "relative", textAlign: "left", margin: "40px 0" }} key={index}>
-                <div className="nes-container is-rounded with-title">
+                <div className="nes-container is-rounded with-title mobile-owned">
                   <h4 className="title">{value.name}</h4>
-                  <b>{value.uuid} </b>
+                  NFT ID: <b>{value.uuid} </b>
                   <a href={"/details/" + value.uuid}>
-                    <button className="nes-btn is-success" style={{ position: "absolute", top: "5px", right: "10px" }}> Details </button>
+                    <button className="nes-btn is-success mobile-btn-owned" style={{ position: "absolute", top: "5px", right: "10px" }}> Details </button>
                   </a>
                 </div>
               </div>
@@ -216,16 +212,16 @@ export function Dashboard(props) {
             if (ban.indexOf(value.name) === -1) {
               return (
                 <div style={{ position: "relative", marginTop: "40px" }} key={index}>
-                  <div className="nes-container is-rounded with-title" style={{ textAlign: "left" }}>
+                  <div className="nes-container is-rounded with-title  mobile-sell" style={{ textAlign: "left" }}>
                     <h4 className="title" stlye={{ marginBottom: "-30px" }}>{value.name}</h4>
                       Registered by: <b>{value.owner} </b><br />
                       Domain ID: <b>{value.uuid} </b><br />
                     <div style={{ display: "flex", margin: "7px 0", textAlign: "left" }}>
-                      <i class="nes-icon coin"></i>
+                      <i className="nes-icon coin"></i>
                       <p style={{ margin: "7px 7px" }}> Price: <b>{value.price} LYRA</b></p></div>
                   </div>
                   <a href={"/details/" + value.uuid}>
-                    <button className="nes-btn is-success" style={{ position: "absolute", top: 40, right: 20 }}> Details
+                    <button className="nes-btn is-success mobile-btn" style={{ position: "absolute", top: 40, right: 20 }}> Details
                   </button>
                   </a>
                 </div>)
@@ -279,12 +275,12 @@ export function Dashboard(props) {
   function returnDialog() {
     if (showDialog) {
       return (
-        <div class="dialog-wrapper">
-          <dialog class="nes-dialog" open>
-            <p class="title">{titleDialog}</p>
+        <div className="dialog-wrapper">
+          <dialog className="nes-dialog" open>
+            <p className="title">{titleDialog}</p>
             <p>{textDialog}</p>
-            <menu class="dialog-menu">
-              <button className="nes-btn" onClick={() => { setShowDialog(false) }} class="nes-btn is-primary">OK</button>
+            <menu className="dialog-menu">
+              <button className="nes-btn" onClick={() => { setShowDialog(false) }} className="nes-btn is-primary">OK</button>
             </menu>
           </dialog>
         </div>
@@ -328,7 +324,7 @@ export function Dashboard(props) {
                   <h1>You have earned:</h1>
                   <div style={{ fontSize: "16px", fontWeight: 600, marginTop: "15px", textAlign: "left" }}>
                     <div style={{ float: "left" }}>
-                      <i style={{ margin: "0" }} class="nes-icon big coin"></i>
+                      <i style={{ margin: "0" }} className="nes-icon big coin"></i>
                     </div>
                     <div style={{ float: "left", paddingLeft: "60px", marginTop: "10px" }}>{balance}<br />LYRA</div>
                   </div>
