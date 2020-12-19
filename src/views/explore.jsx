@@ -151,7 +151,7 @@ export function Explore() {
             <div className="nes-field">
               <input className="nes-input mod-size" onKeyDown={_handleKeyDown} style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain name"} /></div>
             <Control style={{ position: "absolute", bottom: -4, right: 0 }}>
-              <button className="nes-btn mod-size is-primary" onClick={searchName}>Search</button>
+              <button className="nes-btn mod-size explore-btn is-primary" onClick={searchName}>Search</button>
             </Control>
           </div>
         </div>

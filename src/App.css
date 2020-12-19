@@ -210,52 +210,41 @@ pre {
     font-size: 8px !important;
     overflow-x: hidden;
   }
-
   .navbar-burger {
     display: none !important;
   }
-
   .navbar-item {
-    margin: 15px 20px;
+    margin: 15px 0px;
   }
-
   h1 {
     font-size: 14px !important;
   }
-
   p {
     font-size: 12px !important;
   }
-
   .navbar-item h1 {
     font-size: 10px !important;
   }
-
   .box {
     margin: 0 20px !important;
   }
-
-  .nes-container.with-title > .title {
+  .nes-container.with-title>.title {
     font-size: 12px !important;
   }
-
   .nes-container .title {
     width: 100%;
     line-height: 5px;
     color: rgb(228, 46, 73);
   }
-
   .nes-container {
     margin-right: 10px !important;
     margin-left: 10px !important;
   }
-
   .box.nes-container {
     padding-top: 10px !important;
     padding-bottom: 10px !important;
     height: 120px;
   }
-
   .header-color, .header-color2 {
     height: 30px !important;
     padding: 10px 0 !important
@@ -264,53 +253,41 @@ pre {
     font-size: 12px !important;
     margin: 5px 0 !important;
   }
-
   .nes-container {
     padding-left: 5px !important;
     padding-right: 5px !important;
     word-break: break-all;
   }
-
   .nes-container .is-rounded .with-title {
     width: 100% !important;
   }
-
   .nes-btn {
     font-size: 8px !important;
   }
-
   input, b, strong {
     font-size: 8px !important;
   }
-
   .nes-field {
     padding: 0 15px !important;
   }
-
   .nes-input, .nes-btn {
     height: 40px !important;
   }
-
   .nes-container.with-title.mobile-sell {
-    height: 180px !important; 
+    height: 180px !important;
   }
   .nes-container .mobile-btn {
-    width: 85% ;
+    width: 85%;
     top: 125px !important;
   }
   .nes-container .mobile-btn-owned {
-    width: 85% ;
+    width: 85%;
     top: 50px !important;
     right: 20px !important;
   }
   .mobile-owned {
     height: 110px;
   }
-  .explorer-title {
-    margin-bottom: 30px !important;
-    height: 60px !important;
-  }
-
   .nes-dialog {
     z-index: 99;
     position: absolute;
@@ -323,8 +300,21 @@ pre {
     margin-left: -180px;
     width: 360px;
   }
+  .explore-btn {
+    top: 0;
+    right: 10px;
+  }
+  .explorer-title {
+    margin-bottom: 30px !important;
+    height: 60px !important;
+  }
+  .box.header-color.explorer-title .title {
+    line-height: 18px !important;
+    word-spacing: 0px;
+    padding: -10px;
+    margin: 0 !important;
+  }
   .nes-container.explorer-container-sell {
     height: 120px;
   }
-
 }
