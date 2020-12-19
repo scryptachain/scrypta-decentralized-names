@@ -93,6 +93,10 @@ body, html {
   background-color: #470F47;
 }
 
+.login-container, .dashboard-container{
+ min-height: 93vh !important;
+}
+
 .selling-box {
   background-color: rgba(238, 88, 88, 0.35)!important;
   position: relative !important;

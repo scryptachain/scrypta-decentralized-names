@@ -43,7 +43,7 @@ export function Login() {
   return (
     <div className="Login">
       <NavBar />
-      <Container style={{ padding: "220px 0", backgroundColor: "#470F47" }} align="center">
+      <Container className="login-container" style={{ padding: "220px 0", backgroundColor: "#470F47" }} align="center">
         <Columns>
           <Columns.Column>
             <Box className="nes-container is-rounded" style={{ padding: "30px 20px", }}>

@@ -46,22 +46,18 @@ export function NavBar() {
             return (
                 <Navbar className="noMobile">
                     <Navbar.Brand>
-                        <Navbar.Item renderAs="a" href="#">
+                        <Navbar.Item renderAs="a" href="/">
                             <img src={Scrypta} style={{ paddingRight: "20px" }} alt="Scrypta Decentralized Names" />
                             <h1 style={{ color: "white", margin: "10px 0" }}>Scrypta Decentralizes Names</h1>
                         </Navbar.Item>
                     </Navbar.Brand>
                     <Navbar.Container position="end">
                         <Navbar.Menu >
-                            <Navbar.Item>
-                                <a href="/">
-                                    <button className="nes-btn is-warning" >Dashboard</button>
-                                </a>
+                            <Navbar.Item renderAs="a" href="/">
+                                <button className="nes-btn is-warning" >Dashboard</button>
                             </Navbar.Item>
-                            <Navbar.Item>
-                                <a href="/showcase">
-                                    <button className="nes-btn is-success" >Showcase</button>
-                                </a>
+                            <Navbar.Item renderAs="a" href="/showcase">
+                                <button className="nes-btn is-success" >Showcase</button>
                             </Navbar.Item>
                             <Navbar.Item onClick={() => { localStorage.removeItem('wallet'); localStorage.removeItem('xSID'); localStorage.removeItem('SID'); setLogged(false); window.location = "/" }}>
                                 <button className="nes-btn is-error" style={{ marginRight: "30px" }}>LOGOUT</button>
@@ -74,7 +70,7 @@ export function NavBar() {
             return (
                 <Navbar>
                     <Navbar.Brand>
-                        <Navbar.Item renderAs="a" href="#">
+                        <Navbar.Item renderAs="a" href="/">
                             <img src={Scrypta} style={{ paddingRight: "20px" }} alt="Scrypta Decentralized Names" />
                             <h1 style={{ color: "white", margin: "10px 0" }}>Scrypta Decentralized Names</h1>
                         </Navbar.Item>
@@ -82,11 +78,9 @@ export function NavBar() {
                     </Navbar.Brand>
                     <Navbar.Container position="end">
                         <Navbar.Menu >
-                                <Navbar.Item>
-                                    <a href="/how-it-works">
-                                        <button className="nes-btn is-warning" style={{ marginRight: "30px" }}>HOW IT WORKS</button>
-                                    </a>
-                                </Navbar.Item>
+                            <Navbar.Item renderAs="a" href="/how-it-works">
+                                <button className="nes-btn is-warning" style={{ marginRight: "30px" }}>HOW IT WORKS</button>
+                            </Navbar.Item>
                         </Navbar.Menu>
                     </Navbar.Container>
                 </Navbar>

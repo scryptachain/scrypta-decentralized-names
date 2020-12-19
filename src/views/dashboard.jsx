@@ -298,7 +298,7 @@ export function Dashboard(props) {
     <div className="Explore">
       {returnDialog()}
       <NavBar />
-      <Container style={{ padding: "50px 0" }}>
+      <Container className="dashboard-container" style={{ padding: "50px 0" }}>
         <div >
           <Container>
             <Columns style={{ marginTop: "70px" }}>

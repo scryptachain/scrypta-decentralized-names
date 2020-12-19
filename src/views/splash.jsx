@@ -20,7 +20,7 @@ export function Splash() {
                 </Container>
                 <Section>
                     <p>
-                        Please login with your <a style={{ color: "#fff", textDecoration: "underline" }} href="https://chrome.google.com/webstore/detail/scrypta-manent-wallet/didcemkbebjgcbblnimfajmnmedgagjf" target="_blank">extension</a> to start play with this dApp.<br /><br />
+                        Please login with your <a style={{ color: "#fff", textDecoration: "underline" }} href="https://chrome.google.com/webstore/detail/scrypta-manent-wallet/didcemkbebjgcbblnimfajmnmedgagjf" target="_blank">extension</a> to start playing with this dApp.<br /><br />
                         This is what you can do here:
                     </p>
                     <ul>

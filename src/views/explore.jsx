@@ -98,7 +98,7 @@ export function Explore() {
                           Registered by: <b>{value.owner} </b><br></br>
                           Unique id: <b>{value.uuid}</b><br />
                         <div style={{ display: "flex", margin: "7px 0" }}>
-                          <i class="nes-icon coin"></i>
+                          <i className="nes-icon coin"></i>
                           <p style={{ margin: "7px 7px" }}> Price: <b>{value.price} LYRA</b></p></div>
                       </div>
                     </div>
