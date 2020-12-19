@@ -211,6 +211,14 @@ pre {
     overflow-x: hidden;
   }
 
+  .navbar-burger {
+    display: none !important;
+  }
+
+  .navbar-item {
+    margin: 15px 30px;
+  }
+
   h1 {
     font-size: 14px !important;
   }
@@ -298,4 +306,24 @@ pre {
   .mobile-owned {
     height: 110px;
   }
+  .explorer-title {
+    margin-bottom: 30px !important;
+  }
+
+  .nes-dialog {
+    z-index: 99;
+    position: absolute;
+    top: 50%;
+    margin-top: -109px;
+    background: #fff;
+    border: 5px solid #000000;
+    text-align: center;
+    left: 50%;
+    margin-left: -180px;
+    width: 360px;
+  }
+  .nes-container.explorer-container-sell {
+    height: 120px;
+  }
+
 }

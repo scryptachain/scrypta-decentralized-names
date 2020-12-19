@@ -62,7 +62,7 @@ export function Explore() {
           {history.map((value, index) => {
             if (ban.indexOf(value.name) === -1) {
               return <div style={{ marginBottom: "30px" }} key={index}>
-                <div className="nes-container is-rounded with-title" >
+                <div className="nes-container is-rounded with-title explorer-container" >
                   <p className="title">{value.name}</p>
                   Registered by: <b>{value.owner} </b><br></br>
                   Unique ID: {value.uuid} </div>
@@ -93,7 +93,7 @@ export function Explore() {
                 if (ban.indexOf(value.name) === -1 && value.payment !== null && value.payment !== undefined) {
                   return (
                     <div key={index} style={{ margin: "30px 0" }}>
-                      <div className="nes-container is-rounded with-title mobile-sell" >
+                      <div className="nes-container is-rounded with-title explorer-container-sell" >
                         <p className="title">{value.name}</p>
                           Registered by: <b>{value.owner} </b><br></br>
                           Unique id: <b>{value.uuid}</b><br />
@@ -158,7 +158,7 @@ export function Explore() {
         <Container className="nes-container is-rounded" style={{ marginTop: "40px" }}>
           <div>
             <div align="center">
-              <Box className="header-color">
+              <Box className="header-color explorer-title">
                 <Heading size={5} align="center" style={{ color: "white" }}>LATEST REGISTERED NAMES</Heading>
               </Box>
               {returnRegistered()}
