@@ -216,7 +216,7 @@ pre {
   }
 
   .navbar-item {
-    margin: 15px 30px;
+    margin: 15px 20px;
   }
 
   h1 {
@@ -308,6 +308,7 @@ pre {
   }
   .explorer-title {
     margin-bottom: 30px !important;
+    height: 60px !important;
   }
 
   .nes-dialog {
