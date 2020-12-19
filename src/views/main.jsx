@@ -16,39 +16,39 @@ const scrypta = new ScryptaCore(true)
 export class Main extends Component {
   constructor() {
     super();
-    this.state = {user: false, guest: false}
+    this.state = { user: false, guest: false }
   }
 
   async authUser() {
-    if(localStorage.getItem('SID') !== null){
-        if(localStorage.getItem('SID').indexOf('xpub') !== -1){
-            localStorage.setItem('xSID', localStorage.getItem('SID'))
-        }
+    if (localStorage.getItem('SID') !== null) {
+      if (localStorage.getItem('SID').indexOf('xpub') !== -1) {
+        localStorage.setItem('xSID', localStorage.getItem('SID'))
+      }
     }
-    if(localStorage.getItem('xSID') !== null){
-        let SIDS = localStorage.getItem('xSID').split(':')
-        let address = await scrypta.deriveKeyfromXPub (SIDS[0], "m/0")
-        return {
-            address: address.pub,
-            walletstore: localStorage.getItem('xSID'),
-            xpub: SIDS[0]
-        }
-    }else{
-        return false
+    if (localStorage.getItem('xSID') !== null) {
+      let SIDS = localStorage.getItem('xSID').split(':')
+      let address = await scrypta.deriveKeyfromXPub(SIDS[0], "m/0")
+      return {
+        address: address.pub,
+        walletstore: localStorage.getItem('xSID'),
+        xpub: SIDS[0]
+      }
+    } else {
+      return false
     }
   }
 
   async fetchUser() {
-      let auth = await this.authUser();
-      if (auth !== false) {
-        this.setState(() => { return { user: auth } })
-      }
-      let isGuest = localStorage.getItem('isGuest')
-      if (isGuest === 'true') {
-        this.setState(() => { return { guest: true } })
-      } else {
-        this.setState(() => { return { guest: false } })
-      }
+    let auth = await this.authUser();
+    if (auth !== false) {
+      this.setState(() => { return { user: auth } })
+    }
+    let isGuest = localStorage.getItem('isGuest')
+    if (isGuest === 'true') {
+      this.setState(() => { return { guest: true } })
+    } else {
+      this.setState(() => { return { guest: false } })
+    }
   }
 
   componentDidMount() {
@@ -64,6 +64,9 @@ export class Main extends Component {
               <Route exact path="/"><Explore /></Route>
               <Route exact path="/how-it-works"><Login /></Route>
             </Switch>
+            <div style={{ marginTop: "20px", padding: "20px 10px", color: "white", fontSize: "10px", textAlign: "center", borderTop: "1px solid #fff" }}>
+              Scrypta Decentralized Name is an <a href="https://github.com/scryptachain/scrypta-decentralized-name" target="_blank">open-source</a> project by <a href="https://scrypta.foundation" target="_blank">Scrypta Foundation</a>
+            </div>
           </Router>
         )
       } else {
@@ -75,7 +78,7 @@ export class Main extends Component {
               <Route expact path="/showcase"><Showcase user={this.state.user} /></Route>
               <Route exact path="/how-it-works"><Login /></Route>
             </Switch>
-            <div style={{marginTop: "20px", padding: "20px 10px", color: "white", fontSize: "10px", textAlign: "center", borderTop: "1px solid #fff"}}>
+            <div style={{ marginTop: "20px", padding: "20px 10px", color: "white", fontSize: "10px", textAlign: "center", borderTop: "1px solid #fff" }}>
               Scrypta Decentralized Name is an <a href="https://github.com/scryptachain/scrypta-decentralized-name" target="_blank">open-source</a> project by <a href="https://scrypta.foundation" target="_blank">Scrypta Foundation</a>
             </div>
           </Router>
