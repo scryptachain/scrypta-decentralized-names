@@ -48,7 +48,7 @@ export function NavBar() {
                     <Navbar.Brand>
                         <Navbar.Item renderAs="a" href="/">
                             <img src={Scrypta} style={{ paddingRight: "20px" }} alt="Scrypta Decentralized Names" />
-                            <h1 style={{ color: "white", margin: "10px 0" }}>Scrypta Decentralizes Names</h1>
+                            <h1 style={{ color: "white", margin: "10px 0" }}>Scrypta Decentralized Names</h1>
                         </Navbar.Item>
                     </Navbar.Brand>
                     <Navbar.Container position="end">
