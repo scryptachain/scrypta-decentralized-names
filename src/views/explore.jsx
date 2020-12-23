@@ -151,7 +151,7 @@ export function Explore() {
             <div className="nes-field">
               <input className="nes-input mod-size" onKeyDown={_handleKeyDown} style={{ width: "100%!important" }} onChange={(evt) => { 
                 let name = evt.target.value.toLocaleLowerCase(); 
-                name = name.replace(/[^\w\s]/gi, "");
+                name = name.replace(/ /g, '_').replace(/[^\w\s]/gi, "");
                 setSearcher(name)
               }} value={searcher} placeholder={"Search a blockchain name"} /></div>
             <Control style={{ position: "absolute", bottom: -4, right: 0 }}>

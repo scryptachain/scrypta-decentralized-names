@@ -225,7 +225,7 @@ export function Showcase(props) {
                         <div className="nes-field">
                             <Input className="nes-input" onKeyDown={_handleKeyDown} style={{ width: "100%!important" }} onChange={(evt) => { 
                                 let name = evt.target.value.toLocaleLowerCase(); 
-                                name = name.replace(/[^\w\s]/gi, "");
+                                name = name.replace(/ /g, '_').replace(/[^\w\s]/gi, "");
                                 setSearcher(name) 
                             }} value={searcher} placeholder={"Search a blockchain name"} />
                         </div>
