@@ -149,7 +149,11 @@ export function Explore() {
           <h1 style={{ fontSize: "30px", fontWeight: "600", margin: "20px 0" }}>Blockchain Names</h1>
           <div style={{ position: "relative", marginTop: "40px" }}>
             <div className="nes-field">
-              <input className="nes-input mod-size" onKeyDown={_handleKeyDown} style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain name"} /></div>
+              <input className="nes-input mod-size" onKeyDown={_handleKeyDown} style={{ width: "100%!important" }} onChange={(evt) => { 
+                let name = evt.target.value.toLocaleLowerCase(); 
+                name = name.replace(/[^\w\s]/gi, "");
+                setSearcher(name)
+              }} value={searcher} placeholder={"Search a blockchain name"} /></div>
             <Control style={{ position: "absolute", bottom: -4, right: 0 }}>
               <button className="nes-btn mod-size explore-btn is-primary" onClick={searchName}>Search</button>
             </Control>

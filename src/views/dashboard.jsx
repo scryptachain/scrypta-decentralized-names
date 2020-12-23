@@ -336,7 +336,11 @@ export function Dashboard(props) {
             <div className="nes-container is-rounded" style={{ marginBottom: "30px", position: "relative" }}>
               <h1 style={{ backgroundColor: "none", lineHeight: "20px", fontSize: "22px", fontWeight: 600 }}><br />What do you want to register today?</h1><br></br>
               <div className="nes-field">
-                <input className="nes-input mod-size" onKeyDown={_handleKeyDown} style={{ width: "100%!important" }} onChange={(evt) => { setSearcher(evt.target.value) }} value={searcher} placeholder={"Search a blockchain name"} /></div>
+                <input className="nes-input mod-size" onKeyDown={_handleKeyDown} style={{ width: "100%!important" }} onChange={(evt) => { 
+                  let name = evt.target.value.toLocaleLowerCase(); 
+                  name = name.replace(/[^\w\s]/gi, "");
+                  setSearcher(name);
+                }} value={searcher} placeholder={"Search a blockchain name"} /></div>
               {!isSearching ? <Control style={{ position: "absolute", bottom: 16, right: 21 }}>
                 <button className="nes-btn mod-size is-primary" onClick={searchName}>Search</button>
               </Control> : <div style={{ marginTop: "20px" }}>Searching...</div>}
