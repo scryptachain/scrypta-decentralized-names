@@ -3,15 +3,11 @@ import { Form, Heading, Content, Media, Container, Columns, Modal, Section, } fr
 import { NavBar, } from '../components/navbar.jsx';
 import Gravatar from 'react-gravatar'
 import { useParams } from 'react-router-dom';
-import Txid from '../assets/txid.svg'
-import Domain from '../assets/domain-white.svg'
-import Check from '../assets/check-white.svg'
-import Block from '../assets/block.svg'
 
 const ScryptaCore = require('@scrypta/core')
 const scrypta = new ScryptaCore(true)
 scrypta.staticnodes = true
-const { Input, Control } = Form;
+const { Input } = Form;
 
 export function Details(props) {
     let { uuid } = useParams()
@@ -52,8 +48,8 @@ export function Details(props) {
     if (blockchainData.uuid === "") {
         return (<div className="Details">
             <NavBar />
-            <Container style={{ padding: "45vh 0 0 0", textAlign: "center" }}>
-                Loading...
+            <Container style={{ padding: "45vh 0", color: "#fff", textAlign: "center" }}>
+                Loading data from the blockchain...
             </Container>
         </div>)
     } else {
@@ -226,7 +222,7 @@ export function Details(props) {
                             <p className="title">{titleDialog}</p>
                             <p>{textDialog}</p>
                             <menu className="dialog-menu">
-                                <button className="nes-btn" onClick={() => { setShowDialog(false) }} className="nes-btn is-primary">OK</button>
+                                <button onClick={() => { setShowDialog(false) }} className="nes-btn is-primary">OK</button>
                             </menu>
                         </dialog>
                     </div>
