@@ -85,12 +85,13 @@ export function Dashboard(props) {
         let key = await scrypta.deriveKeyFromSeed(master.seed, "m/0")
         let masterkey = await scrypta.importPrivateKey(key.prv, '-', false)
         let balance = await scrypta.get('/balance/' + key.pub)
+        scrypta.debug = true
         if (balance.balance >= 10.002) {
-          let fee = await scrypta.send(masterkey.walletstore, '-', 'LSJq6a6AMigCiRHGrby4TuHeGirJw2PL5c', 10)
-          if (fee.length === 64) {
+          let written = await scrypta.write(masterkey.walletstore, '-', 'register:' + searcher, '', '', 'names://')
+          if (written.txs[0].length === 64) {
             setTimeout(async function () {
-              let written = await scrypta.write(masterkey.walletstore, '-', 'register:' + searcher, '', '', 'names://')
-              if (written.txs[0].length === 64) {
+              let fee = await scrypta.send(masterkey.walletstore, '-', 'LSJq6a6AMigCiRHGrby4TuHeGirJw2PL5c', 10)
+              if (fee.length === 64) {
                 openDialog('Well Done', 'Name registered! Wait next confirmed block to see it in your Dashboard')
                 setAvailability(false)
                 setSearcher("")
@@ -336,8 +337,8 @@ export function Dashboard(props) {
             <div className="nes-container is-rounded" style={{ marginBottom: "30px", position: "relative" }}>
               <h1 style={{ backgroundColor: "none", lineHeight: "20px", fontSize: "22px", fontWeight: 600 }}><br />What do you want to register today?</h1><br></br>
               <div className="nes-field">
-                <input className="nes-input mod-size" onKeyDown={_handleKeyDown} style={{ width: "100%!important" }} onChange={(evt) => { 
-                  let name = evt.target.value.toLocaleLowerCase(); 
+                <input className="nes-input mod-size" onKeyDown={_handleKeyDown} style={{ width: "100%!important" }} onChange={(evt) => {
+                  let name = evt.target.value.toLocaleLowerCase();
                   name = name.replace(/ /g, '_').replace(/[^\w\s]/gi, "");
                   setSearcher(name);
                 }} value={searcher} placeholder={"Search a blockchain name"} /></div>
