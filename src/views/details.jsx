@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Heading, Content, Media, Container, Columns, Modal, Section, } from 'react-bulma-components';
+import { Form, Heading, Content, Media, Container, Columns, Modal, Section, Control } from 'react-bulma-components';
 import { NavBar, } from '../components/navbar.jsx';
 import Gravatar from 'react-gravatar'
 import { useParams } from 'react-router-dom';
@@ -265,6 +265,55 @@ export function Details(props) {
                                 </Media.Item>
                             </Media>
                         </div>
+                    </div>
+                </Container>
+                <Container style={{ marginTop: "30px" }}>
+                    <div className="nes-container is-rounded" style={{ paddingTop: "30px" }}>
+                        <div className="nes-container is-rounded with-title" style={{ marginBottom: "30px" }}>
+                            <div className="title">
+                                <h1 style={{ color: "red", fontWeight: 600, fontSize: "32px", marginBottom: "20px" }}>Metadata</h1>
+                                <small>Bring this data with your name</small>
+                            </div>
+                            <div style={{ marginTop: "80px" }}>
+                                <div style={{ position: "relative" }}>
+                                    <h3>IP Address</h3>
+                                    <div className="nes-field" style={{ marginBottom: "20px" }}>
+                                        <Input style={{ height: "45px" }} className="nes-input" placeholder="Insert IP" />
+                                    </div>
+                                    <button className="nes-btn is-primary" style={{ position: "absolute", top: 28, right: 0 }}>Save</button>
+                                </div>
+                                <div style={{ position: "relative" }}>
+                                    <h3>Bitcoin Address</h3>
+                                    <div className="nes-field" style={{ marginBottom: "20px" }}>
+                                        <Input style={{ height: "45px" }} className="nes-input" placeholder="Insert a Bitcoin address" />
+                                    </div>
+                                    <button className="nes-btn is-primary" style={{ position: "absolute", top: 28, right: 0 }}>Save</button>
+                                </div>
+                                <div style={{ position: "relative" }}>
+                                    <h3>Ethereum Address</h3>
+                                    <div className="nes-field" style={{ marginBottom: "20px" }}>
+                                        <Input style={{ height: "45px" }} className="nes-input" placeholder="Insert a Ethereum address" />
+                                    </div>
+                                    <button className="nes-btn is-primary" style={{ position: "absolute", top: 28, right: 0 }}>Save</button>
+                                </div>
+                                <div style={{ position: "relative" }}>
+                                    <h3>Link </h3>
+                                    <div className="nes-field" style={{ marginBottom: "20px" }}>
+                                        <Input style={{ height: "45px" }} className="nes-input" placeholder="Insert a link" />
+                                    </div>
+                                    <button className="nes-btn is-primary" style={{ position: "absolute", top: 28, right: 0 }}>Save</button>
+                                </div>
+                                <div style={{ position: "relative" }}>
+                                    <h3>Image Link </h3>
+                                    <div className="nes-field" style={{ marginBottom: "20px" }}>
+                                        <Input style={{ height: "45px" }} className="nes-input" placeholder="Insert an image link" />
+                                    </div>
+                                    <button className="nes-btn is-primary" style={{ position: "absolute", top: 28, right: 0 }}>Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style={{ marginTop: "30px" }}>
                         {buttonForSale()}
                     </div>
                 </Container>

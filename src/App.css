@@ -94,7 +94,7 @@ body, html {
 }
 
 .Details {
-  height: 82vh;
+  min-height: 82vh;
 }
 
 .login-container, .dashboard-container {
