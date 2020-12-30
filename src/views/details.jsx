@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Heading, Content, Media, Container, Columns, Modal, Section, Control } from 'react-bulma-components';
+import { Form, Heading, Content, Media, Container, Columns, Modal, Section } from 'react-bulma-components';
 import { NavBar, } from '../components/navbar.jsx';
 import Gravatar from 'react-gravatar'
 import { useParams } from 'react-router-dom';
@@ -202,12 +202,12 @@ export function Details(props) {
                 return <Modal show={showRemove} onClose={() => setShowRemove(false)}>
                     <Modal.Content style={{ textAlign: "center" }}>
                         <Section style={{ backgroundColor: 'white' }}>
-                            <Heading>Remove from Showcase <br /><span style={{ color: "red" }}>{blockchainData.domain}</span></Heading>
-                            If doesn't want sell this domain, enter the password to confirm! <br /><br />
+                            <Heading>Remove from marketplace <br /><span style={{ color: "red" }}>{blockchainData.domain}</span></Heading>
+                            If you don't want to sell this domain anymore, enter the password to confirm! <br /><br />
                             <div className="nes-field">
                                 <Input className="nes-input" style={{ width: "100%!important", textAlign: "center", marginTop: "20px" }} type="password" onChange={(evt) => { setPassword(evt.target.value) }} placeholder="Insert wallet password" value={password} />
                             </div><br></br><br></br>
-                            {!isRemoving ? <button className="nes-btn is-error" onClick={removeSell} color="success">Remove from Showcase</button> : <div>Removing from Showcase, please wait...</div>}
+                            {!isRemoving ? <button className="nes-btn is-error" onClick={removeSell} color="success">Remove from marketplace</button> : <div>Removing from marketplace, please wait...</div>}
                         </Section>
                     </Modal.Content>
                 </Modal >
@@ -272,9 +272,9 @@ export function Details(props) {
                         <div className="nes-container is-rounded with-title" style={{ marginBottom: "30px" }}>
                             <div className="title">
                                 <h1 style={{ color: "red", fontWeight: 600, fontSize: "32px", marginBottom: "20px" }}>Metadata</h1>
-                                <small>Bring this data with your name</small>
+                                <small>Attach data to your name</small>
                             </div>
-                            <div style={{ marginTop: "80px" }}>
+                            <div style={{ marginTop: "40px" }}>
                                 <div style={{ position: "relative" }}>
                                     <h3>IP Address</h3>
                                     <div className="nes-field" style={{ marginBottom: "20px" }}>
@@ -297,16 +297,23 @@ export function Details(props) {
                                     <button className="nes-btn is-primary" style={{ position: "absolute", top: 28, right: 0 }}>Save</button>
                                 </div>
                                 <div style={{ position: "relative" }}>
-                                    <h3>Link </h3>
+                                    <h3>Website</h3>
                                     <div className="nes-field" style={{ marginBottom: "20px" }}>
-                                        <Input style={{ height: "45px" }} className="nes-input" placeholder="Insert a link" />
+                                        <Input style={{ height: "45px" }} className="nes-input" placeholder="Insert a link to your website" />
                                     </div>
                                     <button className="nes-btn is-primary" style={{ position: "absolute", top: 28, right: 0 }}>Save</button>
                                 </div>
                                 <div style={{ position: "relative" }}>
-                                    <h3>Image Link </h3>
+                                    <h3>IPFS Image hash </h3>
                                     <div className="nes-field" style={{ marginBottom: "20px" }}>
-                                        <Input style={{ height: "45px" }} className="nes-input" placeholder="Insert an image link" />
+                                        <Input style={{ height: "45px" }} className="nes-input" placeholder="Insert a valid IPFS hash" />
+                                    </div>
+                                    <button className="nes-btn is-primary" style={{ position: "absolute", top: 28, right: 0 }}>Save</button>
+                                </div>
+                                <div style={{ position: "relative" }}>
+                                    <h3>Youtube</h3>
+                                    <div className="nes-field" style={{ marginBottom: "20px" }}>
+                                        <Input style={{ height: "45px" }} className="nes-input" placeholder="Insert a link to youtube video or channel" />
                                     </div>
                                     <button className="nes-btn is-primary" style={{ position: "absolute", top: 28, right: 0 }}>Save</button>
                                 </div>

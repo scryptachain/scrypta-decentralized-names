@@ -49,7 +49,7 @@ export function Dashboard(props) {
           }
         }
       }
-      totalBalance = totalBalance.toFixed(8)
+      totalBalance = (totalBalance - totFees).toFixed(8)
       setChecked(true)
       setOwned(registered)
       setBalance(totalBalance)
@@ -156,6 +156,7 @@ export function Dashboard(props) {
                         }
                       }
                       totalBalance = totalBalance.toFixed(8)
+                      setBalance(totalBalance)
                     }, 1000)
                   }, 1000)
                 }
@@ -281,7 +282,7 @@ export function Dashboard(props) {
             <p className="title">{titleDialog}</p>
             <p>{textDialog}</p>
             <menu className="dialog-menu">
-              <button className="nes-btn" onClick={() => { setShowDialog(false) }} className="nes-btn is-primary">OK</button>
+              <button onClick={() => { setShowDialog(false) }} className="nes-btn is-primary">OK</button>
             </menu>
           </dialog>
         </div>

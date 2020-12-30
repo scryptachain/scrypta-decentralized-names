@@ -1,21 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Heading, Container, Columns, Modal, Section, } from 'react-bulma-components';
 import { NavBar, } from '../components/navbar.jsx';
-import { useParams } from 'react-router-dom';
 import Gravatar from 'react-gravatar'
 const ScryptaCore = require('@scrypta/core')
 const scrypta = new ScryptaCore(true)
 scrypta.staticnodes = true
-const { Input, Control } = Form;
+const { Input } = Form;
 
-export function Showcase(props) {
+export function Marketplace(props) {
     let [listed, setList] = useState([])
     let [searcher, setSearcher] = useState("")
     let [password, setPassword] = useState("")
-    let [isSearching, setSearching] = useState(false)
-    let [isAvailable, setAvailability] = useState(false)
     let [checked, setChecked] = useState(false)
-    let [balance, setBalance] = useState(0)
     let [isBuying, setBuying] = useState(false)
     let [showConfirm, setShowConfirm] = useState(false)
     let [selected, setSelected] = useState({})
@@ -44,25 +40,6 @@ export function Showcase(props) {
         }
     })
 
-
-    async function searchName() {
-        if (searcher.length > 0 && !isSearching) {
-            setSearching(true)
-            let address = await scrypta.createAddress('-', false)
-            let request = await scrypta.createContractRequest(address.walletstore, '-', { contract: "LcD7AGaY74xvVxDg3NkKjfP6QpG8Pmxpnu", function: "search", params: { "name": searcher } })
-            let response = await scrypta.sendContractRequest(request)
-            setSearching(false)
-            if (response.message !== undefined && response.message === 'Name not found.') {
-                setAvailability(true)
-            } else if (response.address !== undefined) {
-                openDialog('Ops', 'This domain is taken by ' + response.address)
-                setAvailability(false)
-            }
-        } else {
-            openDialog('Ops', 'Write a name first!')
-        }
-    }
-
     const returnSell = () => {
         if (listed.length > 0) {
             let inSell = []
@@ -75,7 +52,7 @@ export function Showcase(props) {
             if (inSell.length > 0) {
                 return <Columns style={{ marginTop: "40px" }}>
                     {inSell.map((value, index) => {
-                        if (ban.indexOf(value.name) === -1) {
+                        if (ban.indexOf(value.name) === -1 && (searcher === "" || value.name.indexOf(searcher) !== -1)) {
                             return (
                                 <Columns.Column key={index} size="half">
                                     <div className="nes-container is-rounded">
@@ -105,14 +82,8 @@ export function Showcase(props) {
             }
         } else {
             return (
-                <p>Nothing to show</p>
+                <div style={{padding: "30px 0", color: "#fff", textAlign: "center"}}>Loading data from blockchain...</div>
             )
-        }
-    }
-
-    function _handleKeyDown(e) {
-        if (e.key === 'Enter') {
-            searchName()
         }
     }
 
@@ -129,8 +100,6 @@ export function Showcase(props) {
                     let buyTx = await scrypta.send(masterkey.walletstore, '-', selected.payment, parseFloat(selected.price), "names://buy:" + selected.uuid)
                     if (buyTx !== null && buyTx.length === 64) {
                         openDialog('Well Done', 'Name bougth!')
-                        setAvailability(false)
-                        setSearcher("")
                         setBuying(false)
                         setShowConfirm(false)
                         setPassword("")
@@ -189,7 +158,7 @@ export function Showcase(props) {
                         <p className="title">{titleDialog}</p>
                         <p>{textDialog}</p>
                         <menu className="dialog-menu">
-                            <button className="nes-btn" onClick={() => { setShowDialog(false) }} className="nes-btn is-primary">OK</button>
+                            <button onClick={() => { setShowDialog(false) }} className="nes-btn is-primary">OK</button>
                         </menu>
                     </dialog>
                 </div>
@@ -215,7 +184,7 @@ export function Showcase(props) {
     }
 
     return (
-        <div className="Showcase">
+        <div className="Marketplace">
             {returnConfirmBox()}
             {returnDialog()}
             <NavBar />
@@ -223,15 +192,12 @@ export function Showcase(props) {
                 <div style={{ marginTop: "150px" }}>
                     <div className="nes-container is-rounded" style={{ position: "relative" }}>
                         <div className="nes-field">
-                            <Input className="nes-input" onKeyDown={_handleKeyDown} style={{ width: "100%!important" }} onChange={(evt) => { 
+                            <Input className="nes-input" style={{ width: "100%!important" }} onChange={(evt) => { 
                                 let name = evt.target.value.toLocaleLowerCase(); 
                                 name = name.replace(/ /g, '_').replace(/[^\w\s]/gi, "");
                                 setSearcher(name) 
                             }} value={searcher} placeholder={"Search a blockchain name"} />
                         </div>
-                        {!isSearching ? <Control style={{ position: "absolute", bottom: 13, right: 15 }}>
-                            <button className="nes-btn is-primary" onClick={searchName} color="info">Search</button>
-                        </Control> : <div style={{ marginTop: "20px" }}>Searching...</div>}
                     </div>
                 </div>
                     {returnSell()}

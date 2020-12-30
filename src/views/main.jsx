@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Splash } from './splash.jsx'
 import { Dashboard } from './dashboard.jsx'
-import { Showcase } from './showcase.jsx'
+import { Marketplace } from './marketplace.jsx'
 import { Explore } from './explore.jsx'
 import { Login } from './login.jsx'
 import { Details } from './details.jsx'
@@ -75,7 +75,7 @@ export class Main extends Component {
             <Switch>
               <Route exact path="/"><Dashboard user={this.state.user} /></Route>
               <Route exact path="/details/:uuid"><Details user={this.state.user} /></Route>
-              <Route expact path="/showcase"><Showcase user={this.state.user} /></Route>
+              <Route expact path="/marketplace"><Marketplace user={this.state.user} /></Route>
               <Route exact path="/how-it-works"><Login /></Route>
             </Switch>
             <div className="nes-footer" style={{ marginTop: "20px", padding: "20px 10px", color: "white", fontSize: "10px", textAlign: "center", borderTop: "1px solid #fff" }}>

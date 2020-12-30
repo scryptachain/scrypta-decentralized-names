@@ -56,8 +56,8 @@ export function NavBar() {
                             <Navbar.Item renderAs="a" href="/">
                                 <button className="nes-btn is-warning" >Dashboard</button>
                             </Navbar.Item>
-                            <Navbar.Item renderAs="a" href="/showcase">
-                                <button className="nes-btn is-success" >Showcase</button>
+                            <Navbar.Item renderAs="a" href="/marketplace">
+                                <button className="nes-btn is-success" >Marketplace</button>
                             </Navbar.Item>
                             <Navbar.Item onClick={() => { localStorage.removeItem('wallet'); localStorage.removeItem('xSID'); localStorage.removeItem('SID'); setLogged(false); window.location = "/" }}>
                                 <button className="nes-btn is-error" style={{ marginRight: "30px" }}>LOGOUT</button>
