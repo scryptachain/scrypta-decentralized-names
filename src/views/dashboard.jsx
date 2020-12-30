@@ -63,16 +63,17 @@ export function Dashboard(props) {
     if (searcher.length > 0 && !isSearching) {
       setSearching(true)
       let address = await scrypta.createAddress('-', false)
-      let request = await scrypta.createContractRequest(address.walletstore, '-', { contract: "LcD7AGaY74xvVxDg3NkKjfP6QpG8Pmxpnu", function: "search", params: { "name": searcher } })
+      let request = await scrypta.createContractRequest(address.walletstore, '-', { contract: "LcD7AGaY74xvVxDg3NkKjfP6QpG8Pmxpnu", function: "check", params: { "name": searcher } })
       let response = await scrypta.sendContractRequest(request)
       setSearching(false)
-      if (response.message !== undefined && response.message === 'Name not found.') {
+      if (response.available !== undefined && response.available === true) {
         setAvailability(true)
-      } else if (response.address !== undefined) {
-        openDialog('Ops', 'This domain is taken by ' + response.address)
+      } else if (response.record.owner !== undefined) {
+        openDialog('Ops', 'This domain is taken by ' + response.record.owner)
         setAvailability(false)
       }
     } else {
+      setSearching(false)
       openDialog('Ops', 'Write a name first!')
     }
   }
@@ -125,7 +126,7 @@ export function Dashboard(props) {
           if (written.data[k].data.indexOf("sell:") === 0) {
             let split = written.data[k].data.split(':')
             let balance = await scrypta.get("/balance/" + split[2])
-            let fees = balance.balance / 100 * 10
+            let fees = balance.balance / 100 * 1.5
             let canWithdraw = balance.balance - fees - 0.002
             if (balance.balance > 0) {
               let hash = await scrypta.hash(split[1])
@@ -135,10 +136,10 @@ export function Dashboard(props) {
               if (balance.balance >= 0.001) {
                 let paymentAddress = await scrypta.deriveKeyFromSeed(master.seed, path)
                 let writingKey = await scrypta.importPrivateKey(paymentAddress.prv, '-', false)
-                let fee = await scrypta.send(writingKey.walletstore, '-', 'LSJq6a6AMigCiRHGrby4TuHeGirJw2PL5c', fees)
-                if (fee.length === 64) {
+                let tx = await scrypta.send(writingKey.walletstore, '-', props.user.address, canWithdraw)
+                if (tx.length === 64) {
                   setTimeout(async function () {
-                    await scrypta.send(writingKey.walletstore, '-', props.user.address, canWithdraw)
+                    await scrypta.send(writingKey.walletstore, '-', 'LSJq6a6AMigCiRHGrby4TuHeGirJw2PL5c', fees)
                     openDialog('Well Done', 'Withdraw successfully done!')
                     setWithdrawing(false)
                     setShowWithdraw(false)
@@ -149,7 +150,7 @@ export function Dashboard(props) {
                           let split = written.data[k].data.split(':')
                           let balance = await scrypta.get("/balance/" + split[2])
                           if (balance.balance > 0) {
-                            let fees = balance.balance / 100 * 10
+                            let fees = balance.balance / 100 * 1.5
                             let canWithdraw = balance.balance - fees - 0.002
                             totalBalance += canWithdraw
                           }
@@ -172,6 +173,10 @@ export function Dashboard(props) {
   }
 
   const returnOwned = () => {
+    owned.sort((a, b) => {
+      if (a.name < b.name) return -1
+      return a.name > b.name ? 1 : 0
+    })
     if (owned.length > 0) {
       return <div>
         {owned.map((value, index) => {
@@ -198,6 +203,10 @@ export function Dashboard(props) {
   }
 
   const returnSell = () => {
+    owned.sort((a, b) => {
+      if (a.name < b.name) return -1
+      return a.name > b.name ? 1 : 0
+    })
     if (owned.length > 0) {
       let inSell = []
       for (let k in owned) {

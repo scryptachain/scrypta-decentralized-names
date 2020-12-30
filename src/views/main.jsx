@@ -76,6 +76,7 @@ export class Main extends Component {
               <Route exact path="/"><Dashboard user={this.state.user} /></Route>
               <Route exact path="/details/:uuid"><Details user={this.state.user} /></Route>
               <Route expact path="/marketplace"><Marketplace user={this.state.user} /></Route>
+              <Route exact path="/explore"><Explore user={this.state.user} /></Route>
               <Route exact path="/how-it-works"><Login /></Route>
             </Switch>
             <div className="nes-footer" style={{ marginTop: "20px", padding: "20px 10px", color: "white", fontSize: "10px", textAlign: "center", borderTop: "1px solid #fff" }}>

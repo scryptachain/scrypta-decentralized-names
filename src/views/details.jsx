@@ -22,9 +22,17 @@ export function Details(props) {
     let [showRemove, setShowRemove] = useState(false)
     let [isRemoving, setRemoving] = useState(false)
     let [showDialog, setShowDialog] = useState(false)
+    let [showUpdate, setShowUpdate] = useState(false)
     let [textDialog, setTextDialog] = useState("")
     let [titleDialog, setTitleDialog] = useState("")
-
+    let [bitcoin, setBitcoin] = useState("")
+    let [ethereum, setEthereum] = useState("")
+    let [link, setLink] = useState("")
+    let [youtube, setYoutube] = useState("")
+    let [icon, setIcon] = useState("")
+    let [isUpdating, setUpdating] = useState(false)
+    let [what, setWhat] = useState("")
+    let [isOwner, setOwner] = useState(false)
 
     useEffect(() => {
         async function readBlockchain() {
@@ -38,6 +46,24 @@ export function Details(props) {
             let request = await scrypta.createContractRequest(address.walletstore, '-', { contract: "LcD7AGaY74xvVxDg3NkKjfP6QpG8Pmxpnu", function: "check", params: { name: domain.domain } })
             let response = await scrypta.sendContractRequest(request)
             domain.smartcontract = response.record
+            if(domain.smartcontract.owner === props.user.address){
+                setOwner(true)
+            }
+            if (domain.smartcontract.link !== undefined) {
+                setLink(domain.smartcontract.link)
+            }
+            if (domain.smartcontract.bitcoin !== undefined) {
+                setBitcoin(domain.smartcontract.bitcoin)
+            }
+            if (domain.smartcontract.ethereum !== undefined) {
+                setEthereum(domain.smartcontract.ethereum)
+            }
+            if (domain.smartcontract.icon !== undefined) {
+                setIcon(domain.smartcontract.icon)
+            }
+            if (domain.smartcontract.youtube !== undefined) {
+                setYoutube(domain.smartcontract.youtube)
+            }
             setData(domain)
         }
         if (blockchainData.uuid === "") {
@@ -148,6 +174,58 @@ export function Details(props) {
             }
         }
 
+        async function updateName() {
+            if (password.length > 0 && !isUpdating) {
+                setUpdating(true)
+                let mnemonic = await scrypta.readxKey(password, props.user.walletstore)
+                if (mnemonic !== false) {
+                    let key = await scrypta.deriveKeyFromSeed(mnemonic.seed, "m/0")
+                    let value = ''
+
+                    switch (what) {
+                        case "icon":
+                            value = icon
+                            break;
+                        case "link":
+                            value = link
+                            value = value.replace("http://", "")
+                            value = value.replace("https://", "")
+                            break;
+                        case "youtube":
+                            value = youtube
+                            value = value.replace("http://", "")
+                            value = value.replace("https://", "")
+                            break;
+                        case "bitcoin":
+                            value = bitcoin
+                            break;
+                        case "ethereum":
+                            value = ethereum
+                            break;
+                        default:
+                            break;
+                    }
+
+                    value = value.replace(":", "")
+                    let toWrite = 'update:' + blockchainData.uuid + ':' + what + ':' + value
+                    let writingKey = await scrypta.importPrivateKey(key.prv, '-', false)
+                    let written = await scrypta.write(writingKey.walletstore, '-', toWrite, '', '', 'names://')
+                    if (written.txs !== undefined && written.txs[0] !== undefined && written.txs[0].length === 64) {
+                        openDialog('Well Done', 'Name updated, wait next block for confirmation!')
+                        setUpdating(false)
+                        setShowUpdate(false)
+                        setWhat("")
+                        setPassword("")
+                    } else {
+                        openDialog('Ops', 'Something goes wrong!')
+                    }
+                } else {
+                    setUpdating(false)
+                    openDialog('Ops', 'Wrong password!')
+                }
+            }
+        }
+
         const returnTransferBox = () => {
             if (showTransfer) {
                 return <Modal show={showTransfer} onClose={() => setShowTranfer(false)}>
@@ -165,19 +243,21 @@ export function Details(props) {
         }
 
         const buttonForSale = () => {
-            if (blockchainData.smartcontract.price === null) {
-                return <div>
-                    <Columns>
-                        <Columns.Column>
-                            <button className="nes-btn is-success" style={{ width: "100%", height: "80px", fontSize: "22px" }} onClick={() => { setShowTranfer(true) }}>Transfer</button>
-                        </Columns.Column>
-                        <Columns.Column>
-                            <button className="nes-btn is-error" style={{ width: "100%", height: "80px", fontSize: "22px" }} onClick={() => { setShowSell(true) }}>Sell</button>
-                        </Columns.Column>
-                    </Columns>
-                </div>
-            } else {
-                return <button className="nes-btn is-error" style={{ width: "100%", height: "80px", fontSize: "22px" }} color="danger" onClick={() => { setShowRemove(true) }}>Undo Sell</button>
+            if(isOwner){
+                if (blockchainData.smartcontract.price === null) {
+                    return <div>
+                        <Columns>
+                            <Columns.Column>
+                                <button className="nes-btn is-success" style={{ width: "100%", height: "80px", fontSize: "22px" }} onClick={() => { setShowTranfer(true) }}>Transfer</button>
+                            </Columns.Column>
+                            <Columns.Column>
+                                <button className="nes-btn is-error" style={{ width: "100%", height: "80px", fontSize: "22px" }} onClick={() => { setShowSell(true) }}>Sell</button>
+                            </Columns.Column>
+                        </Columns>
+                    </div>
+                } else {
+                    return <button className="nes-btn is-error" style={{ width: "100%", height: "80px", fontSize: "22px" }} color="danger" onClick={() => { setShowRemove(true) }}>Undo Sell</button>
+                }
             }
         }
 
@@ -214,6 +294,23 @@ export function Details(props) {
             }
         }
 
+        const returnUpdateBox = () => {
+            if (showUpdate) {
+                return <Modal show={showUpdate} onClose={() => setShowUpdate(false)}>
+                    <Modal.Content style={{ textAlign: "center" }}>
+                        <Section style={{ backgroundColor: 'white' }}>
+                            <Heading>Update <span style={{ color: "red" }}>{what}</span> for name <br /><span style={{ color: "red" }}>{blockchainData.domain}</span></Heading>
+                            enter the password to update your name, please remember that these data are written in blockchain and are immutable, be careful.<br /><br />
+                            <div className="nes-field">
+                                <Input className="nes-input" style={{ width: "100%!important", textAlign: "center", marginTop: "20px" }} type="password" onChange={(evt) => { setPassword(evt.target.value) }} placeholder="Insert wallet password" value={password} />
+                            </div><br></br><br></br>
+                            {!isUpdating ? <button className="nes-btn is-error" onClick={updateName} color="success">Update metadata</button> : <div>Updating metadata, please wait...</div>}
+                        </Section>
+                    </Modal.Content>
+                </Modal >
+            }
+        }
+
         function returnDialog() {
             if (showDialog) {
                 return (
@@ -240,6 +337,7 @@ export function Details(props) {
             <div className="Details">
                 {returnTransferBox()}
                 {returnSellBox()}
+                {returnUpdateBox()}
                 {returnRemoveBox()}
                 {returnDialog()}
                 <NavBar />
@@ -251,15 +349,21 @@ export function Details(props) {
                             </div>
                             <Media>
                                 <Media.Item renderAs="figure" position="left">
-                                    <Gravatar style={{ marginTop: "10px", height: "200px", width: "200px" }} email={uuid} />
+                                    {icon.length > 0 ? <img src={'https://ipfs.io/ipfs/' + icon} alt="IPFS-Icon" /> : <Gravatar style={{ marginTop: "10px", height: "200px", width: "200px" }} email={uuid} /> }
                                 </Media.Item>
                                 <Media.Item>
                                     <Content>
                                         <div style={{ marginTop: "5px" }}>
                                             <p style={{ marginTop: 0 }}>NFT identifier:<br /><b>{uuid}</b></p>
+                                            <p style={{ marginTop: 0 }}>Owner:<br /> <b>{blockchainData.address}</b></p>
                                             <p style={{ marginTop: 0 }}>Block:<br /> <b>{blockchainData.block}</b></p>
-                                            <p style={{ marginTop: 0 }}>TxID:<br /><b>{blockchainData.txid}</b></p>
+                                            <p style={{ marginTop: 0 }}>TxID:<br /><b><a href={'https://bb.scryptachain.org/tx/' + blockchainData.txid} rel="noreferrer" target="_blank">{blockchainData.txid}</a></b></p>
                                             <p style={{ marginTop: 0 }}>Timestamp:<br /><b>{blockchainData.date}</b></p>
+                                            {bitcoin.length > 0 ? <p style={{ marginTop: 0 }}>Bitcoin address:<br /><b>{bitcoin}</b></p> : "" }
+                                            {ethereum.length > 0 ? <p style={{ marginTop: 0 }}>Ethereum address:<br /><b>{ethereum}</b></p> : "" }
+                                            {link.length > 0 ? <p style={{ marginTop: 0 }}>Website:<br /><a href={'https://' + link} rel="noreferrer" target="_blank">{link}</a></p> : "" }
+                                            {youtube.length > 0 ? <p style={{ marginTop: 0 }}>Youtube:<br /><b>{youtube}</b></p> : "" }
+                                            {icon.length > 0 ? <p style={{ marginTop: 0 }}>IPFS:<br /><a href={'https://ipfs.io/ipfs/' + icon} rel="noreferrer" target="_blank">{icon}</a></p> : "" }
                                         </div>
                                     </Content>
                                 </Media.Item>
@@ -267,63 +371,58 @@ export function Details(props) {
                         </div>
                     </div>
                 </Container>
-                <Container style={{ marginTop: "30px" }}>
-                    <div className="nes-container is-rounded" style={{ paddingTop: "30px" }}>
-                        <div className="nes-container is-rounded with-title" style={{ marginBottom: "30px" }}>
-                            <div className="title">
-                                <h1 style={{ color: "red", fontWeight: 600, fontSize: "32px", marginBottom: "20px" }}>Metadata</h1>
-                                <small>Attach data to your name</small>
-                            </div>
-                            <div style={{ marginTop: "40px" }}>
-                                <div style={{ position: "relative" }}>
-                                    <h3>IP Address</h3>
-                                    <div className="nes-field" style={{ marginBottom: "20px" }}>
-                                        <Input style={{ height: "45px" }} className="nes-input" placeholder="Insert IP" />
-                                    </div>
-                                    <button className="nes-btn is-primary" style={{ position: "absolute", top: 28, right: 0 }}>Save</button>
+                {!isOwner ? <div></div> : 
+                    <Container style={{ marginTop: "30px" }}>
+                        <div className="nes-container is-rounded" style={{ paddingTop: "30px" }}>
+                            <div className="nes-container is-rounded with-title" style={{ marginBottom: "30px" }}>
+                                <div className="title">
+                                    <h1 style={{ color: "red", fontWeight: 600, fontSize: "32px", marginBottom: "20px" }}>Metadata</h1>
+                                    <small>Attach data to your name</small>
                                 </div>
-                                <div style={{ position: "relative" }}>
-                                    <h3>Bitcoin Address</h3>
-                                    <div className="nes-field" style={{ marginBottom: "20px" }}>
-                                        <Input style={{ height: "45px" }} className="nes-input" placeholder="Insert a Bitcoin address" />
+                                    <div style={{ marginTop: "40px" }}>
+                                        <div style={{ position: "relative" }}>
+                                            <h3>Bitcoin Address</h3>
+                                            <div className="nes-field" style={{ marginBottom: "20px" }}>
+                                                <Input style={{ height: "45px" }} onChange={(evt) => { setBitcoin(evt.target.value) }} value={bitcoin} className="nes-input" placeholder="Insert a Bitcoin address" />
+                                            </div>
+                                            <button className="nes-btn is-primary" onClick={() => { setWhat('bitcoin'); setShowUpdate(true) }} style={{ position: "absolute", top: 28, right: 0 }}>Save</button>
+                                        </div>
+                                        <div style={{ position: "relative" }}>
+                                            <h3>Ethereum Address</h3>
+                                            <div className="nes-field" style={{ marginBottom: "20px" }}>
+                                                <Input style={{ height: "45px" }} onChange={(evt) => { setEthereum(evt.target.value) }} value={ethereum} className="nes-input" placeholder="Insert a Ethereum address" />
+                                            </div>
+                                            <button className="nes-btn is-primary" onClick={() => { setWhat('ethereum'); setShowUpdate(true) }} style={{ position: "absolute", top: 28, right: 0 }}>Save</button>
+                                        </div>
+                                        <div style={{ position: "relative" }}>
+                                            <h3>Website</h3>
+                                            <div className="nes-field" style={{ marginBottom: "20px" }}>
+                                                <Input style={{ height: "45px" }} onChange={(evt) => { setLink(evt.target.value) }} value={link} className="nes-input" placeholder="Insert a link to your website" />
+                                            </div>
+                                            <button className="nes-btn is-primary" onClick={() => { setWhat('link'); setShowUpdate(true) }} style={{ position: "absolute", top: 28, right: 0 }}>Save</button>
+                                        </div>
+                                        <div style={{ position: "relative" }}>
+                                            <h3>IPFS Image hash </h3>
+                                            <div className="nes-field" style={{ marginBottom: "20px" }}>
+                                                <Input style={{ height: "45px" }} onChange={(evt) => { setIcon(evt.target.value) }} value={icon} className="nes-input" placeholder="Insert a valid IPFS hash" />
+                                            </div>
+                                            <button className="nes-btn is-primary" onClick={() => { setWhat('icon'); setShowUpdate(true) }} style={{ position: "absolute", top: 28, right: 0 }}>Save</button>
+                                        </div>
+                                        <div style={{ position: "relative" }}>
+                                            <h3>Youtube</h3>
+                                            <div className="nes-field" style={{ marginBottom: "20px" }}>
+                                                <Input style={{ height: "45px" }} onChange={(evt) => { setYoutube(evt.target.value) }} value={youtube} className="nes-input" placeholder="Insert a link to youtube video or channel" />
+                                            </div>
+                                            <button className="nes-btn is-primary" onClick={() => { setWhat('youtube'); setShowUpdate(true) }} style={{ position: "absolute", top: 28, right: 0 }}>Save</button>
+                                        </div>
                                     </div>
-                                    <button className="nes-btn is-primary" style={{ position: "absolute", top: 28, right: 0 }}>Save</button>
-                                </div>
-                                <div style={{ position: "relative" }}>
-                                    <h3>Ethereum Address</h3>
-                                    <div className="nes-field" style={{ marginBottom: "20px" }}>
-                                        <Input style={{ height: "45px" }} className="nes-input" placeholder="Insert a Ethereum address" />
-                                    </div>
-                                    <button className="nes-btn is-primary" style={{ position: "absolute", top: 28, right: 0 }}>Save</button>
-                                </div>
-                                <div style={{ position: "relative" }}>
-                                    <h3>Website</h3>
-                                    <div className="nes-field" style={{ marginBottom: "20px" }}>
-                                        <Input style={{ height: "45px" }} className="nes-input" placeholder="Insert a link to your website" />
-                                    </div>
-                                    <button className="nes-btn is-primary" style={{ position: "absolute", top: 28, right: 0 }}>Save</button>
-                                </div>
-                                <div style={{ position: "relative" }}>
-                                    <h3>IPFS Image hash </h3>
-                                    <div className="nes-field" style={{ marginBottom: "20px" }}>
-                                        <Input style={{ height: "45px" }} className="nes-input" placeholder="Insert a valid IPFS hash" />
-                                    </div>
-                                    <button className="nes-btn is-primary" style={{ position: "absolute", top: 28, right: 0 }}>Save</button>
-                                </div>
-                                <div style={{ position: "relative" }}>
-                                    <h3>Youtube</h3>
-                                    <div className="nes-field" style={{ marginBottom: "20px" }}>
-                                        <Input style={{ height: "45px" }} className="nes-input" placeholder="Insert a link to youtube video or channel" />
-                                    </div>
-                                    <button className="nes-btn is-primary" style={{ position: "absolute", top: 28, right: 0 }}>Save</button>
-                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div style={{ marginTop: "30px" }}>
-                        {buttonForSale()}
-                    </div>
-                </Container>
+                        <div style={{ marginTop: "30px" }}>
+                            {buttonForSale()}
+                        </div>
+                    </Container>
+                }
             </div>
         );
     }

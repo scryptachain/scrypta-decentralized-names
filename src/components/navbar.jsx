@@ -53,8 +53,8 @@ export function NavBar() {
                     </Navbar.Brand>
                     <Navbar.Container position="end">
                         <Navbar.Menu >
-                            <Navbar.Item renderAs="a" href="/">
-                                <button className="nes-btn is-warning" >Dashboard</button>
+                            <Navbar.Item renderAs="a" href="/explore">
+                                <button className="nes-btn is-warning" >Explore</button>
                             </Navbar.Item>
                             <Navbar.Item renderAs="a" href="/marketplace">
                                 <button className="nes-btn is-success" >Marketplace</button>

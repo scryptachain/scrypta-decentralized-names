@@ -4,15 +4,17 @@ import { NavBar, } from '../components/navbar.jsx';
 const ScryptaCore = require('@scrypta/core')
 const scrypta = new ScryptaCore(true)
 scrypta.staticnodes = true
-const { Input, Control } = Form;
+const { Control } = Form;
 
-export function Explore() {
+export function Explore(props) {
   let [history, setHistory] = useState([])
   let [inSell, setSell] = useState([])
+  let [isLoading, setLoading] = useState(true)
   let [showDialog, setShowDialog] = useState(false)
   let [textDialog, setTextDialog] = useState("")
   let [titleDialog, setTitleDialog] = useState("")
   let [searcher, setSearcher] = useState("")
+  let [max, setMax] = useState(15)
   let ban = ["register:turinglabs"]
   useEffect(() => {
     async function init() {
@@ -28,6 +30,7 @@ export function Explore() {
         }
       }
       setSell(sellArray)
+      setLoading(false)
     }
     if (history.length === 0) {
       init()
@@ -43,12 +46,12 @@ export function Explore() {
   async function searchName() {
     if (searcher.length > 0) {
       let address = await scrypta.createAddress('-', false)
-      let request = await scrypta.createContractRequest(address.walletstore, '-', { contract: "LcD7AGaY74xvVxDg3NkKjfP6QpG8Pmxpnu", function: "search", params: { "name": searcher } })
+      let request = await scrypta.createContractRequest(address.walletstore, '-', { contract: "LcD7AGaY74xvVxDg3NkKjfP6QpG8Pmxpnu", function: "check", params: { "name": searcher } })
       let response = await scrypta.sendContractRequest(request)
-      if (response.message !== undefined && response.message === 'Name not found.') {
+      if (response.available !== undefined && response.available === true) {
         openDialog('Well done', 'Proceed with login and register this name!')
-      } else if (response.address !== undefined) {
-        openDialog('Ops', 'This domain is taken by ' + response.address)
+      } else if (response.record.owner !== undefined) {
+        openDialog('Ops', 'This domain is taken by ' + response.record.owner)
       }
     } else {
       openDialog('Ops', 'Write a name to search first!')
@@ -56,17 +59,18 @@ export function Explore() {
   }
 
   function returnRegistered() {
-    if (history.length > 0) {
+    if (history.length > 0 && !isLoading) {
       return (
         <Container align="left">
           {history.map((value, index) => {
-            if (ban.indexOf(value.name) === -1) {
+            let imax = max + 3
+            if (ban.indexOf(value.name) === -1 && index <= imax) {
               return <div style={{ marginBottom: "30px" }} key={index}>
-                <div className="nes-container is-rounded with-title explorer-container" >
+                <div className="nes-container is-rounded with-title explorer-container">
                   <p className="title">{value.name}</p>
-                  Registered by: <b>{value.owner} </b><br></br>
-                  Unique ID: {value.uuid} </div>
-              </div>
+                  Owner: <b>{value.owner} </b><br></br>
+                  NFT ID: {value.uuid} </div>
+                </div>
             } else {
               return false;
             }
@@ -81,7 +85,7 @@ export function Explore() {
   }
 
   function returnSell() {
-    if (inSell.length > 0) {
+    if (inSell.length > 0 && !isLoading) {
       return (
         <div>
           <div align="center">
@@ -90,13 +94,13 @@ export function Explore() {
             </Box>
             <Container align="left">
               {inSell.map((value, index) => {
-                if (ban.indexOf(value.name) === -1 && value.payment !== null && value.payment !== undefined) {
+                if (ban.indexOf(value.name) === -1 && value.payment !== null && value.payment !== undefined && index < max) {
                   return (
                     <div key={index} style={{ margin: "30px 0" }}>
                       <div className="nes-container is-rounded with-title explorer-container-sell" >
                         <p className="title">{value.name}</p>
-                          Registered by: <b>{value.owner} </b><br></br>
-                          Unique id: <b>{value.uuid}</b><br />
+                          Owner: <b>{value.owner} </b><br></br>
+                          NFT ID: <b>{value.uuid}</b><br />
                         <div style={{ display: "flex", margin: "7px 0" }}>
                           <i className="nes-icon coin"></i>
                           <p style={{ margin: "7px 7px" }}> Price: <b>{value.price} LYRA</b></p></div>
@@ -126,7 +130,7 @@ export function Explore() {
             <p className="title">{titleDialog}</p>
             <p>{textDialog}</p>
             <menu className="dialog-menu">
-              <button className="nes-btn" onClick={() => { setShowDialog(false) }} className="nes-btn is-primary">OK</button>
+              <button onClick={() => { setShowDialog(false) }} className="nes-btn is-primary">OK</button>
             </menu>
           </dialog>
         </div>
@@ -144,10 +148,11 @@ export function Explore() {
     <div className="Explore">
       <NavBar />
       {returnDialog()}
+      {isLoading ? <div style={{marginTop: "150px", color: "#fff", textAlign: "center", padding: "40vh 0"}}>Loading data from blockchain, please wait...</div> : 
       <Container style={{marginTop: "150px", marginBottom: "60px"}}>
+      {props.user === undefined ? 
         <div className="nes-container is-rounded" align="center">
-          <h1 style={{ fontSize: "30px", fontWeight: "600", margin: "20px 0" }}>Blockchain Names</h1>
-          <div style={{ position: "relative", marginTop: "40px" }}>
+          <div style={{ position: "relative" }}>
             <div className="nes-field">
               <input className="nes-input mod-size" onKeyDown={_handleKeyDown} style={{ width: "100%!important" }} onChange={(evt) => { 
                 let name = evt.target.value.toLocaleLowerCase(); 
@@ -159,20 +164,24 @@ export function Explore() {
             </Control>
           </div>
         </div>
-        <Container className="nes-container is-rounded" style={{ marginTop: "40px" }}>
-          <div>
-            <div align="center">
-              <Box className="header-color explorer-title">
-                <Heading size={5} align="center" style={{ color: "white" }}>LATEST REGISTERED NAMES</Heading>
-              </Box>
-              {returnRegistered()}
+        : "" }
+        <Container className="nes-container is-rounded" style={{ marginTop: "50px" }}>
+          <div class="columns">
+            <div class="column is-half">
+                <Box className="header-color explorer-title">
+                  <Heading size={5} align="center" style={{ color: "white" }}>LATEST REGISTERED NAMES</Heading>
+                </Box>
+                {returnRegistered()}
+            </div>
+            <div class="column is-half">
+              {returnSell()}
             </div>
           </div>
+          <div>
+            <button onClick={() => { setMax(9999999999) }} style = {{ width:"100%"}} className="nes-btn is-primary">SHOW ALL</button>
+          </div>
         </Container>
-        <Container className="nes-container is-rounded" style={{ marginTop: "50px" }}>
-          {returnSell()}
-        </Container>
-      </Container>
+      </Container>}
     </div>
   );
 }
