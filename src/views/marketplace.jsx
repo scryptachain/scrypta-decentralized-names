@@ -54,20 +54,21 @@ export function Marketplace(props) {
                     {inSell.map((value, index) => {
                         if (ban.indexOf(value.name) === -1 && (searcher === "" || value.name.indexOf(searcher) !== -1)) {
                             return (
-                                <Columns.Column key={index} size="half">
-                                    <div className="nes-container is-rounded">
-                                        <div className="nes-container is-rounded with-title" align="center" style={{ marginTop: "10px" }} >
-                                            <h1 className="title" style={{ fontSize: "22px", fontWeight: "600" }}>{value.name}</h1>
-                                            {value.icon !== undefined && value.icon.length > 0 ? <img src={'https://ipfs.io/ipfs/' + value.icon} alt="IPFS-Icon" /> : <Gravatar style={{ marginTop: "10px", height: "200px", width: "200px" }} email={value.uuid} /> }
+                                <Columns.Column key={index} size="one-quarter">
+                                    <div className="nes-container is-rounded" style={{ margin: 0, padding: "10px" }}>
+                                        <div className="nes-container is-rounded with-title" align="center" style={{ margin: "10px 0", padding: "1rem 5px" }} >
+                                            <h1 className="title" style={{ fontSize: "1vw", fontWeight: "600" }}>{value.name}</h1>
+                                            {value.icon !== undefined && value.icon.length > 0 ? <img src={'https://ipfs.io/ipfs/' + value.icon} alt="IPFS-Icon" /> : <Gravatar style={{ height: "130px", width: "130px" }} email={value.uuid} />}
                                             <div style={{ textAlign: "left", marginTop: "10px" }}>
-                                                <p style={{ fontSize: "12px" }}>Registered by:<br /> <b>{value.owner} </b></p>
-                                                <p style={{ fontSize: "12px" }}>Domain ID:<br /><b>{value.uuid} </b></p><br />
+                                                <p style={{ fontSize: "8px" }}>Registered by:<br /> <b>{value.owner} </b></p>
                                             </div>
-                                            <div style={{ height: "70px"}}>
-                                                <div style={{ float: "left" }}>
-                                                    <i style={{ margin: "0" }} className="nes-icon big coin"></i>
+                                            <div style={{ height: "100px" }}>
+                                                <div style={{display: "flex"}}>
+                                                    <div style={{margin: "0px"}}>
+                                                        <i style={{ marginTop: "0" }} className="nes-icon medium coin"></i>
+                                                    </div>
+                                                    <h1 style={{ fontSize: "12px", padding: "5px 20px", textAlign: "left" }}>Price:<br /> <b> {value.price} LYRA</b></h1>
                                                 </div>
-                                                <h1 style={{float: "left", paddingLeft: "60px", textAlign: "left", marginTop: "10px" }}>Price:<br/> <b> {value.price} LYRA</b></h1>
                                                 {returnBuyButton(value)}
                                             </div>
                                         </div>
@@ -82,7 +83,7 @@ export function Marketplace(props) {
             }
         } else {
             return (
-                <div style={{padding: "30px 0", color: "#fff", textAlign: "center"}}>Loading data from blockchain...</div>
+                <div style={{ padding: "30px 0", color: "#fff", textAlign: "center" }}>Loading data from blockchain...</div>
             )
         }
     }
@@ -115,7 +116,7 @@ export function Marketplace(props) {
                             }
                             setChecked(true)
                             setList(registered)
-                            
+
                         }, 1500)
                     } else {
                         setBuying(false)
@@ -166,11 +167,12 @@ export function Marketplace(props) {
         }
     }
 
-    function returnBuyButton(value){
-        return(
-            <div>
-                <button className="nes-btn is-success" style={{ marginTop: "15px", marginLeft:"10px", float: "right" }} onClick={() => { setShowConfirm(true); setSelected(value) }}>BUY</button>
-                <button className="nes-btn is-primary" style={{ marginTop: "15px", float: "right" }} onClick={() => { window.location = '/details/' + value.uuid }}>DETAILS</button>
+    function returnBuyButton(value) {
+        return (
+            <div style={{display:"flex", float: "left" }}>
+                <button className="nes-btn is-primary btn-mrk" style={{marginRight: "10px" }} onClick={() => { window.location = '/details/' + value.uuid }}>DETAILS</button>
+                <button className="nes-btn is-success btn-mrk" onClick={() => { setShowConfirm(true); setSelected(value) }}>BUY</button>
+                
             </div>
         )
     }
@@ -189,15 +191,15 @@ export function Marketplace(props) {
                 <div style={{ marginTop: "150px" }}>
                     <div className="nes-container is-rounded" style={{ position: "relative" }}>
                         <div className="nes-field">
-                            <Input className="nes-input" style={{ width: "100%!important" }} onChange={(evt) => { 
-                                let name = evt.target.value.toLocaleLowerCase(); 
+                            <Input className="nes-input" style={{ width: "100%!important" }} onChange={(evt) => {
+                                let name = evt.target.value.toLocaleLowerCase();
                                 name = name.replace(/ /g, '_').replace(/[^\w\s]/gi, "");
-                                setSearcher(name) 
+                                setSearcher(name)
                             }} value={searcher} placeholder={"Search a blockchain name"} />
                         </div>
                     </div>
                 </div>
-                    {returnSell()}
+                {returnSell()}
             </Container>
         </div>
     );

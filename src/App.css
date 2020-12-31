@@ -59,8 +59,14 @@ body, html {
   margin-left: 0;
 }
 
+
 .nes-icon.big {
   transform: scale(4);
+}
+
+.nes-icon.medium {
+  transform: scale(2);
+  margin: 0 !important;
 }
 
 .nes-container {
