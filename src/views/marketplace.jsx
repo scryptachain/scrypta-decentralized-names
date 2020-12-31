@@ -57,7 +57,7 @@ export function Marketplace(props) {
                                 <Columns.Column key={index} size="one-quarter">
                                     <div className="nes-container is-rounded" style={{ margin: 0, padding: "10px" }}>
                                         <div className="nes-container is-rounded with-title" align="center" style={{ margin: "10px 0", padding: "1rem 5px" }} >
-                                            <h1 className="title" style={{ fontSize: "1vw", fontWeight: "600" }}>{value.name}</h1>
+                                            <h1 className="title" style={{ fontSize: "16px", fontWeight: "600" }}>{value.name}</h1>
                                             {value.icon !== undefined && value.icon.length > 0 ? <img src={'https://ipfs.io/ipfs/' + value.icon} alt="IPFS-Icon" /> : <Gravatar style={{ height: "130px", width: "130px" }} email={value.uuid} />}
                                             <div style={{ textAlign: "left", marginTop: "10px" }}>
                                                 <p style={{ fontSize: "8px" }}>Registered by:<br /> <b>{value.owner} </b></p>
