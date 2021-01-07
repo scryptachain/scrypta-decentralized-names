@@ -29,6 +29,8 @@ export function Details(props) {
     let [ethereum, setEthereum] = useState("")
     let [link, setLink] = useState("")
     let [youtube, setYoutube] = useState("")
+    let [ownerAddress, setOwnerAddress] = useState("")
+    let [twitter, setTwitter] = useState("")
     let [icon, setIcon] = useState("")
     let [isUpdating, setUpdating] = useState(false)
     let [what, setWhat] = useState("")
@@ -46,11 +48,15 @@ export function Details(props) {
             let request = await scrypta.createContractRequest(address.walletstore, '-', { contract: "LcD7AGaY74xvVxDg3NkKjfP6QpG8Pmxpnu", function: "check", params: { name: domain.domain } })
             let response = await scrypta.sendContractRequest(request)
             domain.smartcontract = response.record
+            setOwnerAddress(domain.smartcontract.owner)
             if(domain.smartcontract.owner === props.user.address){
                 setOwner(true)
             }
             if (domain.smartcontract.link !== undefined) {
                 setLink(domain.smartcontract.link)
+            }
+            if (domain.smartcontract.twitter !== undefined) {
+                setTwitter(domain.smartcontract.twitter)
             }
             if (domain.smartcontract.bitcoin !== undefined) {
                 setBitcoin(domain.smartcontract.bitcoin)
@@ -201,7 +207,12 @@ export function Details(props) {
                             break;
                         case "ethereum":
                             value = ethereum
-                            break;
+                        break;
+                        case "twitter":
+                            value = twitter
+                            value = value.replace("http://twitter.com/", "")
+                            value = value.replace("https:://twitter.com/", "")
+                        break;
                         default:
                             break;
                     }
@@ -355,7 +366,7 @@ export function Details(props) {
                                     <Content>
                                         <div style={{ marginTop: "5px" }}>
                                             <p style={{ marginTop: 0 }}>NFT identifier:<br /><b>{uuid}</b></p>
-                                            <p style={{ marginTop: 0 }}>Owner:<br /> <b>{blockchainData.address}</b></p>
+                                            <p style={{ marginTop: 0 }}>Owner:<br /> <b>{ownerAddress}</b></p>
                                             <p style={{ marginTop: 0 }}>Block:<br /> <b>{blockchainData.block}</b></p>
                                             <p style={{ marginTop: 0 }}>TxID:<br /><b><a href={'https://bb.scryptachain.org/tx/' + blockchainData.txid} rel="noreferrer" target="_blank">{blockchainData.txid}</a></b></p>
                                             <p style={{ marginTop: 0 }}>Timestamp:<br /><b>{blockchainData.date}</b></p>
@@ -363,6 +374,7 @@ export function Details(props) {
                                             {ethereum.length > 0 ? <p style={{ marginTop: 0 }}>Ethereum address:<br /><b>{ethereum}</b></p> : "" }
                                             {link.length > 0 ? <p style={{ marginTop: 0 }}>Website:<br /><a href={'https://' + link} rel="noreferrer" target="_blank">{link}</a></p> : "" }
                                             {youtube.length > 0 ? <p style={{ marginTop: 0 }}>Youtube:<br /><b>{youtube}</b></p> : "" }
+                                            {twitter.length > 0 ? <p style={{ marginTop: 0 }}>Twitter:<br /><b>{twitter}</b></p> : "" }
                                             {icon.length > 0 ? <p style={{ marginTop: 0 }}>IPFS:<br /><a href={'https://ipfs.io/ipfs/' + icon} rel="noreferrer" target="_blank">{icon}</a></p> : "" }
                                         </div>
                                     </Content>
@@ -393,6 +405,13 @@ export function Details(props) {
                                                 <Input style={{ height: "45px" }} onChange={(evt) => { setEthereum(evt.target.value) }} value={ethereum} className="nes-input" placeholder="Insert a Ethereum address" />
                                             </div>
                                             <button className="nes-btn is-primary" onClick={() => { setWhat('ethereum'); setShowUpdate(true) }} style={{ position: "absolute", top: 28, right: 0 }}>Save</button>
+                                        </div>
+                                        <div style={{ position: "relative" }}>
+                                            <h3>Twitter username</h3>
+                                            <div className="nes-field" style={{ marginBottom: "20px" }}>
+                                                <Input style={{ height: "45px" }} onChange={(evt) => { setTwitter(evt.target.value) }} value={twitter} className="nes-input" placeholder="Insert your username for ex. @scryptachain" />
+                                            </div>
+                                            <button className="nes-btn is-primary" onClick={() => { setWhat('twitter'); setShowUpdate(true) }} style={{ position: "absolute", top: 28, right: 0 }}>Save</button>
                                         </div>
                                         <div style={{ position: "relative" }}>
                                             <h3>Website</h3>
